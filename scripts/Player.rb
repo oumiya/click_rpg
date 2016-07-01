@@ -53,8 +53,18 @@ class Player
   
   # レベルアップ時のステータスアップ
   def status_up()
-    @max_hp += 50             # 固定で 50 上昇する
-    @attack +=  (2 + rand(4)) # 2 ～ 5 上昇する
-    @defence += (2 + rand(4)) # 2 ～ 5 上昇する
+    @max_hp += 25             # 固定で 25 上昇する
+    @attack +=  (1 + rand(2)) # 1 ～ 2 上昇する
+    @defence += (1 + rand(2)) # 1 ～ 2 上昇する
+  end
+  
+  # 次のレベルアップまでに必要な経験値
+  def get_next_level_exp()
+    if @level >= MAX_LEVEL then
+      return 0
+    else
+      diff = @exp_table[@level-1] - @exp
+      return diff
+    end
   end
 end

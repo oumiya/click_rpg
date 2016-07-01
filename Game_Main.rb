@@ -5,6 +5,8 @@ require './scripts/Enemy_Data.rb'
 require './scripts/Scene_Home.rb'
 require './scripts/Scene_Battle.rb'
 require './scripts/Debug_Window.rb'
+require './scripts/Save_Data.rb'
+include Save_Data
 
 # ゲームのメインクラス
 class Game_Main
@@ -61,6 +63,7 @@ class Game_Main
     
     # プレイヤー情報の初期化
     $player = Player.new
+    load()
 
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6

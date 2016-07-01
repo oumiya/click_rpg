@@ -4,6 +4,8 @@ require_relative 'Enemy.rb'
 require_relative 'Attack_Icon.rb'
 require_relative 'Guard_Rank_Text.rb'
 require_relative 'Attack_Effect.rb'
+require_relative 'Save_Data.rb'
+include Save_Data
 
 # 戦闘シーン
 class Scene_Battle < Scene_Base
@@ -449,12 +451,15 @@ class Scene_Battle < Scene_Base
         @enemy.effect_index = 0
         
         $player.exp += @enemy.exp
-        $player.gold = @enemy.gold
+        $player.gold += @enemy.gold
         
         # この戦闘でプレイヤーはレベルアップしたか？
         if $player.level_up?() then
           @win_window.draw_font(15, 89, "レベルが上がった！", @text_font)
         end
+        
+        # プレイヤー情報を保存
+        save()
       end
       
       if @cut_counter >= 60 && @cut_counter < 120 then

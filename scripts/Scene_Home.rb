@@ -1,6 +1,8 @@
 require 'dxruby'
 require_relative 'Scene_Base.rb'
 require_relative 'Scene_Battle.rb'
+require_relative 'Save_Data.rb'
+include Save_Data
 
 # ホーム画面
 class Scene_Home < Scene_Base
@@ -24,6 +26,8 @@ class Scene_Home < Scene_Base
     $player.hp = $player.max_hp
     
     $bgm["home"].play(0, 0)
+    
+    save()
   end
   
   # フレーム更新処理
@@ -48,8 +52,8 @@ class Scene_Home < Scene_Base
     Window.draw_font(x, y, $player.heal_count.to_s, @status_font) # 薬草の数
     y += 21
     Window.draw_font(x, y, $player.exp.to_s, @status_font) # 経験値
-    y += 20
-    Window.draw_font_ex(x, y, "知るか！", @status_font) # 次のレベルまで
+    y += 22
+    Window.draw_font_ex(x, y, $player.get_next_level_exp().to_s, @status_font) # 次のレベルまで
     
     # 主人公のつぶやき
     Window.draw_font(208, 253, "うひひ　頑張るぞ！", @status_font, {:color => [0, 0, 0]})

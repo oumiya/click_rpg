@@ -92,7 +92,7 @@ class Enemy_Data
       enemy.max_hp = 1800
       enemy.attack = 10
       enemy.defence = 10
-      enemy.attack_frequency = [60,75,90]
+      enemy.attack_frequency = [35,43,51,59,67]
       enemy.ai = 0
       enemy.attack_speed = 8
       enemy.exp = 10
