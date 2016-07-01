@@ -53,6 +53,7 @@ class Game_Main
     $bgm = Hash.new
     $bgm["battle"] = Ayame.new("audio/bgm/battle.mp3")
     $bgm["boss_battle"] = Ayame.new("audio/bgm/boss_battle.mp3")
+    $bgm["home"] = Ayame.new("audio/bgm/home.mp3")
    
     # データベースからデータを読み込む
     # 敵情報を読み込む
@@ -60,14 +61,6 @@ class Game_Main
     
     # プレイヤー情報の初期化
     $player = Player.new
-    $player.level = 1
-    $player.max_hp = 100
-    $player.hp = $player.max_hp
-    $player.attack = 20
-    $player.defence = 5
-    $player.heal_count = 5
-    $player.exp = 0
-    $player.gold = 0
 
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6

@@ -1,0 +1,23 @@
+require_relative 'Enemy.rb'
+
+# 敵データ
+class Enemy_Data
+  # 敵データを取得
+  def get_enemy(id)
+    enemy = Enemy.new
+    case id
+##place_holder
+    end
+
+    # 現在HPに最大HPを代入
+    enemy.hp = enemy.max_hp
+    # 敵画像を読み込み
+    enemy.image = Image.load("image/enemy/" + enemy.image_file_name)
+    # 敵死亡時エフェクトを作成
+    enemy.create_die_effect()
+    # 敵の当たり判定を作成
+    enemy.calc_hitbox()
+    
+    return enemy
+  end
+end

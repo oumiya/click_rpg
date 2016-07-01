@@ -21,9 +21,9 @@ class Scene_Home < Scene_Base
     @next_scene = nil
     
     # プレイヤーを全回復させておく
-    $player.level = 1
-    $player.max_hp = 100
     $player.hp = $player.max_hp
+    
+    $bgm["home"].play(0, 0)
   end
   
   # フレーム更新処理
@@ -127,6 +127,7 @@ class Scene_Home < Scene_Base
   
   # ループ後処理
   def terminate()
+    $bgm["home"].stop(0)
   end
   
   # 次のシーンに遷移

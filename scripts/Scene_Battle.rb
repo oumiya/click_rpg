@@ -166,7 +166,7 @@ class Scene_Battle < Scene_Base
       end
       
       # 攻撃フレームが来たら攻撃アイコンを表示
-      if $frame_counter % @enemy.attack_frequency == 0 then
+      if @enemy.attack_frame? then
         @atk_count = $frame_counter
         @e_atk_move = 24
         
@@ -287,7 +287,10 @@ class Scene_Battle < Scene_Base
   
   # ダメージ計算
   def calc_damage(attack, defence)
-    damage = (attack.to_f / 2.0 - defence / 4.0).to_i
+    damage = (attack.to_f * 4.0 - defence * 2.0).round
+    if damage < 1 then
+      damage = 1 # 確定で 1 ダメージは与える
+    end
     return damage
   end
   
@@ -447,6 +450,11 @@ class Scene_Battle < Scene_Base
         
         $player.exp += @enemy.exp
         $player.gold = @enemy.gold
+        
+        # この戦闘でプレイヤーはレベルアップしたか？
+        if $player.level_up?() then
+          @win_window.draw_font(15, 89, "レベルが上がった！", @text_font)
+        end
       end
       
       if @cut_counter >= 60 && @cut_counter < 120 then
