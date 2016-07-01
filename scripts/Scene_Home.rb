@@ -14,6 +14,10 @@ class Scene_Home < Scene_Base
     @back_image = Image.load("image/system/home.png")
     @cursor = Image.load("image/system/cursor.png")
     
+    # お金が足りないよウィンドウ
+    @not_enough_money = Image.load("image/system/not_enough_money.png")
+    @not_enough_money_show = false
+    
     @status_font = Font.new(18)
     
     @button_push = false
@@ -26,6 +30,12 @@ class Scene_Home < Scene_Base
     $player.hp = $player.max_hp
     
     $bgm["home"].play(0, 0)
+    
+    # 操作可能フラグ
+    @control = true
+    
+    # 操作不可能時間
+    @not_control_frame = 0
     
     save()
   end
@@ -60,28 +70,55 @@ class Scene_Home < Scene_Base
     Window.draw_font(208, 253+18, "うひひ　頑張るぞ！", @status_font, {:color => [0, 0, 0]})
     Window.draw_font(208, 253+36, "うひひ　頑張るぞ！", @status_font, {:color => [0, 0, 0]})
 
-    # 洞窟を選択
-    if Input.mouse_push?(M_LBUTTON) then
-      if Input.mouse_x >= 147 &&
-         Input.mouse_y >= 43 &&
-         Input.mouse_x <= 310 &&
-         Input.mouse_y <= 206 then
-         
-         $sounds["decision"].play(1, 0) # 決定音を鳴らす
-         
-         # ダンジョンIDを1に設定
-         $dungeon_id = 1
-         
-         @cursor_index = 1
-         @button_push = true
-         
-         @wait_count = 95
-         @fade_out_count = 60
-         @cursor_visible = true
-         @alpha = 0
-         @cursor_x = 143
-         @cursor_y = 39
+    if @control then
+      # 洞窟を選択
+      if Input.mouse_push?(M_LBUTTON) then
+        if Input.mouse_x >= 147 &&
+           Input.mouse_y >= 43 &&
+           Input.mouse_x <= 310 &&
+           Input.mouse_y <= 206 then
+           
+           $sounds["decision"].play(1, 0) # 決定音を鳴らす
+           
+           # ダンジョンIDを1に設定
+           $dungeon_id = 1
+           
+           @cursor_index = 1
+           @button_push = true
+           
+           @wait_count = 95
+           @fade_out_count = 60
+           @cursor_visible = true
+           @alpha = 0
+           @cursor_x = 143
+           @cursor_y = 39
+        end
       end
+      
+      # 薬草を買うボタンを選択
+      if Input.mouse_push?(M_LBUTTON) then
+        if Input.mouse_x >= 538 &&
+           Input.mouse_y >= 407 &&
+           Input.mouse_x <= 714 &&
+           Input.mouse_y <= 467 then
+           
+           $sounds["decision"].play(1, 0) # 決定音を鳴らす
+           
+           @cursor_index = 7
+           @button_push = true
+        end
+      end
+    else
+      if @not_control_frame <= 0 then
+        @not_control_frame = 0
+        @control = true
+      end
+      
+      if @not_enough_money_show then
+        Window.draw(327, 226, @not_enough_money, 3000)
+      end
+      
+      @not_control_frame -= 1
     end
     
     # ボタン押下後イベント
@@ -114,15 +151,30 @@ class Scene_Home < Scene_Base
             @next_scene = Scene_Battle.new
           end
         end
+      when 7
+        # ゴールドが足りているか？
+        if $player.gold >= 50 then
+          $player.gold -= 50
+          $player.heal_count += 1
+        else
+          @control = false
+          @not_control_frame = 120
+          @not_enough_money_show = true
+        end
+        
+        @button_push = false
+        @cursor_index = 0
       end
     else
-      # マウスカーソルホバー
-      if Input.mouse_x >= 147 &&
-         Input.mouse_y >= 43 &&
-         Input.mouse_x <= 310 &&
-         Input.mouse_y <= 206 then
-         # 洞窟にマウスカーソルがホバーされている
-         Window.draw(143, 39, @cursor)
+      if @control then
+        # マウスカーソルホバー
+        if Input.mouse_x >= 147 &&
+           Input.mouse_y >= 43 &&
+           Input.mouse_x <= 310 &&
+           Input.mouse_y <= 206 then
+           # 洞窟にマウスカーソルがホバーされている
+           Window.draw(143, 39, @cursor)
+        end
       end
     end
     
