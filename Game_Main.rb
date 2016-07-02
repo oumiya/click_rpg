@@ -4,6 +4,7 @@ require './scripts/Player.rb'
 require './scripts/Enemy_Data.rb'
 require './scripts/Scene_Home.rb'
 require './scripts/Scene_Battle.rb'
+require './scripts/Scene_Shop.rb'
 require './scripts/Debug_Window.rb'
 require './scripts/Save_Data.rb'
 include Save_Data
@@ -78,6 +79,7 @@ class Game_Main
     # 初期シーンをセット
     #$scene = Scene_Battle.new
     $scene = Scene_Home.new
+    #$scene = Scene_Shop.new
     
     $scene.start # シーンの初期化
     

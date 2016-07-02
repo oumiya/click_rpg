@@ -14,6 +14,8 @@ module Save_Data
     save_data["heal_count"] = $player.heal_count   # –ò‘‚Ì”
     save_data["exp"] = $player.exp                 # ŒoŒ±’l
     save_data["gold"] = $player.gold               # Š‹à
+    save_data["hair"] = $player.hair               # ”¯Œ^
+    save_data["have_hair"] = $player.have_hair     # ‚Á‚Ä‚¢‚é”¯Œ^
   
     open("save_data.dat", 'w') do |io|
       JSON.dump(save_data, io)
@@ -35,6 +37,9 @@ module Save_Data
       $player.heal_count = save_data["heal_count"].to_i # –ò‘‚Ì”
       $player.exp = save_data["exp"].to_i               # ŒoŒ±’l
       $player.gold = save_data["gold"].to_i             # Š‹à
+      $player.hair = save_data["hair"]                  # ”¯Œ^
+      $player.have_hair = save_data["have_hair"]        # ‚Á‚Ä‚¢‚é”¯Œ^
+      
     end
     
   end

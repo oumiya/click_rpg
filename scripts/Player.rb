@@ -8,6 +8,8 @@ class Player
   attr_accessor :heal_count        # 薬草の数
   attr_accessor :exp               # 経験値
   attr_accessor :gold              # 所持金
+  attr_accessor :hair              # 髪型
+  attr_accessor :have_hair         # 所持している髪型
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
   
@@ -21,6 +23,9 @@ class Player
     @heal_count = 5
     @exp = 0
     @gold = 0
+    @hair = "none"
+    @have_hair = Array.new
+    @have_hair.push(@hair)
   
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)

@@ -2,6 +2,7 @@ require 'dxruby'
 require_relative 'Scene_Base.rb'
 require_relative 'Scene_Battle.rb'
 require_relative 'Fade_Effect.rb'
+require_relative 'Hair.rb'
 require_relative 'Save_Data.rb'
 include Save_Data
 
@@ -69,6 +70,8 @@ class Scene_Home < Scene_Base
     # ホーム画面のBGMを演奏
     $bgm["home"].play(0, 0)
     
+    @hair = Hair.new
+    
     # ホーム画面を開いた時に自動セーブ
     save()
   end
@@ -81,6 +84,8 @@ class Scene_Home < Scene_Base
     draw_player_status()
     # 主人公のつぶやきを表示
     draw_word()
+    # 髪型を表示
+    @hair.draw
     # ダンジョン選択カーソルを表示
     @cursor.update
     # お金が足りないメッセージの表示
@@ -100,8 +105,13 @@ class Scene_Home < Scene_Base
     # フェードアウト/フェードインの表示
     @fade_effect.update
     if @fade_effect.effect_end? then
+      # 戦闘シーンに移行
       if @scene_index == 1 then
         @next_scene = Scene_Battle.new
+      end
+      #ショップシーンに移行
+      if @scene_index == 3 then
+        @next_scene = Scene_Shop.new
       end
     else
       return
@@ -143,6 +153,12 @@ class Scene_Home < Scene_Base
           @wait_frame = 60
           @not_enough_money_show = true
         end
+      end
+      # ショップボタンを押下
+      if mouse_widthin_button?("shop") then
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        @scene_index = 3
       end
     end
     
