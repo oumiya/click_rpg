@@ -48,6 +48,26 @@ class Scene_Battle < Scene_Base
     @dungeon_end.box_fill(4, 4, 132, 37, [128, 0, 0, 0])
     @dungeon_end.draw_font(9, 9, "街に戻る", @text_font)
     
+    # 背景画像読み込み
+    @background = nil
+    case $dungeon_id
+    when 1
+      @background = Image.load("image/background/cave.jpg")
+    when 2
+      @background = Image.load("image/background/forest.jpg")
+    when 3
+      @background = Image.load("image/background/mansion.jpg")
+    when 4
+      @background = Image.load("image/background/volcano.jpg")
+    when 5
+      @background = Image.load("image/background/ice_world.jpg")
+    when 6
+      @background = Image.load("image/background/castle.jpg")
+    else
+      # 一応、入れておく
+      @background = Image.load("image/background/cave.jpg")
+    end
+    
     # バトルカウント
     @battle_count = 0
     # 初回戦闘前処理が終わったことを示す
@@ -129,6 +149,7 @@ class Scene_Battle < Scene_Base
   
   # フレーム更新処理
   def update()
+    Window.draw(0, 0, @background)
     
     @p_damage = false          # プレイヤーがダメージを受けたか true, false
     @p_guard = false           # プレイヤーがガードしたか true, false

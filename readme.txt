@@ -1,23 +1,38 @@
+ï»¿
+å†™çœŸç´ æã‚’ãŠå€Ÿã‚Šã—ãŸã‚µã‚¤ãƒˆ
 
-Ê^‘fŞ‚ğ‚¨Ø‚è‚µ‚½ƒTƒCƒg
+ç«å±±ã®å†™çœŸ
+è‘—ä½œè€…: Alex Schwab
+http://free-photos.gatag.net/2013/07/04/000000.html
 
-Ê^‘fŞ ‘«¬
+æ°·å±±ã®å†™çœŸ
+è‘—ä½œè€…: J McSporran
+http://free-photos.gatag.net/2015/01/23/170000.html
+
+åŸå†…ã®å†™çœŸ
+è‘—ä½œè€…: StÃ©phane Gaudry
+http://free-photos.gatag.net/2013/07/10/150000.html
+
+å†™çœŸç´ æ è¶³æˆ
 http://www.ashinari.com/
 
+COCOON
+http://cocoon.daa.jp/material/
 
-BGM‚ğ‚¨Ø‚è‚µ‚½ƒTƒCƒg
 
-–‚‰¤°
+BGMã‚’ãŠå€Ÿã‚Šã—ãŸã‚µã‚¤ãƒˆ
+
+é­”ç‹é­‚
 http://maoudamashii.jokersounds.com/
 
 
-Œø‰Ê‰¹‚ğ‚¨Ø‚è‚µ‚½ƒTƒCƒg
+åŠ¹æœéŸ³ã‚’ãŠå€Ÿã‚Šã—ãŸã‚µã‚¤ãƒˆ
 
-–³—¿Œø‰Ê‰¹‚Å—V‚Ú‚¤I
+ç„¡æ–™åŠ¹æœéŸ³ã§éŠã¼ã†ï¼
 http://taira-komori.jpn.org/index.html
 
-Œø‰Ê‰¹ƒ‰ƒ{
+åŠ¹æœéŸ³ãƒ©ãƒœ
 http://soundeffect-lab.info/
 
-ƒtƒŠ[Œø‰Ê‰¹‘fŞ ‚­‚ç‚°H 
+ãƒ•ãƒªãƒ¼åŠ¹æœéŸ³ç´ æ ãã‚‰ã’å·¥åŒ 
 http://www.kurage-kosho.info/
