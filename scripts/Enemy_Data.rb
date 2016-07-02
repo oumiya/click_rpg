@@ -89,8 +89,8 @@ class Enemy_Data
       enemy.image_file_name = "dragon.png"
       enemy.name = "ドラゴン"
       enemy.description = "洞窟の主であるドラゴン"
-      enemy.max_hp = 1800
-      enemy.attack = 10
+      enemy.max_hp = 3000
+      enemy.attack = 18
       enemy.defence = 10
       enemy.attack_frequency = [35,43,51,59,67]
       enemy.ai = 0
