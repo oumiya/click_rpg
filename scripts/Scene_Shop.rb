@@ -2,6 +2,7 @@ require 'dxruby'
 require_relative 'Scene_Base.rb'
 require_relative 'Scene_Home.rb'
 require_relative 'Fade_Effect.rb'
+require_relative 'Message_Box.rb'
 require_relative 'Save_Data.rb'
 include Save_Data
 
@@ -67,6 +68,9 @@ class Scene_Shop < Scene_Base
     @hair_list.push(Hair_Item.new("セミロング", 150, "semi_long"))
     @hair_list.push(Hair_Item.new("ロング", 150, "long"))
     @hair_list.push(Hair_Item.new("ツインテール", 150, "tails"))
+    
+    # 表示するメッセージ
+    @message = nil
   end
   
   # フレーム更新処理
@@ -167,6 +171,13 @@ class Scene_Shop < Scene_Base
       }
     end
     
+    if @message != nil then
+      Message_Box.show(@message)
+      if @wait_frame <= 0 then
+        @message = nil
+      end
+    end
+    
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
       @wait_frame -= 1
@@ -235,12 +246,20 @@ class Scene_Shop < Scene_Base
             end
           }
           
-          if has_hair == false then
+          if has_hair then
+            @message = "あんた、それもう持ってるぜ"
+            @wait_frame = 60
+          else
             $player.have_hair.push(@hair_list[i].key)
             $player.gold -= @hair_list[i].price
             $player.hair = @hair_list[i].key
+            @message = "ありがとよ！"
+            @wait_frame = 60
           end
-          
+        
+        else
+          @message = "お金が足りないぜ"
+          @wait_frame = 60
         end
       end
     end
