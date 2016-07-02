@@ -43,8 +43,8 @@ class Scene_Shop < Scene_Base
     @button_hitbox["armor"] = [398, 20, 510, 68]
     @button_hitbox["hair"] = [513, 20, 623, 68]
     @button_hitbox["quit"] = [762, 20, 908, 68]
-    @button_hitbox["next_page"] = [302, 503, 466, 533]
-    @button_hitbox["prev_page"] = [748, 503, 914, 533]
+    @button_hitbox["next_page"] = [748, 503, 914, 533]
+    @button_hitbox["prev_page"] = [302, 503, 466, 533]
     
     # フェードアウト/フェードイン用の演出クラスを準備
     @fade_effect = Fade_Effect.new
@@ -54,6 +54,12 @@ class Scene_Shop < Scene_Base
     
     # 今選択されているタブ
     @tab_index = 0
+    
+    # 今選択されている武器ページ
+    @weapon_page = 0
+    
+    # 今選択されている防具ページ
+    @armor_page = 0
     
     @wait_frame = 0
     
@@ -134,17 +140,37 @@ class Scene_Shop < Scene_Base
     y = 84
     if @tab_index == 0 then
       # 武器リストの表示
-      for i in 1..9 do
-        Window.draw_font(311, y + (@font.size + 8) * i, "あああああああああ", @font)
-        Window.draw_font(624, y + (@font.size + 8) * i, "99999999", @font)
-        Window.draw_font(794, y + (@font.size + 8) * i, "999999", @font)
+      start_i = @weapon_page * 9
+      end_i = start_i + 8
+      if end_i >= $weapondata.length then
+        end_i = $weapondata.length - 1
+      end
+      
+      idx = 1
+      for i in start_i..end_i do
+        weapon = $weapondata.get_weapon_data(i)
+        have_count = $player.have_weapon[i][1]
+        Window.draw_font(311, y + (@font.size + 8) * idx, weapon[:name], @font)
+        Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", weapon[:price]), @font)
+        Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
+        idx += 1
       end
     elsif @tab_index == 1 then
       # 防具リストの表示
-      for i in 1..9 do
-        Window.draw_font(311, y + (@font.size + 8) * i, "いいいいいいいいい", @font)
-        Window.draw_font(624, y + (@font.size + 8) * i, "99999999", @font)
-        Window.draw_font(794, y + (@font.size + 8) * i, "999999", @font)
+      start_i = @armor_page * 9
+      end_i = start_i + 8
+      if end_i >= $armordata.length then
+        end_i = $armordata.length - 1
+      end
+      
+      idx = 1
+      for i in start_i..end_i do
+        armor = $armordata.get_armor_data(i)
+        have_count = $player.have_armor[i][1]
+        Window.draw_font(311, y + (@font.size + 8) * idx, armor[:name], @font)
+        Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", armor[:price]), @font)
+        Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
+        idx += 1
       end
     elsif @tab_index == 2 then
       # 髪型リストの表示
@@ -195,6 +221,9 @@ class Scene_Shop < Scene_Base
     end
     
     if Input.mouse_push?(M_LBUTTON) then
+      # 決定音を鳴らす
+      $sounds["decision"].play(1, 0)
+      
       # 武器ボタンを押下
       if mouse_widthin_button?("weapon") then
         @tab_index = 0
@@ -214,12 +243,36 @@ class Scene_Shop < Scene_Base
       end
       # 次のページボタンを押下
       if mouse_widthin_button?("next_page") then
-        
+        if @tab_index == 0 then
+          @weapon_page += 1
+          if @weapon_page > 5 then
+            @weapon_page = 5
+          end
+        end
+        if @tab_index == 1 then
+          @armor_page += 1
+          if @armor_page > 5 then
+            @armor_page = 5
+          end
+        end
       end
+      
       # 前のページボタンを押下
       if mouse_widthin_button?("prev_page") then
-        
+        if @tab_index == 0 then
+          @weapon_page -= 1
+          if @weapon_page < 0 then
+            @weapon_page = 0
+          end
+        end
+        if @tab_index == 1 then
+          @armor_page -= 1
+          if @armor_page < 0 then
+            @armor_page = 0
+          end
+        end
       end
+      
       # アイテム名を左クリック
       i = 0
       idx = -1
@@ -236,31 +289,136 @@ class Scene_Shop < Scene_Base
       }
       
       if idx > -1 then
-        if $player.gold > @hair_list[i].price then
-        
-          has_hair = false
-          $player.have_hair.each{|have_hair|
-            if @hair_list[i].key == have_hair then
-              has_hair = true
-              break
+        # 武器購入処理
+        if @tab_index == 0 then
+          idx = idx + @weapon_page * 9
+          weapon = $weapondata.get_weapon_data(idx)
+          if weapon != nil then
+            if $player.gold >= weapon[:price] then
+              $player.have_weapon[idx][1] += 1
+              $player.gold -= weapon[:price]
+              @message = "ありがとよ！"
+              @wait_frame = 60
+            else
+              @message = weapon[:name] + "を買うにはお金が足りないぜ"
+              @wait_frame = 60
             end
-          }
+          end
+        end
+        # 防具購入処理
+        if @tab_index == 1 then
+          idx = idx + @armor_page * 9
+          armor = $armordata.get_armor_data(idx)
+          if armor != nil then
+            if $player.gold >= armor[:price] then
+              $player.have_armor[idx][1] += 1
+              $player.gold -= armor[:price]
+              @message = "ありがとよ！"
+              @wait_frame = 60
+            else
+              @message = armor[:name] + "を買うにはお金が足りないぜ"
+              @wait_frame = 60
+            end
+          end
+        end
+        # 髪型購入処理
+        if @tab_index == 2 then
+          if $player.gold >= @hair_list[idx].price then
+            has_hair = false
+            $player.have_hair.each{|have_hair|
+              if @hair_list[idx].key == have_hair then
+                has_hair = true
+                break
+              end
+            }
+            
+            if has_hair then
+              @message = "あんた、それもう持ってるぜ"
+              @wait_frame = 60
+            else
+              $player.have_hair.push(@hair_list[idx].key)
+              $player.gold -= @hair_list[idx].price
+              $player.hair = @hair_list[idx].key
+              @message = "ありがとよ！"
+              @wait_frame = 60
+            end
           
-          if has_hair then
-            @message = "あんた、それもう持ってるぜ"
-            @wait_frame = 60
           else
-            $player.have_hair.push(@hair_list[i].key)
-            $player.gold -= @hair_list[i].price
-            $player.hair = @hair_list[i].key
-            @message = "ありがとよ！"
+            @message = @hair_list[idx].name + "を買うにはお金が足りないぜ"
             @wait_frame = 60
           end
-        
-        else
-          @message = "お金が足りないぜ"
-          @wait_frame = 60
         end
+      end
+    end
+    
+    # 売却処理
+    if Input.mouse_push?(M_RBUTTON) then
+      # アイテム名を右クリック
+      i = 0
+      idx = -1
+      @item_hitbox.each{|hitbox|
+        
+        if Input.mouse_x >= hitbox[0] &&
+           Input.mouse_y >= hitbox[1] &&
+           Input.mouse_x <= hitbox[2] &&
+           Input.mouse_y <= hitbox[3] then
+           idx = i
+           break
+        end
+        i = i + 1
+      }
+      
+      if idx > -1 then
+        # 武器売却処理
+        if @tab_index == 0 then
+          idx = idx + @weapon_page * 9
+          weapon = $weapondata.get_weapon_data(idx)
+          
+          if weapon != nil then
+            # 該当の武器を1コ以上持っている
+            if $player.have_weapon[idx][1] > 0 then
+              # 該当の武器を装備している場合は売れない
+              if $player.equip_weapon != idx then
+                $player.gold += weapon[:price] / 2
+                $player.have_weapon[idx][1] -= 1
+                @message = "ありがとうよ！"
+                @wait_frame = 60
+              else
+                @message = "装備中の武器は売れないぜ！"
+                @wait_frame = 60
+              end
+            else
+              @message = "お客さんは" + weapon[:name] + "を持ってないぜ！"
+              @wait_frame = 60
+            end
+          end
+          
+        end
+        
+        # 防具購入処理
+        if @tab_index == 1 then
+          idx = idx + @armor_page * 9
+          armor = $armordata.get_armor_data(idx)
+          if armor != nil then
+            # 該当の防具を1コ以上持っている
+            if $player.have_armor[idx][1] > 0 then
+              # 該当の防具を装備している場合は売れない
+              if $player.equip_armor != idx then
+                $player.gold += armor[:price] / 2
+                @message = "ありがとうよ！"
+                $player.have_armor[idx][1] -= 1
+                @wait_frame = 60
+              else
+                @message = "装備中の防具は売れないぜ！"
+                @wait_frame = 60
+              end
+            else
+              @message = "お客さんは" + armor[:name] + "を持ってないぜ！"
+              @wait_frame = 60
+            end
+          end
+        end
+
       end
     end
     

@@ -43,7 +43,10 @@ module Save_Data
       $player.gold = save_data["gold"].to_i             # Š‹à
       $player.hair = save_data["hair"]                  # ”¯Œ^
       $player.have_hair = save_data["have_hair"]        # ‚Á‚Ä‚¢‚é”¯Œ^
-      
+      $player.equip_weapon = save_data["equip_weapon"]  # ‘•”õ‚µ‚Ä‚¢‚é•Ší
+      $player.have_weapon = save_data["have_weapon"]    # ‚Á‚Ä‚¢‚é•Ší
+      $player.equip_armor = save_data["equip_armor"]    # ‘•”õ‚µ‚Ä‚¢‚é–h‹ï
+      $player.have_armor= save_data["have_armor"]       # ‚Á‚Ä‚¢‚é–h‹ï
     end
     
   end

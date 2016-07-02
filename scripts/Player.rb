@@ -62,7 +62,12 @@ class Player
   end
   
   def DEF()
-    return @defence
+    if @equip_armor >= 0 then
+      value = $armordata.get_armor_data(@equip_armor)[:value]
+      return @defence + value
+    else
+      return @defence
+    end
   end
   
   # レベルアップ処理

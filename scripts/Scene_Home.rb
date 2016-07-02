@@ -169,6 +169,8 @@ class Scene_Home < Scene_Base
       end
       # ショップボタンを押下
       if mouse_widthin_button?("shop") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         # 画面を徐々にフェードアウトさせる
         @fade_effect.setup(0)
         @scene_index = 3
