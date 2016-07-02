@@ -263,9 +263,9 @@ class Scene_Home < Scene_Base
     y += 23
     Window.draw_font(x, y, $player.max_hp.to_s, @status_font) # HP
     y += 23
-    Window.draw_font(x, y, $player.attack.to_s, @status_font) # 攻撃力
+    Window.draw_font(x, y, $player.ATK.to_s, @status_font) # 攻撃力
     y += 23
-    Window.draw_font(x, y, $player.defence.to_s, @status_font) # 防御力
+    Window.draw_font(x, y, $player.DEF.to_s, @status_font) # 防御力
     y += 21
     Window.draw_font(x, y, $player.gold.to_s, @status_font) # ゴールド
     y += 23

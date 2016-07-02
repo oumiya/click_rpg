@@ -6,6 +6,7 @@ require './scripts/Scene_Home.rb'
 require './scripts/Scene_Battle.rb'
 require './scripts/Scene_Shop.rb'
 require './scripts/Debug_Window.rb'
+require './scripts/Weapon_Data.rb'
 require './scripts/Save_Data.rb'
 include Save_Data
 
@@ -62,6 +63,9 @@ class Game_Main
     # データベースからデータを読み込む
     # 敵情報を読み込む
     $enemydata = Enemy_Data.new
+    
+    # 武器データを読み込む
+    $weapondata = Weapon_Data.new
     
     # プレイヤー情報の初期化
     $player = Player.new

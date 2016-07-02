@@ -7,15 +7,19 @@ module Save_Data
   def save()
     save_data = Hash.new
     
-    save_data["level"] = $player.level             # ƒŒƒxƒ‹
-    save_data["max_hp"] = $player.max_hp           # Å‘åHP
-    save_data["attack"] = $player.attack           # UŒ‚—Í
-    save_data["defence"] = $player.defence         # –hŒä—Í
-    save_data["heal_count"] = $player.heal_count   # –ò‘‚Ì”
-    save_data["exp"] = $player.exp                 # ŒoŒ±’l
-    save_data["gold"] = $player.gold               # Š‹à
-    save_data["hair"] = $player.hair               # ”¯Œ^
-    save_data["have_hair"] = $player.have_hair     # ‚Á‚Ä‚¢‚é”¯Œ^
+    save_data["level"] = $player.level               # ƒŒƒxƒ‹
+    save_data["max_hp"] = $player.max_hp             # Å‘åHP
+    save_data["attack"] = $player.attack             # UŒ‚—Í
+    save_data["defence"] = $player.defence           # –hŒä—Í
+    save_data["heal_count"] = $player.heal_count     # –ò‘‚Ì”
+    save_data["exp"] = $player.exp                   # ŒoŒ±’l
+    save_data["gold"] = $player.gold                 # Š‹à
+    save_data["hair"] = $player.hair                 # ”¯Œ^
+    save_data["have_hair"] = $player.have_hair       # ‚Á‚Ä‚¢‚é”¯Œ^
+    save_data["equip_weapon"] = $player.equip_weapon # ‘•”õ‚µ‚Ä‚¢‚é•Ší
+    save_data["have_weapon"] = $player.have_weapon   # ‚Á‚Ä‚¢‚é•Ší
+    save_data["equip_armor"] = $player.equip_armor   # ‘•”õ‚µ‚Ä‚¢‚é–h‹ï
+    save_data["have_armor"] = $player.have_armor     # ‚Á‚Ä‚¢‚é–h‹ï
   
     open("save_data.dat", 'w') do |io|
       JSON.dump(save_data, io)

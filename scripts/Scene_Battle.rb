@@ -153,7 +153,7 @@ class Scene_Battle < Scene_Base
       end
       
       if @p_damage then
-        damage = calc_damage(@enemy.attack, $player.defence)
+        damage = calc_damage(@enemy.attack, $player.DEF)
         case @p_guard_rank
         when "good"
           damage *= 0.5
@@ -317,7 +317,7 @@ class Scene_Battle < Scene_Base
           
           $sounds["p_attack"].play(1, 0)
           @attack_effect.show()
-          damage = calc_damage($player.attack, @enemy.defence)
+          damage = calc_damage($player.ATK, @enemy.defence)
           
           @enemy.hp -= damage
           if @enemy.hp < 0 then

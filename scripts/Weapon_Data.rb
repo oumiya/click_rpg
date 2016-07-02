@@ -3,6 +3,7 @@ class Weapon_Data
 
   # 武器データをハッシュの配列で定義
   def initialize()
+    @weapon = Array.new
     @weapon.push({:name=>"かたい木の棒", :value=>1, :effect_id=>1})
     @weapon.push({:name=>"棍棒", :value=>2, :effect_id=>1})
     @weapon.push({:name=>"石斧", :value=>3, :effect_id=>1})
@@ -57,6 +58,8 @@ class Weapon_Data
   
   # 武器データを返す
   def get_weapon_data(id)
-    return @weapon(id)
+    return nil if id < 0
+    return nil if id >= @weapon.size
+    return @weapon[id]
   end
 end

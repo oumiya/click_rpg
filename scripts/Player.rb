@@ -1,3 +1,5 @@
+require_relative 'Weapon_Data.rb'
+
 # プレイヤークラス
 class Player
   attr_accessor :level             # レベル
@@ -10,6 +12,10 @@ class Player
   attr_accessor :gold              # 所持金
   attr_accessor :hair              # 髪型
   attr_accessor :have_hair         # 所持している髪型
+  attr_accessor :equip_weapon      # 装備している武器
+  attr_accessor :equip_armor       # 装備している防具
+  attr_accessor :have_weapon       # 所持している武器
+  attr_accessor :have_armor        # 所持している防具
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
   
@@ -26,7 +32,15 @@ class Player
     @hair = "none"
     @have_hair = Array.new
     @have_hair.push(@hair)
-  
+    @equip_weapon = -1
+    @equip_armor = -1
+    @have_weapon = Array.new
+    @have_armor = Array.new
+    for i in 0..49 do
+      @have_weapon.push([i, 0])
+      @have_armor.push([i, 0])
+    end
+
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)
     base_value = 10  # 基本増加量
@@ -36,6 +50,19 @@ class Player
     for i in 1..@exp_table.length-1 do
       @exp_table[i] = (@exp_table[i-1] * base_rate + base_value).round
     end
+  end
+  
+  def ATK()
+    if @equip_weapon >= 0 then
+      value = $weapondata.get_weapon_data(@equip_weapon)[:value]
+      return @attack + value
+    else
+      return @attack
+    end
+  end
+  
+  def DEF()
+    return @defence
   end
   
   # レベルアップ処理
