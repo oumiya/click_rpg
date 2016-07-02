@@ -127,9 +127,13 @@ class Scene_Home < Scene_Base
       if @scene_index == 2 then
         @next_scene = Scene_Equip.new
       end
-      #ショップシーンに移行
+      # ショップシーンに移行
       if @scene_index == 3 then
         @next_scene = Scene_Shop.new
+      end
+      # ゲームをやめる
+      if @scene_index == 4 then
+        $scene = nil
       end
     else
       return
@@ -187,6 +191,15 @@ class Scene_Home < Scene_Base
         # 画面を徐々にフェードアウトさせる
         @fade_effect.setup(0)
         @scene_index = 2
+      end
+      if mouse_widthin_button?("quit") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # 一応やめる前にセーブしておく
+        save()
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        @scene_index = 4
       end
     end
     
