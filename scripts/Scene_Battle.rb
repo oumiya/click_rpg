@@ -75,6 +75,15 @@ class Scene_Battle < Scene_Base
         @enemy = $enemydata.get_enemy(6)
         @battle_count += 1
       end
+    when 2
+      # 森のダンジョン
+      if @battle_count < 14
+        @enemy = $enemydata.get_enemy(rand(6) + 7)
+        @battle_count += 1
+      else
+        @enemy = $enemydata.get_enemy(13)
+        @battle_count += 1
+      end
     end
     
     # 戦闘前テキストウィンドウの生成
@@ -241,10 +250,10 @@ class Scene_Battle < Scene_Base
       if @cut_counter > 120 then
         if @battle_count < 15 then
           $playing_bgm = "battle"
-          $bgm[$playing_bgm].play(0, 0)
+          $bgm["battle"].play(0, 0)
         else
           $playing_bgm = "boss_battle"
-          $bgm[$playing_bgm].play(0, 0)
+          $bgm["boss_battle"].play(0, 0)
         end
         
         $bgm["battle"].set_volume(90, 0)
@@ -333,7 +342,7 @@ class Scene_Battle < Scene_Base
   
   # ガードのキー入力処理
   def guard()
-    # 左シフトキーでガード
+    # シフトキーでガード
     if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) then
       # 攻撃アイコンがガードボタン内にあるか？
       @attack_icons.each{|icon|
@@ -359,6 +368,7 @@ class Scene_Battle < Scene_Base
             end
             
             icon.die() # ガードした場合は 攻撃アイコン を消去
+            break
           end
         end
       }
@@ -458,6 +468,36 @@ class Scene_Battle < Scene_Base
         # この戦闘でプレイヤーはレベルアップしたか？
         if $player.level_up?() then
           @win_window.draw_font(15, 89, "レベルが上がった！", @text_font)
+        end
+        
+        # この戦闘でプレイヤーはアイテムを手に入れたか？
+        if rand(15) > 10 then
+          drop_item = rand(2) # 0 なら武器 1 なら防具
+          item_name = ""
+          case $dungeon_id
+          when 1
+            if drop_item == 0 then
+              idx = rand(5)
+              $player.have_weapon[idx][1] += 1
+              item_name = $weapondata.get_weapon_data(idx)[:name]
+            else
+              idx = rand(5)
+              $player.have_armor[idx][1] += 1
+              item_name = $armordata.get_armor_data(idx)[:name]
+            end
+          when 2
+            if drop_item == 0 then
+              idx = rand(5) + 5
+              $player.have_weapon[idx][1] += 1
+              item_name = $weapondata.get_weapon_data(idx)[:name]
+            else
+              idx = rand(5) + 5
+              $player.have_armor[idx][1] += 1
+              item_name = $armordata.get_armor_data(idx)[:name]
+            end
+          end
+          
+          @win_window.draw_font(15, 123, item_name + "を手に入れた！", @text_font)
         end
         
         # プレイヤー情報を保存

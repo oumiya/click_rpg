@@ -97,6 +97,97 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 10
       enemy.gold = 10
+    when 7
+      enemy.id = 7
+      enemy.image_file_name = "dog.png"
+      enemy.name = "のらいぬ"
+      enemy.description = "元は飼い犬だったという犬。怖いくらい攻撃速度が速い"
+      enemy.max_hp = 1140
+      enemy.attack = 22
+      enemy.defence = 20
+      enemy.attack_frequency = [30, 40]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 10
+      enemy.gold = 15
+    when 8
+      enemy.id = 8
+      enemy.image_file_name = "g_monkey.png"
+      enemy.name = "グリーンモンキー"
+      enemy.description = "ケイヴモンキーの色違い"
+      enemy.max_hp = 1500
+      enemy.attack = 25
+      enemy.defence = 22
+      enemy.attack_frequency = [45]
+      enemy.ai = 0
+      enemy.attack_speed = 8
+      enemy.exp = 10
+      enemy.gold = 15
+    when 9
+      enemy.id = 9
+      enemy.image_file_name = "bear.png"
+      enemy.name = "森のクマさん"
+      enemy.description = "攻撃頻度がバリやばい！"
+      enemy.max_hp = 1800
+      enemy.attack = 28
+      enemy.defence = 25
+      enemy.attack_frequency = [35,43,51,59,67]
+      enemy.ai = 1
+      enemy.attack_speed = 8
+      enemy.exp = 18
+      enemy.gold = 20
+    when 10
+      enemy.id = 10
+      enemy.image_file_name = "redcap.png"
+      enemy.name = "レッドキャップ"
+      enemy.description = "洞窟の主であるドラゴン"
+      enemy.max_hp = 1200
+      enemy.attack = 23
+      enemy.defence = 20
+      enemy.attack_frequency = [35, 64, 92]
+      enemy.ai = 1
+      enemy.attack_speed = 8
+      enemy.exp = 10
+      enemy.gold = 10
+    when 11
+      enemy.id = 11
+      enemy.image_file_name = "bandit.png"
+      enemy.name = "さんぞく"
+      enemy.description = "お金をたくさん持っている"
+      enemy.max_hp = 3000
+      enemy.attack = 30
+      enemy.defence = 28
+      enemy.attack_frequency = [35,43,51,59,67]
+      enemy.ai = 0
+      enemy.attack_speed = 8
+      enemy.exp = 20
+      enemy.gold = 30
+    when 12
+      enemy.id = 12
+      enemy.image_file_name = "torrent.png"
+      enemy.name = "トレント"
+      enemy.description = "この木の人、ちんこ立ってね？"
+      enemy.max_hp = 3000
+      enemy.attack = 32
+      enemy.defence = 18
+      enemy.attack_frequency = [10, 45, 60, 72]
+      enemy.ai = 0
+      enemy.attack_speed = 8
+      enemy.exp = 20
+      enemy.gold = 20
+    when 13
+      enemy.id = 13
+      enemy.image_file_name = "duroid.png"
+      enemy.name = "森の隠者"
+      enemy.description = "森に隠れ住んでいるが、その昔は凄いやばい人だったらしい。"
+      enemy.max_hp = 30000
+      enemy.attack = 40
+      enemy.defence = 25
+      enemy.attack_frequency = [10, 45, 60, 72]
+      enemy.ai = 0
+      enemy.attack_speed = 8
+      enemy.exp = 50
+      enemy.gold = 50
 
     end
 

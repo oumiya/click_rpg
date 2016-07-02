@@ -59,7 +59,7 @@ class Armor_Data
     @armor.each{|a|
       img = Image.load("image/armor/" + a[:filename])
       img.set_color_key([0,0,0])
-      @images.push()
+      @images.push(img)
     }
   end
   
