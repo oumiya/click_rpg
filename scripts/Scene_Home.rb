@@ -7,7 +7,8 @@ include Save_Data
 
 # ホーム画面
 class Scene_Home < Scene_Base
-  # ダンジョン選択用カーソル
+
+  # ダンジョン選択用カーソルクラス
   class Dungeon_Cursor
     attr_accessor :index
     attr_accessor :flash
@@ -28,7 +29,7 @@ class Scene_Home < Scene_Base
     
     def draw()
       if @flash then
-        if $frame_counter % 3 == 0 then
+        if $frame_counter % 6 > 2 then
           Window.draw(@pos[@index][0], @pos[@index][1], @image)
         end
       else
@@ -39,6 +40,9 @@ class Scene_Home < Scene_Base
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()
+    # 遷移先シーンを格納
+    @next_scene = nil
+    
     # 背景画像の読み込み
     @back_image = Image.load("image/system/home.png")
     # ダンジョン選択カーソル
@@ -53,33 +57,19 @@ class Scene_Home < Scene_Base
     # フェードアウト/フェードイン用の演出クラスを準備
     @fade_effect = Fade_Effect.new
     @fade_effect.setup(1)
+    
     # シーン切り替え先 0 シーン切り替えなし 1 戦闘シーン 2 装備シーン 3 ショップシーン
     @scene_index = 0
     # ウェイトフレームを初期化
     @wait_frame = 0
     
-    
-    
-    
-    
-    
-    @button_push = false
-    @cursor_index = 0
-    @cursor_visible = false
-    
-    @next_scene = nil
-    
     # プレイヤーを全回復させておく
     $player.hp = $player.max_hp
     
+    # ホーム画面のBGMを演奏
     $bgm["home"].play(0, 0)
     
-    # 操作可能フラグ
-    @control = true
-    
-    # 操作不可能時間
-    @not_control_frame = 0
-    
+    # ホーム画面を開いた時に自動セーブ
     save()
   end
   
@@ -93,6 +83,13 @@ class Scene_Home < Scene_Base
     draw_word()
     # ダンジョン選択カーソルを表示
     @cursor.update
+    # お金が足りないメッセージの表示
+    if @not_enough_money_show then
+      Window.draw(327, 226, @not_enough_money, 3000)
+      if @wait_frame <= 0 then
+        @not_enough_money_show = false
+      end
+    end
     
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
@@ -127,128 +124,54 @@ class Scene_Home < Scene_Base
         @cursor.visible = true
         @cursor.index = 0
         # BGM を停止する
-        $bgm["home"].stop(2)
+        $bgm["home"].stop(2.5)
         # 画面を徐々にフェードアウトさせる
         @fade_effect.setup(0)
+        # カーソルを 95 フレーム点滅させるためにウェイト
+        @wait_frame = 95
       end
-      
-      if Input.mouse_x >= 538 &&
-         Input.mouse_y >= 407 &&
-         Input.mouse_x <= 714 &&
-         Input.mouse_y <= 467 then
-         
-         $sounds["decision"].play(1, 0) # 決定音を鳴らす
-         
-         @cursor_index = 7
-         @button_push = true
-      end
-    end
+      # 薬草を買うボタンを押下
+      if mouse_widthin_button?("buy_heal") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0) 
         
-
-    if @control then
-
-           
-           
-           
-           @cursor_index = 1
-           @button_push = true
-           
-           @wait_count = 95
-           @fade_out_count = 60
-           @cursor_visible = true
-           @alpha = 0
-           @cursor_x = 143
-           @cursor_y = 39
-        end
-      end
-      
-      # 薬草を買うボタンを選択
-      if Input.mouse_push?(M_LBUTTON) then
-
-      end
-    else
-      if @not_control_frame <= 0 then
-        @not_control_frame = 0
-        @control = true
-      end
-      
-      if @not_enough_money_show then
-        Window.draw(327, 226, @not_enough_money, 3000)
-      end
-      
-      @not_control_frame -= 1
-    end
-    
-    # ボタン押下後イベント
-    if @button_push then
-      case @cursor_index
-      when 1
-        if @wait_count > 0 then
-          # 決定音が鳴り終わるまでカーソルを点滅させる
-          @wait_count -= 1
-#          if @wait_count % 3 == 0 then
-#            if @cursor_visible then
-#              @cursor_visible = false
-#            else
-#              @cursor_visible = true
-#            end
-#          end
-#          
-#          if @cursor_visible then
-#            @cursor
-#            Window.draw(@cursor_x, @cursor_y, @cursor)
-#          end
-          
-        else
-          @scene_index = 1
-          
-
-        end
-      when 7
         # ゴールドが足りているか？
         if $player.gold >= 50 then
           $player.gold -= 50
           $player.heal_count += 1
         else
-          @control = false
-          @not_control_frame = 120
+          @wait_frame = 60
           @not_enough_money_show = true
-        end
-        
-        @button_push = false
-        @cursor_index = 0
-      end
-    else
-      if @control then
-        # マウスカーソルホバー
-        @cursor.visible = false
-        if mouse_widthin_button?("cave") then
-           @cursor.index = 0
-           @cursor.visible = true
-        end
-        if mouse_widthin_button?("forest") then
-           @cursor.index = 1
-           @cursor.visible = true
-        end
-        if mouse_widthin_button?("mansion") then
-           @cursor.index = 2
-           @cursor.visible = true
-        end
-        if mouse_widthin_button?("volcano") then
-           @cursor.index = 3
-           @cursor.visible = true
-        end
-        if mouse_widthin_button?("ice_world") then
-           @cursor.index = 4
-           @cursor.visible = true
-        end
-        if mouse_widthin_button?("castle") then
-           @cursor.index = 5
-           @cursor.visible = true
         end
       end
     end
     
+    # マウスカーソルホバー
+    @cursor.visible = false
+    if mouse_widthin_button?("cave") then
+       @cursor.index = 0
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("forest") then
+       @cursor.index = 1
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("mansion") then
+       @cursor.index = 2
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("volcano") then
+       @cursor.index = 3
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("ice_world") then
+       @cursor.index = 4
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("castle") then
+       @cursor.index = 5
+       @cursor.visible = true
+    end
     
   end
   
