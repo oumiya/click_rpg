@@ -68,7 +68,20 @@ class Scene_Home < Scene_Base
     $player.hp = $player.max_hp
     
     # ホーム画面のBGMを演奏
-    $bgm["home"].play(0, 0)
+    if $playing_bgm == nil then
+      $playing_bgm = "home"
+      $bgm["home"].play(0, 0)
+    else
+      # ホーム以外のBGMが流れていたら停止してホームのBGMを鳴らす
+      # ホームのBGMが流れていたらそのまま継続して流す
+      if $playing_bgm != "home" then
+        $bgm.each{|bgm_name, bgm_ayame|
+          bgm_ayame.stop(0, 0)
+        }
+        $bgm["home"].play(0, 0)
+      end
+    end
+
     
     @hair = Hair.new
     

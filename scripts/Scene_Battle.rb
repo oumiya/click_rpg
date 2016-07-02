@@ -240,9 +240,11 @@ class Scene_Battle < Scene_Base
       @cut_counter += 1
       if @cut_counter > 120 then
         if @battle_count < 15 then
-          $bgm["battle"].play(0, 0)
+          $playing_bgm = "battle"
+          $bgm[$playing_bgm].play(0, 0)
         else
-          $bgm["boss_battle"].play(0, 0)
+          $playing_bgm = "boss_battle"
+          $bgm[$playing_bgm].play(0, 0)
         end
         
         $bgm["battle"].set_volume(90, 0)
@@ -475,6 +477,7 @@ class Scene_Battle < Scene_Base
       if @cut_counter == 120 then
         $bgm["battle"].stop(0)
         $bgm["boss_battle"].stop(0)
+        $playing_bgm = nil
         $sounds["win"].play(1, 0)
       end
       
@@ -537,6 +540,7 @@ class Scene_Battle < Scene_Base
         # 敗北音の再生
         $bgm["battle"].stop(0)
         $bgm["boss_battle"].stop(0)
+        $playing_bgm = nil
         $sounds["lose"].play(1, 0)
       end
       
