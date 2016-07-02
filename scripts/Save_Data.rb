@@ -15,6 +15,8 @@ module Save_Data
     save_data["exp"] = $player.exp                   # 経験値
     save_data["gold"] = $player.gold                 # 所持金
     save_data["hair"] = $player.hair                 # 髪型
+    save_data["hair_color"] = $player.hair_color     # 髪の色
+    save_data["skin_color"] = $player.skin_color     # 肌の色
     save_data["have_hair"] = $player.have_hair       # 持っている髪型
     save_data["equip_weapon"] = $player.equip_weapon # 装備している武器
     save_data["have_weapon"] = $player.have_weapon   # 持っている武器
@@ -42,6 +44,8 @@ module Save_Data
       $player.exp = save_data["exp"].to_i               # 経験値
       $player.gold = save_data["gold"].to_i             # 所持金
       $player.hair = save_data["hair"]                  # 髪型
+      $player.hair_color = save_data["hair_color"]      # 髪の色
+      $player.skin_color = save_data["skin_color"]      # 肌の色
       $player.have_hair = save_data["have_hair"]        # 持っている髪型
       $player.equip_weapon = save_data["equip_weapon"]  # 装備している武器
       $player.have_weapon = save_data["have_weapon"]    # 持っている武器

@@ -63,18 +63,6 @@ class Scene_Shop < Scene_Base
     
     @wait_frame = 0
     
-    # 髪型リストの作成
-    @hair_list = Array.new
-    @hair_list.push(Hair_Item.new("くせ毛ショート", 150, "unruly"))
-    @hair_list.push(Hair_Item.new("ショート", 150, "short"))
-    @hair_list.push(Hair_Item.new("クルーカット", 150, "crew_cut"))
-    @hair_list.push(Hair_Item.new("ソフトモヒカン", 150, "short_mohawk"))
-    @hair_list.push(Hair_Item.new("モヒカン", 150, "mohawk"))
-    @hair_list.push(Hair_Item.new("ガイル", 150, "guile"))
-    @hair_list.push(Hair_Item.new("セミロング", 150, "semi_long"))
-    @hair_list.push(Hair_Item.new("ロング", 150, "long"))
-    @hair_list.push(Hair_Item.new("ツインテール", 150, "tails"))
-    
     # 表示するメッセージ
     @message = nil
   end
@@ -175,7 +163,7 @@ class Scene_Shop < Scene_Base
     elsif @tab_index == 2 then
       # 髪型リストの表示
       i = 1
-      @hair_list.each{|h|
+      $hair_list.each{|h|
         Window.draw_font(311, y + (@font.size + 8) * i, h.name, @font)
         Window.draw_font(624, y + (@font.size + 8) * i, sprintf("%8d", h.price), @font)
         
@@ -323,10 +311,10 @@ class Scene_Shop < Scene_Base
         end
         # 髪型購入処理
         if @tab_index == 2 then
-          if $player.gold >= @hair_list[idx].price then
+          if $player.gold >= $hair_list[idx].price then
             has_hair = false
             $player.have_hair.each{|have_hair|
-              if @hair_list[idx].key == have_hair then
+              if $hair_list[idx].key == have_hair then
                 has_hair = true
                 break
               end
@@ -336,15 +324,15 @@ class Scene_Shop < Scene_Base
               @message = "あんた、それもう持ってるぜ"
               @wait_frame = 60
             else
-              $player.have_hair.push(@hair_list[idx].key)
-              $player.gold -= @hair_list[idx].price
-              $player.hair = @hair_list[idx].key
+              $player.have_hair.push($hair_list[idx].key)
+              $player.gold -= $hair_list[idx].price
+              $player.hair = $hair_list[idx].key
               @message = "ありがとよ！"
               @wait_frame = 60
             end
           
           else
-            @message = @hair_list[idx].name + "を買うにはお金が足りないぜ"
+            @message = $hair_list[idx].name + "を買うにはお金が足りないぜ"
             @wait_frame = 60
           end
         end

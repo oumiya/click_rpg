@@ -5,9 +5,11 @@ require './scripts/Enemy_Data.rb'
 require './scripts/Scene_Home.rb'
 require './scripts/Scene_Battle.rb'
 require './scripts/Scene_Shop.rb'
+require './scripts/Scene_Equip.rb'
 require './scripts/Debug_Window.rb'
 require './scripts/Weapon_Data.rb'
 require './scripts/Armor_Data.rb'
+require './scripts/Hair_Item.rb'
 require './scripts/Save_Data.rb'
 include Save_Data
 
@@ -21,13 +23,60 @@ class Game_Main
     # 画面の解像度を指定
     Window.width = WINDOW_WIDTH
     Window.height = WINDOW_HEIGHT
+  end
+  
+  # メイン処理
+  def main()
+    # フレームカウンターをリセット
+    $frame_counter = 0
     
+    # 初期シーンをセット
+    #$scene = Scene_Battle.new
+    $scene = Scene_Home.new
+    #$scene = Scene_Shop.new
+    #$scene = Scene_Equip.new
+    
+    loaded = false
+    
+    Window.loop do
+      
+      if loaded == false then
+        font = Font.new(32)
+        width = font.get_width("Now Loading...")
+        height = font.size
+        x = WINDOW_WIDTH / 2 - width / 2
+        y = WINDOW_HEIGHT / 2 - height / 2
+        Window.draw_font(x, y, "Now Loading...", font)
+        Window.update
+        data_load()
+        loaded = true
+        $scene.start # シーンの初期化
+      end
+
+      $scene.update
+      
+      break if $scene == nil
+
+      if $scene.get_next_scene != nil then
+        $scene.terminate               # シーンの終了処理
+        $scene = $scene.get_next_scene # シーンを遷移
+        $scene.start                   # シーンの初期化
+      end
+
+      $frame_counter += 1
+      
+      $debug.draw
+
+      Ayame.update
+
+      break if Input.keyPush?(K_ESCAPE) # Escキーで終了
+    end
+  end
+  
+  def data_load()
     # デバッグ情報
     $debug = Debug_Window.new
     $debug.visible = false
-    
-    # シーン
-    $scene = nil
     
     # フレームカウンター
     $frame_counter = 0
@@ -71,6 +120,32 @@ class Game_Main
     # 防具データを読み込む
     $armordata = Armor_Data.new
     
+    # 髪情報を読み込む
+    $hair = Hair.new
+    
+    # 髪型リストの作成
+    $hair_list = Array.new
+    $hair_list.push(Hair_Item.new("くせ毛ショート", 150, "unruly"))
+    $hair_list.push(Hair_Item.new("ショート", 150, "short"))
+    $hair_list.push(Hair_Item.new("クルーカット", 150, "crew_cut"))
+    $hair_list.push(Hair_Item.new("ソフトモヒカン", 150, "short_mohawk"))
+    $hair_list.push(Hair_Item.new("モヒカン", 150, "mohawk"))
+    $hair_list.push(Hair_Item.new("ガイル", 150, "guile"))
+    $hair_list.push(Hair_Item.new("セミロング", 150, "semi_long"))
+    $hair_list.push(Hair_Item.new("ロング", 150, "long"))
+    $hair_list.push(Hair_Item.new("ツインテール", 150, "tails"))
+    
+    # アバター情報の作成
+    $avater = Array.new(8)
+    $avater[0] = Image.load("image/avater/01.png")
+    $avater[1] = Image.load("image/avater/02.png")
+    $avater[2] = Image.load("image/avater/03.png")
+    $avater[3] = Image.load("image/avater/04.png")
+    $avater[4] = Image.load("image/avater/05.png")
+    $avater[5] = Image.load("image/avater/06.png")
+    $avater[6] = Image.load("image/avater/07.png")
+    $avater[7] = Image.load("image/avater/08.png")
+    
     # プレイヤー情報の初期化
     $player = Player.new
     load()
@@ -78,40 +153,6 @@ class Game_Main
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6
     $dungeon_id = 0
-  end
-  
-  # メイン処理
-  def main()
-    # フレームカウンターをリセット
-    $frame_counter = 0
-    
-    # 初期シーンをセット
-    #$scene = Scene_Battle.new
-    $scene = Scene_Home.new
-    #$scene = Scene_Shop.new
-    
-    $scene.start # シーンの初期化
-    
-    Window.loop do
-
-      $scene.update
-      
-      break if $scene == nil
-
-      if $scene.get_next_scene != nil then
-        $scene.terminate               # シーンの終了処理
-        $scene = $scene.get_next_scene # シーンを遷移
-        $scene.start                   # シーンの初期化
-      end
-
-      $frame_counter += 1
-      
-      $debug.draw
-
-      Ayame.update
-
-      break if Input.keyPush?(K_ESCAPE) # Escキーで終了
-    end
   end
 end
 

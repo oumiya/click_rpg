@@ -81,9 +81,6 @@ class Scene_Home < Scene_Base
         $bgm["home"].play(0, 0)
       end
     end
-
-    
-    @hair = Hair.new
     
     # ホーム画面を開いた時に自動セーブ
     save()
@@ -97,8 +94,12 @@ class Scene_Home < Scene_Base
     draw_player_status()
     # 主人公のつぶやきを表示
     draw_word()
+    # アバターの描画
+    Window.draw(29, 285, $avater[$player.skin_color])
+    # 防具の描画
+    $armordata.draw
     # 髪型を表示
-    @hair.draw
+    $hair.draw
     # ダンジョン選択カーソルを表示
     @cursor.update
     # お金が足りないメッセージの表示
@@ -121,6 +122,10 @@ class Scene_Home < Scene_Base
       # 戦闘シーンに移行
       if @scene_index == 1 then
         @next_scene = Scene_Battle.new
+      end
+      # 装備シーンに移行
+      if @scene_index == 2 then
+        @next_scene = Scene_Equip.new
       end
       #ショップシーンに移行
       if @scene_index == 3 then
@@ -174,6 +179,14 @@ class Scene_Home < Scene_Base
         # 画面を徐々にフェードアウトさせる
         @fade_effect.setup(0)
         @scene_index = 3
+      end
+      # 装備変更ボタン押下
+      if mouse_widthin_button?("equip") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        @scene_index = 2
       end
     end
     

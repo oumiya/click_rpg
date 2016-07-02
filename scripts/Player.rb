@@ -11,6 +11,8 @@ class Player
   attr_accessor :exp               # 経験値
   attr_accessor :gold              # 所持金
   attr_accessor :hair              # 髪型
+  attr_accessor :hair_color        # 髪の色
+  attr_accessor :skin_color        # 肌の色
   attr_accessor :have_hair         # 所持している髪型
   attr_accessor :equip_weapon      # 装備している武器
   attr_accessor :equip_armor       # 装備している防具
@@ -30,6 +32,8 @@ class Player
     @exp = 0
     @gold = 0
     @hair = "none"
+    @hair_color = "black"
+    @skin_color = 2
     @have_hair = Array.new
     @have_hair.push(@hair)
     @equip_weapon = -1
