@@ -18,6 +18,7 @@ class Player
   attr_accessor :equip_armor       # 装備している防具
   attr_accessor :have_weapon       # 所持している武器
   attr_accessor :have_armor        # 所持している防具
+  attr_accessor :fever_point       # 
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
   

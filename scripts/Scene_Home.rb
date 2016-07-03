@@ -8,6 +8,8 @@ include Save_Data
 
 # ホーム画面
 class Scene_Home < Scene_Base
+  # 薬草の持てる上限数
+  MAX_HEAL_COUNT = 15
 
   # ダンジョン選択用カーソルクラス
   class Dungeon_Cursor
@@ -84,6 +86,8 @@ class Scene_Home < Scene_Base
     
     # ホーム画面を開いた時に自動セーブ
     save()
+    
+    @message = ""
   end
   
   # フレーム更新処理
@@ -107,6 +111,14 @@ class Scene_Home < Scene_Base
       Window.draw(327, 226, @not_enough_money, 3000)
       if @wait_frame <= 0 then
         @not_enough_money_show = false
+      end
+    end
+    
+    # メッセージボックスの表示
+    if @message != "" then
+      Message_Box.show(@message)
+      if @wait_frame < 1 then
+        @message = ""
       end
     end
     
@@ -188,8 +200,13 @@ class Scene_Home < Scene_Base
         
         # ゴールドが足りているか？
         if $player.gold >= 50 then
-          $player.gold -= 50
-          $player.heal_count += 1
+          if $player.heal_count >= MAX_HEAL_COUNT then
+            @message = "薬草はもうそんなに持てないよ！"
+            @wait_frame = 60
+          else
+            $player.gold -= 50
+            $player.heal_count += 1
+          end
         else
           @wait_frame = 60
           @not_enough_money_show = true
