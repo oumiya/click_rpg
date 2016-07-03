@@ -43,7 +43,7 @@ SPACEキーを押すと薬草を使用してHPを回復できます。ゲーム�
 3. 敵の攻撃をガードせずに受ける
 
 
-## 写真素材をお借りしたサイト
+## 画像素材をお借りしたサイト
 
 火山の写真  
 著作者: Alex Schwab  
@@ -62,6 +62,9 @@ http://www.ashinari.com/
 
 COCOON  
 http://cocoon.daa.jp/material/  
+
+無料素材倶楽部  
+http://sozai.7gates.net/
 
 
 ## BGMをお借りしたサイト

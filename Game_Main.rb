@@ -108,7 +108,9 @@ class Game_Main
     $bgm["battle"] = Ayame.new("audio/bgm/battle.mp3")
     $bgm["boss_battle"] = Ayame.new("audio/bgm/boss_battle.mp3")
     $bgm["home"] = Ayame.new("audio/bgm/home.mp3")
+    $bgm["fever"] = Ayame.new("audio/bgm/fever.mp3")
     $playing_bgm = nil
+    $last_bgm = nil
    
     # データベースからデータを読み込む
     # 敵情報を読み込む

@@ -22,6 +22,8 @@ module Save_Data
     save_data["have_weapon"] = $player.have_weapon   # 持っている武器
     save_data["equip_armor"] = $player.equip_armor   # 装備している防具
     save_data["have_armor"] = $player.have_armor     # 持っている防具
+    save_data["fever_point"] = $player.fever_point   # フィーバーポイント
+    save_data["fever_frame"] = $player.fever_frame   # フィーバー持続時間
   
     open("save_data.dat", 'w') do |io|
       JSON.dump(save_data, io)
@@ -51,6 +53,8 @@ module Save_Data
       $player.have_weapon = save_data["have_weapon"]    # 持っている武器
       $player.equip_armor = save_data["equip_armor"]    # 装備している防具
       $player.have_armor= save_data["have_armor"]       # 持っている防具
+      $player.fever_point = save_data["fever_point"]    # フィーバーポイント
+      $player.fever_frame = save_data["fever_frame"]    # フィーバー持続時間
     end
     
   end

@@ -4,7 +4,9 @@ require_relative 'Enemy.rb'
 require_relative 'Attack_Icon.rb'
 require_relative 'Guard_Rank_Text.rb'
 require_relative 'Attack_Effect.rb'
+require_relative 'Sparkly.rb'
 require_relative 'Save_Data.rb'
+require_relative 'Message_Box.rb'
 include Save_Data
 
 # 戦闘シーン
@@ -68,6 +70,10 @@ class Scene_Battle < Scene_Base
       @background = Image.load("image/background/cave.jpg")
     end
     
+    # フィーバー画像の読み込み
+    @background_fever = Image.load("image/background/fever.png")
+    @sparkly = Sparkly.new
+    
     # バトルカウント
     @battle_count = 0
     # 初回戦闘前処理が終わったことを示す
@@ -117,8 +123,6 @@ class Scene_Battle < Scene_Base
     @win_window.box_fill(2, 2, 410, 197, [128, 255, 255, 255])
     @win_window.box_fill(4, 4, 408, 195, [128, 0, 0, 0])
     @win_window.draw_font(15, 11, @enemy.name + " をたおした！", @text_font)
-    @win_window.draw_font(15, 37, @enemy.exp.to_s + " ポイントの経験値を獲得！", @text_font)
-    @win_window.draw_font(15, 63, @enemy.gold.to_s + " ゴールドを獲得！", @text_font)
     
     # 敗北時ウィンドウの生成
     @lose_window = Image.new(413, 77, [128, 0, 0, 0])
@@ -149,13 +153,45 @@ class Scene_Battle < Scene_Base
   
   # フレーム更新処理
   def update()
-    Window.draw(0, 0, @background)
+    $player.fever_start()
+
+    if $player.fever? then
+      Window.draw(0, 0, @background_fever)
+      @sparkly.draw()
+      
+      if $playing_bgm != "fever" then
+        $last_bgm = $playing_bgm
+        $playing_bgm = "fever"
+        $bgm["battle"].stop(0)
+        $bgm["boss_battle"].stop(0)
+        $bgm["fever"].play(0, 0)
+      end
+    else
+      Window.draw(0, 0, @background)
+      
+      if $playing_bgm == "fever" then
+        $bgm["fever"].stop(0)
+        if @battle_count < 14 then
+          $bgm["battle"].play(0, 0)
+          $playing_bgm = "battle"
+        else
+          $bgm["boss_battle"].play(0, 0)
+          $playing_bgm = "boss_battle"
+        end
+      end
+    end
+    
+    Window.draw_font(0, 0, "fever:" + $player.fever_point.to_s + " / " + Player::FEVER_MAX_POINT.to_s, @text_font)
     
     @p_damage = false          # プレイヤーがダメージを受けたか true, false
     @p_guard = false           # プレイヤーがガードしたか true, false
     @p_guard_rank = "no_guard" # no_guard, perfect, good, poor の 4種の値が入る
     
     if @cut == 1 then
+      if $player.fever_frame > 0 then
+        $player.fever_frame -= 1
+      end
+
       # キー入力処理
       attack()
       guard()
@@ -170,6 +206,9 @@ class Scene_Battle < Scene_Base
           
           # ガードせずに攻撃を受けた
           if icon.x < 200 then
+            if $player.fever? == false then
+              $player.fever_point += 4
+            end
             icon.die()
             @p_damage = true
           end
@@ -270,11 +309,19 @@ class Scene_Battle < Scene_Base
       @cut_counter += 1
       if @cut_counter > 120 then
         if @battle_count < 15 then
-          $playing_bgm = "battle"
-          $bgm["battle"].play(0, 0)
+          if $playing_bgm != "fever" then
+            if $playing_bgm != "battle" then
+              $playing_bgm = "battle"
+              $bgm["battle"].play(0, 0)
+            end
+          end
         else
-          $playing_bgm = "boss_battle"
-          $bgm["boss_battle"].play(0, 0)
+          if $playing_bgm != "fever" then
+            if $playing_bgm != "boss_battle" then
+              $playing_bgm = "boss_battle"
+              $bgm["boss_battle"].play(0, 0)
+            end
+          end
         end
         
         $bgm["battle"].set_volume(90, 0)
@@ -340,9 +387,15 @@ class Scene_Battle < Scene_Base
           diff = $frame_counter - @combo_frame
           if diff > 16 && diff <= 30 then
             @combo_count += 1
-            $debug.puts("combo = " + @combo_count.to_s)
+            if $player.fever? == false then
+              $player.fever_point += 1
+            end
           else
             @combo_count = 0
+          end
+          
+          if $player.fever? == false then
+            $player.fever_point += 1
           end
           
           $sounds["p_attack"].play(1, 0)
@@ -364,7 +417,7 @@ class Scene_Battle < Scene_Base
   # ガードのキー入力処理
   def guard()
     # シフトキーでガード
-    if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) then
+    if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) || Input.mouse_push?(M_RBUTTON) then
       # 攻撃アイコンがガードボタン内にあるか？
       @attack_icons.each{|icon|
         if icon.visible == true then
@@ -380,12 +433,21 @@ class Scene_Battle < Scene_Base
             if diff <= 12 then
               @p_guard_rank = "perfect"
               @p_damage = false # ガードがパーフェクトの場合は ダメージを受けない
+              if $player.fever? == false then
+                $player.fever_point += 4
+              end
             elsif diff <= 32 then
               @p_guard_rank = "good"
               @p_damage = true
+              if $player.fever? == false then
+                $player.fever_point += 4
+              end
             else
               @p_guard_rank = "poor"
               @p_damage = true
+              if $player.fever? == false then
+                $player.fever_point += 4
+              end
             end
             
             icon.die() # ガードした場合は 攻撃アイコン を消去
@@ -445,6 +507,9 @@ class Scene_Battle < Scene_Base
       
       # 攻撃エフェクトの表示
       @attack_effect.update()
+      
+      # あと何匹倒せば良いのかを表示
+      Message_Box.show("あと" + (15 - @battle_count).to_s + " 回", 0, 34)
   end
   
   # プレイヤーのHPゲージの描画
@@ -483,8 +548,21 @@ class Scene_Battle < Scene_Base
         $sounds["die"].play(1, 0)
         @enemy.effect_index = 0
         
-        $player.exp += @enemy.exp
-        $player.gold += @enemy.gold
+        exp = @enemy.exp
+        gold = @enemy.gold
+        
+        if $player.fever? then
+          exp *= 2
+          gold *= 2
+        end
+        
+        @win_window.draw_font(15, 37, exp.to_s + " ポイントの経験値を獲得！", @text_font)
+        @win_window.draw_font(15, 63, gold.to_s + " ゴールドを獲得！", @text_font)
+        
+        $player.exp += exp
+        $player.gold += gold
+        
+        
         
         # この戦闘でプレイヤーはレベルアップしたか？
         if $player.level_up?() then
@@ -536,9 +614,6 @@ class Scene_Battle < Scene_Base
       end
       
       if @cut_counter == 120 then
-        $bgm["battle"].stop(0)
-        $bgm["boss_battle"].stop(0)
-        $playing_bgm = nil
         $sounds["win"].play(1, 0)
       end
       

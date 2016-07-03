@@ -2,6 +2,10 @@ require_relative 'Weapon_Data.rb'
 
 # プレイヤークラス
 class Player
+  # フィーバー持続時間の最大値
+  FEVER_MAX_FRAME = 900
+  FEVER_MAX_POINT = 500
+  
   attr_accessor :level             # レベル
   attr_accessor :max_hp            # 最大HP
   attr_accessor :hp                # 現在のHP
@@ -18,7 +22,8 @@ class Player
   attr_accessor :equip_armor       # 装備している防具
   attr_accessor :have_weapon       # 所持している武器
   attr_accessor :have_armor        # 所持している防具
-  attr_accessor :fever_point       # 
+  attr_accessor :fever_point       # 現在のフィーバーポイント
+  attr_accessor :fever_frame       # フィーバー持続時間（フレーム）
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
   
@@ -45,6 +50,9 @@ class Player
       @have_weapon.push([i, 0])
       @have_armor.push([i, 0])
     end
+    @fever_point = 0
+    @fever_frame = 0
+    
 
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)
@@ -57,22 +65,44 @@ class Player
     end
   end
   
+  # 今現在フィーバー状態か？
+  def fever?()
+    if @fever_frame > 0 then
+      return true
+    end
+    return false
+  end
+  
   def ATK()
+    res = 0
     if @equip_weapon >= 0 then
       value = $weapondata.get_weapon_data(@equip_weapon)[:value]
-      return @attack + value
+      res = @attack + value
     else
-      return @attack
+      res = @attack
     end
+    
+    if fever?() then
+      res *= 2
+    end
+    
+    return res
   end
   
   def DEF()
+    res = 0
     if @equip_armor >= 0 then
       value = $armordata.get_armor_data(@equip_armor)[:value]
-      return @defence + value
+      res = @defence + value
     else
-      return @defence
+      res = @defence
     end
+    
+    if fever?() then
+      res *= 2
+    end
+    
+    return res
   end
   
   # レベルアップ処理
@@ -98,6 +128,14 @@ class Player
     @max_hp += 25             # 固定で 25 上昇する
     @attack +=  (1 + rand(2)) # 1 ～ 2 上昇する
     @defence += (1 + rand(2)) # 1 ～ 2 上昇する
+  end
+  
+  # フィーバー状態を開始
+  def fever_start()
+    if @fever_point >= FEVER_MAX_POINT then
+      @fever_point = 0
+      @fever_frame = FEVER_MAX_FRAME
+    end
   end
   
   # 次のレベルアップまでに必要な経験値
