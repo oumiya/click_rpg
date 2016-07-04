@@ -783,7 +783,21 @@ class Scene_Battle < Scene_Base
              @go_home = true
              @cut_counter = -1
           end
-          
+        end
+        
+        # マウスカーソルホバー
+        if (Input.mouse_x >= 542 &&
+           Input.mouse_y >= 327 &&
+           Input.mouse_x <= 680 &&
+           Input.mouse_y <= 369) then
+          @cursor.index = 1
+        end
+        
+        if (Input.mouse_x >= 269 &&
+            Input.mouse_y >= 327 &&
+            Input.mouse_x <= 407 &&
+            Input.mouse_y <= 369) then
+          @cursor.index = 0
         end
       end
     else
