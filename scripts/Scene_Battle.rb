@@ -230,6 +230,7 @@ class Scene_Battle < Scene_Base
           $bgm["battle"].play(0, 0)
           $playing_bgm = "battle"
         else
+          $bgm["battle"].stop(0)
           $bgm["boss_battle"].play(0, 0)
           $playing_bgm = "boss_battle"
         end
@@ -373,6 +374,7 @@ class Scene_Battle < Scene_Base
         else
           if $playing_bgm != "fever" then
             if $playing_bgm != "boss_battle" then
+              $bgm["battle"].stop(0)
               $playing_bgm = "boss_battle"
               $bgm["boss_battle"].play(0, 0)
             end
