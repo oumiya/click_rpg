@@ -74,6 +74,18 @@ class Scene_Battle < Scene_Base
     @background_fever = Image.load("image/background/fever.png")
     @sparkly = Sparkly.new
     
+    # フィーバーダンスの読み込み
+    @dance_image = Array.new
+    @dance_image.push(Image.load_tiles("image/avater/dance01.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance02.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance03.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance04.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance05.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance06.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance07.png", 9, 1))
+    @dance_image.push(Image.load_tiles("image/avater/dance08.png", 9, 1))
+    @dance_index = 0
+    
     # バトルカウント
     @battle_count = 0
     # 初回戦闘前処理が終わったことを示す
@@ -480,6 +492,23 @@ class Scene_Battle < Scene_Base
   
   # 画像の描画
   def draw()
+      if $player.fever? then
+        Window.draw(29, 285, @dance_image[$player.skin_color][@dance_index])
+        if $frame_counter % 12 == 0 then
+          @dance_index = @dance_index + 1
+          @dance_index = 0 if @dance_index >= @dance_image[$player.skin_color].size
+        end
+      else
+        # アバターの描画
+        Window.draw(29, 285, $avater[$player.skin_color])
+        
+        # 防具の描画
+        $armordata.draw
+      
+        # 髪型を描画
+        $hair.draw
+      end
+      
       # プレイヤーHPゲージの表示
       Window.draw(174, 466, $system_image["hp_gauge"])
       draw_player_hp_gauge()
@@ -489,10 +518,10 @@ class Scene_Battle < Scene_Base
       draw_enemy_hp_gauge()
       
       # 回復ボタンの表示
-      Window.draw(100, 461, $system_image["heal_button"])
+      Window.draw(740, 461, $system_image["heal_button"])
       
       # 回復ボタンの残り数表示
-      Window.draw_font_ex(141, 505, $player.heal_count.to_s, @heal_font, {:color=>[0, 128, 0], :edge=>true, :edge_color=>C_WHITE, :edge_width=>4, :edge_level=>10})
+      Window.draw_font_ex(781, 505, $player.heal_count.to_s, @heal_font, {:color=>[0, 128, 0], :edge=>true, :edge_color=>C_WHITE, :edge_width=>4, :edge_level=>10})
       
       # 敵画像の表示
       if @cut < 2 then
