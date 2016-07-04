@@ -23,6 +23,7 @@ class Game_Main
     # 画面の解像度を指定
     Window.width = WINDOW_WIDTH
     Window.height = WINDOW_HEIGHT
+    Window.caption = "ボクが勇者になって奴隷のあのコを救うんだ！"
   end
   
   # メイン処理
@@ -32,8 +33,8 @@ class Game_Main
     
     # 初期シーンをセット
     #$scene = Scene_Battle.new
-    $scene = Scene_Home.new
-    #$scene = Scene_Shop.new
+    #$scene = Scene_Home.new
+    $scene = Scene_Shop.new
     #$scene = Scene_Equip.new
     
     loaded = false

@@ -43,6 +43,8 @@ class Scene_Shop < Scene_Base
     @button_hitbox["armor"] = [398, 20, 510, 68]
     @button_hitbox["hair"] = [513, 20, 623, 68]
     @button_hitbox["quit"] = [762, 20, 908, 68]
+    @button_hitbox["bulk1"] = [28, 355, 276, 403]
+    @button_hitbox["bulk2"] = [28, 422, 276, 495]
     
     # フェードアウト/フェードイン用の演出クラスを準備
     @fade_effect = Fade_Effect.new
@@ -57,6 +59,9 @@ class Scene_Shop < Scene_Base
     
     # 表示するメッセージ
     @message = nil
+    
+    # 一括売却ボタンのフォント
+    @sell_font = Font.new(20, "ＭＳ ゴシック")
   end
   
   # フレーム更新処理
@@ -112,6 +117,9 @@ class Scene_Shop < Scene_Base
     Window.draw_font(19, 174, "右クリックで売却", @font)
     Window.draw_font(19, 214, "売却額は購入額の", @font)
     Window.draw_font(19, 254, "半額だぜ！", @font)
+    
+    Message_Box.show("装備品以外を一括で売却", 26, 353, @sell_font)
+    Message_Box.show("装備品以外を一個残して\n一括で売却", 26, 420, @sell_font)
     
     # アイテムリストの表示
     y = 84
@@ -220,6 +228,101 @@ class Scene_Shop < Scene_Base
         $sounds["decision"].play(1, 0)
         @fade_effect.setup(0)
         @scene_index = 1
+      end
+      # 一括売却ボタンを押下
+      if mouse_widthin_button?("bulk1") then
+        $sounds["decision"].play(1, 0)
+        # 武器売却処理
+        $player.have_weapon.each_with_index{|weapon, idx|
+          if weapon[1] > 0 then
+            total = 0
+            # 装備しているか？
+            if $player.equip_weapon == idx && weapon[1] > 1 then
+              total == weapon[1] - 1
+              weapon[1] = 1
+            elsif $player.equip_weapon == idx && weapon[1] == 1 then
+              total = 0
+            else
+              total = weapon[1]
+              weapon[1] = 0
+            end
+            
+            if total > 0
+              total *= $weapondata.get_weapon_data(idx)[:price] / 2
+              $player.gold += total
+            end
+          end
+        }
+        
+        # 防具売却処理
+        $player.have_armor.each_with_index{|armor, idx|
+          if armor[1] > 0 then
+            total = 0
+            # 装備しているか？
+            if $player.equip_armor == idx && armor[1] > 1 then
+              total == armor[1] - 1
+              armor[1] = 1
+            elsif $player.equip_armor == idx && armor[1] == 1 then
+              total = 0
+            else
+              total = armor[1]
+              armor[1] = 0
+            end
+            
+            if total > 0
+              total *= $armordata.get_armor_data(idx)[:price] / 2
+              $player.gold += total
+            end
+          end
+        }
+      end
+      # 1個だけ残して一括売却ボタンを押下
+      if mouse_widthin_button?("bulk2") then
+        $sounds["decision"].play(1, 0)
+        $sounds["decision"].play(1, 0)
+        # 武器売却処理
+        $player.have_weapon.each_with_index{|weapon, idx|
+          if weapon[1] > 0 then
+            total = 0
+            # 装備しているか？
+            if $player.equip_weapon == idx && weapon[1] > 2 then
+              total == weapon[1] - 1
+              weapon[1] = 1
+            elsif $player.equip_weapon == idx && weapon[1] == 1 then
+              total = 0
+            else
+              total = weapon[1] - 1
+              weapon[1] = 1
+            end
+            
+            if total > 0
+              total *= $weapondata.get_weapon_data(idx)[:price] / 2
+              $player.gold += total
+            end
+          end
+        }
+        
+        # 防具売却処理
+        $player.have_armor.each_with_index{|armor, idx|
+          if armor[1] > 0 then
+            total = 0
+            # 装備しているか？
+            if $player.equip_armor == idx && armor[1] > 2 then
+              total == armor[1] - 1
+              armor[1] = 1
+            elsif $player.equip_armor == idx && armor[1] == 1 then
+              total = 0
+            else
+              total = armor[1] - 1
+              armor[1] = 1
+            end
+            
+            if total > 0
+              total *= $armordata.get_armor_data(idx)[:price] / 2
+              $player.gold += total
+            end
+          end
+        }
       end
       
       # アイテム名を左クリック

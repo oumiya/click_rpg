@@ -7,9 +7,29 @@ module Message_Box
 
   # 指定した文章をメッセージボックスに表示します
   def show(text, x=-1, y=-1, font = Font.new(32))
-    width = font.get_width(text)
+    lines = text.split("\n")
+    line_height = font.size / 4
+    
+    height = 0
+    width = 0
+    
+    if lines.size > 1 then
+      width_max = 0
+      lines.each{|line|
+        width = font.get_width(line)
+        if width > width_max then
+          width_max = width
+        end
+      }
+      width = width_max
+      height = (font.size + line_height) * lines.size
+      height -= line_height
+    else
+      width = font.get_width(text)
+      height = font.size
+    end
+    
     width += MARGIN * 2
-    height = font.size
     height += MARGIN * 2
     
     if x == -1 then
@@ -26,7 +46,13 @@ module Message_Box
     Window.draw_box(x + 3, y + 3, x + width - 3, y + height - 3, [255, 255, 255], 1102)
     
     # テキストを描画
-    Window.draw_font(x + MARGIN, y + MARGIN, text, font, {:z=>1103})
+    x = x + MARGIN
+    y = y + MARGIN
+    
+    lines.each{|line|
+      Window.draw_font(x, y, line, font, {:z=>1103})
+      y += font.size + line_height
+    }
   end
   
   module_function :show
