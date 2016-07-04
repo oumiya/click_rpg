@@ -1,5 +1,9 @@
 # 敵クラス 今は単なる構造体みたいになっているが
 class Enemy
+  MAX_COMBO = 3
+  COMBO_WAIT_FRAME = 8
+  WAIT_FRAME = 90
+
   attr_accessor :id                # モンスターID
   attr_accessor :image_file_name   # 画像ファイル名
   attr_accessor :name              # モンスター名
@@ -24,9 +28,19 @@ class Enemy
   
   def initialize()
     @attack_index = 0
+    @last_attack_frame = 0
+    @combo_count = 0
+    @wait_frame = 0
   end
   
   def attack_frame?()
+    if @wait_frame > 0 then
+      @wait_frame -= 1
+      return false
+    else
+      @combo_count = 0
+    end
+    
     freq = 0
     
     if @ai == 0 then
@@ -45,8 +59,31 @@ class Enemy
     
     result = false
     
-    if $frame_counter % freq == 0 then
+    if @last_attack_frame != 0 then
+      diff = $frame_counter - @last_attack_frame
+      
+      if diff < COMBO_WAIT_FRAME then
+        result = false
+      else
+        result = true
+      end
+      
+      if diff < 60 && result then
+        @combo_count += 1
+      end
+      
+      if @combo_count > MAX_COMBO then
+        @wait_frame = WAIT_FRAME
+      end
+    else
       result = true
+    end
+    
+    if $frame_counter % freq == 0 && result then
+      result = true
+      @last_attack_frame = $frame_counter
+    else
+      result = false
     end
     
     return result
