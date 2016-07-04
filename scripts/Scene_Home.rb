@@ -18,10 +18,11 @@ class Scene_Home < Scene_Base
     attr_accessor :visible
     
     def initialize()
-      @pos = [[143, 39], [343, 39], [538, 42], [737, 44], [539, 232], [736, 233]]
+      @pos = [[114, 39], [314, 39], [514, 42], [713, 44], [515, 232], [712, 233], [523, 413], [726, 413], [523, 477], [726, 477]]
       @image = Image.load("image/system/cursor.png")
-      @visible = false
+      @visible = true
       @flash = false
+      @index = 0
     end
     
     def update()
@@ -155,9 +156,35 @@ class Scene_Home < Scene_Base
     # キー入力処理
     
     # ボタン処理
-    if Input.mouse_push?(M_LBUTTON) then
+    if Input.pad_push?(P_UP) then
+      if @cursor.index >=4 && @cursor.index <= 9 then
+        @cursor.index -= 2
+      end
+    end
+    
+    if Input.pad_push?(P_RIGHT) then
+      @cursor.index += 1
+      if @cursor.index > 9 then
+        @cursor.index = 0
+      end
+    end
+    
+    if Input.pad_push?(P_DOWN) then
+      if @cursor.index >=2 && @cursor.index <= 7 then
+        @cursor.index += 2
+      end
+    end
+    
+    if Input.pad_push?(P_LEFT) then
+      @cursor.index -= 1
+      if @cursor.index < 0 then
+        @cursor.index = 9
+      end
+    end
+    
+    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
       # 洞窟を決定
-      if mouse_widthin_button?("cave") then
+      if mouse_widthin_button?("cave") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 0) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         # ダンジョンIDを1に設定
@@ -176,7 +203,7 @@ class Scene_Home < Scene_Base
         @wait_frame = 95
       end
       # 森を決定
-      if mouse_widthin_button?("forest") then
+      if mouse_widthin_button?("forest") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 1) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         # ダンジョンIDを2に設定
@@ -186,7 +213,7 @@ class Scene_Home < Scene_Base
         # カーソルを点滅させる
         @cursor.flash = true
         @cursor.visible = true
-        @cursor.index = 0
+        @cursor.index = 1
         # BGM を停止する
         $bgm["home"].stop(2.5)
         # 画面を徐々にフェードアウトさせる
@@ -195,7 +222,7 @@ class Scene_Home < Scene_Base
         @wait_frame = 95
       end
       # 死者の館を決定
-      if mouse_widthin_button?("mansion") then
+      if mouse_widthin_button?("mansion") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 2) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         # ダンジョンIDを3に設定
@@ -205,7 +232,7 @@ class Scene_Home < Scene_Base
         # カーソルを点滅させる
         @cursor.flash = true
         @cursor.visible = true
-        @cursor.index = 0
+        @cursor.index = 2
         # BGM を停止する
         $bgm["home"].stop(2.5)
         # 画面を徐々にフェードアウトさせる
@@ -214,7 +241,7 @@ class Scene_Home < Scene_Base
         @wait_frame = 95
       end
       # 薬草を買うボタンを押下
-      if mouse_widthin_button?("buy_heal") then
+      if mouse_widthin_button?("buy_heal") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 6) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0) 
         
@@ -233,7 +260,7 @@ class Scene_Home < Scene_Base
         end
       end
       # ショップボタンを押下
-      if mouse_widthin_button?("shop") then
+      if mouse_widthin_button?("shop") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 8) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         # 画面を徐々にフェードアウトさせる
@@ -241,14 +268,14 @@ class Scene_Home < Scene_Base
         @scene_index = 3
       end
       # 装備変更ボタン押下
-      if mouse_widthin_button?("equip") then
+      if mouse_widthin_button?("equip") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 7) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         # 画面を徐々にフェードアウトさせる
         @fade_effect.setup(0)
         @scene_index = 2
       end
-      if mouse_widthin_button?("quit") then
+      if mouse_widthin_button?("quit") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 9) then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         # 一応やめる前にセーブしておく
@@ -260,7 +287,7 @@ class Scene_Home < Scene_Base
     end
     
     # マウスカーソルホバー
-    @cursor.visible = false
+    #@cursor.visible = false
     if mouse_widthin_button?("cave") then
        @cursor.index = 0
        @cursor.visible = true
@@ -283,6 +310,22 @@ class Scene_Home < Scene_Base
     end
     if mouse_widthin_button?("castle") then
        @cursor.index = 5
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("buy_heal") then
+       @cursor.index = 6
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("equip") then
+       @cursor.index = 7
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("shop") then
+       @cursor.index = 8
+       @cursor.visible = true
+    end
+    if mouse_widthin_button?("quit") then
+       @cursor.index = 9
        @cursor.visible = true
     end
     

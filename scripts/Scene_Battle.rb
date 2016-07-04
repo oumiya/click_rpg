@@ -15,6 +15,37 @@ class Scene_Battle < Scene_Base
   ENEMY_X = 237  # 敵画像の表示原点 X座標
   ENEMY_Y = 72   # 敵画像の表示原点 Y座標
 
+  # ダンジョン選択用カーソルクラス
+  class Cursor
+    attr_accessor :index
+    attr_accessor :flash
+    attr_accessor :visible
+    
+    def initialize()
+      @pos = [[244, 326], [520, 326]]
+      @image = Image.load("image/system/cursor.png")
+      @visible = true
+      @flash = false
+      @index = 0
+    end
+    
+    def update()
+      if @visible then
+        draw()
+      end
+    end
+    
+    def draw()
+      if @flash then
+        if $frame_counter % 6 > 2 then
+          Window.draw(@pos[@index][0], @pos[@index][1], @image)
+        end
+      else
+        Window.draw(@pos[@index][0], @pos[@index][1], @image)
+      end
+    end
+  end
+
   def initialize()
     super
   end
@@ -85,6 +116,9 @@ class Scene_Battle < Scene_Base
     @dance_image.push(Image.load_tiles("image/avater/dance07.png", 9, 1))
     @dance_image.push(Image.load_tiles("image/avater/dance08.png", 9, 1))
     @dance_index = 0
+    
+    # 選択カーソルの初期化
+    @cursor = Cursor.new
     
     # バトルカウント
     @battle_count = 0
@@ -398,11 +432,11 @@ class Scene_Battle < Scene_Base
   
   # 攻撃処理
   def attack()
-    if Input.mouse_push?(M_LBUTTON) then
-      if Input.mouse_x >= @enemy.sx + ENEMY_X &&
+    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
+      if (Input.mouse_x >= @enemy.sx + ENEMY_X &&
          Input.mouse_y >= @enemy.sy + ENEMY_Y + @e_atk_move &&
          Input.mouse_x <= @enemy.ex + ENEMY_X &&
-         Input.mouse_y <= @enemy.ey + ENEMY_Y + @e_atk_move then
+         Input.mouse_y <= @enemy.ey + ENEMY_Y + @e_atk_move) || Input.pad_push?(P_BUTTON0)then
          
         if @attack_effect.visible == false || @attack_effect.frame_count > 15 then
           diff = $frame_counter - @combo_frame
@@ -452,7 +486,7 @@ class Scene_Battle < Scene_Base
   # ガードのキー入力処理
   def guard()
     # シフトキーでガード
-    if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) || Input.mouse_push?(M_RBUTTON) then
+    if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) || Input.mouse_push?(M_RBUTTON) || Input.pad_push?(P_BUTTON1) || Input.pad_push?(P_LEFT) then
       # 攻撃アイコンがガードボタン内にあるか？
       @attack_icons.each{|icon|
         if icon.visible == true then
@@ -495,7 +529,7 @@ class Scene_Battle < Scene_Base
   
   # 回復ボタンのキー入力処理
   def heal()
-    if Input.key_push?(K_SPACE) then
+    if Input.key_push?(K_SPACE) || Input.pad_push?(P_BUTTON2) then
         if $player.heal_count > 0 then
           # HP が減っている場合のみ回復処理
           if $player.hp < $player.max_hp then
@@ -697,6 +731,7 @@ class Scene_Battle < Scene_Base
       if @cut_counter == 225 then
         # 勝利ボイスの再生
         $sounds["v_win"].play(1, 0)
+        @cursor.index = 1
       end
       
       if @cut_counter > 225 then
@@ -708,13 +743,23 @@ class Scene_Battle < Scene_Base
           Window.draw(542, 327, @dungeon_end)
         end
         
-        if Input.mouse_push?(M_LBUTTON) then
+        if Input.pad_push?(P_LEFT) && @battle_count < 15 then
+          @cursor.index = 0
+        end
+        
+        if Input.pad_push?(P_RIGHT) then
+          @cursor.index = 1
+        end
+        
+        @cursor.draw
+        
+        if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
           # 戦闘後、次の戦闘へ行くボタンを押した
           # （ボス戦終了後は街へ戻るボタンに変化）
-          if Input.mouse_x >= 542 &&
+          if (Input.mouse_x >= 542 &&
              Input.mouse_y >= 327 &&
              Input.mouse_x <= 680 &&
-             Input.mouse_y <= 369 then
+             Input.mouse_y <= 369) || (Input.pad_push?(P_BUTTON0) && @cursor.index == 1) then
              
              if @before_end == false then
                @before_end = true
@@ -730,10 +775,10 @@ class Scene_Battle < Scene_Base
           end
           
           # 戦闘後、街へ戻るボタンを押した
-          if Input.mouse_x >= 269 &&
+          if (Input.mouse_x >= 269 &&
              Input.mouse_y >= 327 &&
              Input.mouse_x <= 407 &&
-             Input.mouse_y <= 369 then
+             Input.mouse_y <= 369) || (Input.pad_push?(P_BUTTON0) && @cursor.index == 0) then
              
              @go_home = true
              @cut_counter = -1
