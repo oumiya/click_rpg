@@ -395,12 +395,16 @@ class Scene_Battle < Scene_Base
          Input.mouse_x <= @enemy.ex + ENEMY_X &&
          Input.mouse_y <= @enemy.ey + ENEMY_Y + @e_atk_move then
          
-        if @attack_effect.visible == false || @attack_effect.frame_count > 16 then
+        if @attack_effect.visible == false || @attack_effect.frame_count > 15 then
           diff = $frame_counter - @combo_frame
-          if diff > 16 && diff <= 30 then
+          if diff <= 80 then
             @combo_count += 1
             if $player.fever? == false then
-              $player.fever_point += 1
+              if @combo_count > 10
+                $player.fever_point += 10
+              else
+                $player.fever_point += @combo_count
+              end
             end
           else
             @combo_count = 0
@@ -411,8 +415,16 @@ class Scene_Battle < Scene_Base
           end
           
           $sounds["p_attack"].play(1, 0)
-          @attack_effect.show()
+          @attack_effect.show(@combo_count)
           damage = calc_damage($player.ATK, @enemy.defence)
+          
+          combo_correction_value = (@combo_count.to_f / 100.0) + 1.0
+          
+          if combo_correction_value > 2.0 then
+            combo_correction_value = 2.0
+          end
+          
+          damage = (damage.to_f * combo_correction_value).ceil
           
           @enemy.hp -= damage
           if @enemy.hp < 0 then
@@ -420,6 +432,8 @@ class Scene_Battle < Scene_Base
           end
           
           @combo_frame = $frame_counter
+        else
+          @combo_frame = 0
         end
 
       end
@@ -526,6 +540,11 @@ class Scene_Battle < Scene_Base
       # 敵画像の表示
       if @cut < 2 then
         Window.draw(ENEMY_X, ENEMY_Y + @e_atk_move, @enemy.image)
+      end
+      
+      # コンボ回数の表示
+      if @combo_count > 0 then
+        Window.draw_font_ex(540, 290, @combo_count.to_s + "HIT", @heal_font, {:color=>[255, 60, 17], :edge=>true, :edge_color=>C_WHITE, :edge_width=>4, :edge_level=>10})
       end
       
       # ガードゲージの表示
