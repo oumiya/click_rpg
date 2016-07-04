@@ -180,7 +180,7 @@ class Enemy_Data
       enemy.image_file_name = "duroid.png"
       enemy.name = "森の隠者"
       enemy.description = "森に隠れ住んでいるが、その昔は凄いやばい人だったらしい。"
-      enemy.max_hp = 30000
+      enemy.max_hp = 10000
       enemy.attack = 40
       enemy.defence = 25
       enemy.attack_frequency = [10, 45, 60, 72]

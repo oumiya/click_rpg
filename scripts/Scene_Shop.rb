@@ -366,13 +366,13 @@ class Scene_Shop < Scene_Base
             # 該当の武器を1コ以上持っている
             if $player.have_weapon[idx][1] > 0 then
               # 該当の武器を装備している場合 かつ 該当の武器が1個しかない場合は売れない
-              if $player.equip_weapon != idx && $player.have_weapon[idx][1] > 1 then
+              if $player.equip_weapon == idx && $player.have_weapon[idx][1] == 1 then
+                @message = "装備中の武器は売れないぜ！"
+                @wait_frame = 60
+              else
                 $player.gold += weapon[:price] / 2
                 $player.have_weapon[idx][1] -= 1
                 @message = "ありがとうよ！"
-                @wait_frame = 60
-              else
-                @message = "装備中の武器は売れないぜ！"
                 @wait_frame = 60
               end
             else
@@ -391,13 +391,13 @@ class Scene_Shop < Scene_Base
             # 該当の防具を1コ以上持っている
             if $player.have_armor[idx][1] > 0 then
               # 該当の防具を装備している場合は売れない
-              if $player.equip_armor != idx && $player.have_armor[idx][1] > 1then
+              if $player.equip_armor == idx && $player.have_armor[idx][1] == 1then
+                @message = "装備中の防具は売れないぜ！"
+                @wait_frame = 60
+              else
                 $player.gold += armor[:price] / 2
                 @message = "ありがとうよ！"
                 $player.have_armor[idx][1] -= 1
-                @wait_frame = 60
-              else
-                @message = "装備中の防具は売れないぜ！"
                 @wait_frame = 60
               end
             else

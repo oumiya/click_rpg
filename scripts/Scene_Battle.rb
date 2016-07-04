@@ -494,7 +494,7 @@ class Scene_Battle < Scene_Base
   def draw()
       if $player.fever? then
         Window.draw(29, 285, @dance_image[$player.skin_color][@dance_index])
-        if $frame_counter % 12 == 0 then
+        if $frame_counter % 6 == 0 then
           @dance_index = @dance_index + 1
           @dance_index = 0 if @dance_index >= @dance_image[$player.skin_color].size
         end
@@ -599,7 +599,12 @@ class Scene_Battle < Scene_Base
         end
         
         # この戦闘でプレイヤーはアイテムを手に入れたか？
-        if rand(15) > 10 then
+        item_hit = rand(15)
+        if $player.fever? then
+          item_hit =15
+        end
+        
+        if item_hit > 10 then
           drop_item = rand(2) # 0 なら武器 1 なら防具
           item_name = ""
           case $dungeon_id
