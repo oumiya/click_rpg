@@ -1,8 +1,8 @@
 # 敵クラス 今は単なる構造体みたいになっているが
 class Enemy
-  MAX_COMBO = 3
+  MAX_COMBO = 5
   COMBO_WAIT_FRAME = 8
-  WAIT_FRAME = 90
+  WAIT_FRAME = 45
 
   attr_accessor :id                # モンスターID
   attr_accessor :image_file_name   # 画像ファイル名
@@ -31,14 +31,16 @@ class Enemy
     @last_attack_frame = 0
     @combo_count = 0
     @wait_frame = 0
+    @idx = 0
   end
   
   def attack_frame?()
     if @wait_frame > 0 then
       @wait_frame -= 1
+      if @wait_frame == 0 then
+        @combo_count = 0
+      end
       return false
-    else
-      @combo_count = 0
     end
     
     freq = 0
@@ -51,7 +53,7 @@ class Enemy
       end
     else
       if @attack_frequency.size > 1 then
-        freq = @attack_frequency[rand(@attack_frequency.size)]
+        freq = @attack_frequency[@idx]
       else
         freq = @attack_frequency[0]
       end
@@ -68,7 +70,7 @@ class Enemy
         result = true
       end
       
-      if diff < 60 && result then
+      if diff < 30 && result then
         @combo_count += 1
       end
       
@@ -82,6 +84,8 @@ class Enemy
     if $frame_counter % freq == 0 && result then
       result = true
       @last_attack_frame = $frame_counter
+      
+      @idx = rand(@attack_frequency.size)
     else
       result = false
     end
