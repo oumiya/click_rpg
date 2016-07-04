@@ -43,8 +43,6 @@ class Scene_Shop < Scene_Base
     @button_hitbox["armor"] = [398, 20, 510, 68]
     @button_hitbox["hair"] = [513, 20, 623, 68]
     @button_hitbox["quit"] = [762, 20, 908, 68]
-    @button_hitbox["next_page"] = [748, 503, 914, 533]
-    @button_hitbox["prev_page"] = [302, 503, 466, 533]
     
     # フェードアウト/フェードイン用の演出クラスを準備
     @fade_effect = Fade_Effect.new
@@ -54,12 +52,6 @@ class Scene_Shop < Scene_Base
     
     # 今選択されているタブ
     @tab_index = 0
-    
-    # 今選択されている武器ページ
-    @weapon_page = 0
-    
-    # 今選択されている防具ページ
-    @armor_page = 0
     
     @wait_frame = 0
     
@@ -121,18 +113,12 @@ class Scene_Shop < Scene_Base
     Window.draw_font(19, 214, "売却額は購入額の", @font)
     Window.draw_font(19, 254, "半額だぜ！", @font)
     
-    Window.draw_font(303, 503, "前のページ", @font)
-    Window.draw_font(750, 503, "次のページ", @font)
-    
     # アイテムリストの表示
     y = 84
     if @tab_index == 0 then
       # 武器リストの表示
-      start_i = @weapon_page * 9
+      start_i = 0
       end_i = start_i + 8
-      if end_i >= $weapondata.length then
-        end_i = $weapondata.length - 1
-      end
       
       idx = 1
       for i in start_i..end_i do
@@ -145,7 +131,7 @@ class Scene_Shop < Scene_Base
       end
     elsif @tab_index == 1 then
       # 防具リストの表示
-      start_i = @armor_page * 9
+      start_i = 0
       end_i = start_i + 8
       if end_i >= $armordata.length then
         end_i = $armordata.length - 1
@@ -209,56 +195,31 @@ class Scene_Shop < Scene_Base
     end
     
     if Input.mouse_push?(M_LBUTTON) then
-      # 決定音を鳴らす
-      $sounds["decision"].play(1, 0)
       
       # 武器ボタンを押下
       if mouse_widthin_button?("weapon") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @tab_index = 0
       end
       # 防具ボタンを押下
       if mouse_widthin_button?("armor") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @tab_index = 1
       end
       # 髪型ボタンを押下
       if mouse_widthin_button?("hair") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @tab_index = 2
       end
       # 店を出るボタンを押下
       if mouse_widthin_button?("quit") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @fade_effect.setup(0)
         @scene_index = 1
-      end
-      # 次のページボタンを押下
-      if mouse_widthin_button?("next_page") then
-        if @tab_index == 0 then
-          @weapon_page += 1
-          if @weapon_page > 5 then
-            @weapon_page = 5
-          end
-        end
-        if @tab_index == 1 then
-          @armor_page += 1
-          if @armor_page > 5 then
-            @armor_page = 5
-          end
-        end
-      end
-      
-      # 前のページボタンを押下
-      if mouse_widthin_button?("prev_page") then
-        if @tab_index == 0 then
-          @weapon_page -= 1
-          if @weapon_page < 0 then
-            @weapon_page = 0
-          end
-        end
-        if @tab_index == 1 then
-          @armor_page -= 1
-          if @armor_page < 0 then
-            @armor_page = 0
-          end
-        end
       end
       
       # アイテム名を左クリック
@@ -271,6 +232,8 @@ class Scene_Shop < Scene_Base
            Input.mouse_x <= hitbox[2] &&
            Input.mouse_y <= hitbox[3] then
            idx = i
+           # 決定音を鳴らす
+           $sounds["decision"].play(1, 0)
            break
         end
         i = i + 1
@@ -279,7 +242,6 @@ class Scene_Shop < Scene_Base
       if idx > -1 then
         # 武器購入処理
         if @tab_index == 0 then
-          idx = idx + @weapon_page * 9
           weapon = $weapondata.get_weapon_data(idx)
           if weapon != nil then
             if $player.gold >= weapon[:price] then
@@ -295,7 +257,6 @@ class Scene_Shop < Scene_Base
         end
         # 防具購入処理
         if @tab_index == 1 then
-          idx = idx + @armor_page * 9
           armor = $armordata.get_armor_data(idx)
           if armor != nil then
             if $player.gold >= armor[:price] then
@@ -351,6 +312,8 @@ class Scene_Shop < Scene_Base
            Input.mouse_x <= hitbox[2] &&
            Input.mouse_y <= hitbox[3] then
            idx = i
+           # 決定音を鳴らす
+           $sounds["decision"].play(1, 0)
            break
         end
         i = i + 1
@@ -359,7 +322,6 @@ class Scene_Shop < Scene_Base
       if idx > -1 then
         # 武器売却処理
         if @tab_index == 0 then
-          idx = idx + @weapon_page * 9
           weapon = $weapondata.get_weapon_data(idx)
           
           if weapon != nil then
@@ -385,7 +347,6 @@ class Scene_Shop < Scene_Base
         
         # 防具購入処理
         if @tab_index == 1 then
-          idx = idx + @armor_page * 9
           armor = $armordata.get_armor_data(idx)
           if armor != nil then
             # 該当の防具を1コ以上持っている
