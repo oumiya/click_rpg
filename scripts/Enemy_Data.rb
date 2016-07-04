@@ -188,6 +188,97 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 50
       enemy.gold = 50
+    when 14
+      enemy.id = 14
+      enemy.image_file_name = "skelton_knight.png"
+      enemy.name = "がいこつけんし"
+      enemy.description = "ただのスケルトンではなく剣士らしい"
+      enemy.max_hp = 1500
+      enemy.attack = 50
+      enemy.defence = 50
+      enemy.attack_frequency = [25, 45, 60, 70]
+      enemy.ai = 1
+      enemy.attack_speed = 8
+      enemy.exp = 25
+      enemy.gold = 40
+    when 15
+      enemy.id = 15
+      enemy.image_file_name = "ghost.png"
+      enemy.name = "おばけ"
+      enemy.description = "ふわふわ漂う悪霊。こんな顔をしているがすぐに人を呪い殺す。"
+      enemy.max_hp = 2000
+      enemy.attack = 48
+      enemy.defence = 30
+      enemy.attack_frequency = [45, 23, 63, 89]
+      enemy.ai = 1
+      enemy.attack_speed = 8
+      enemy.exp = 23
+      enemy.gold = 30
+    when 16
+      enemy.id = 16
+      enemy.image_file_name = "zombie.png"
+      enemy.name = "ゾンビ"
+      enemy.description = "土葬された死体を蘇らせて作った死の奴隷。"
+      enemy.max_hp = 1500
+      enemy.attack = 63
+      enemy.defence = 50
+      enemy.attack_frequency = [12,45, 55, 65, 75, 82]
+      enemy.ai = 1
+      enemy.attack_speed = 6
+      enemy.exp = 30
+      enemy.gold = 50
+    when 17
+      enemy.id = 17
+      enemy.image_file_name = "vampire.png"
+      enemy.name = "吸血鬼"
+      enemy.description = "血ぃ吸うたろかぁ？"
+      enemy.max_hp = 2000
+      enemy.attack = 55
+      enemy.defence = 50
+      enemy.attack_frequency = [45]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 28
+      enemy.gold = 50
+    when 18
+      enemy.id = 18
+      enemy.image_file_name = "zombie_dog.png"
+      enemy.name = "ゾンビ犬"
+      enemy.description = "とにかく攻撃が速い！"
+      enemy.max_hp = 2000
+      enemy.attack = 48
+      enemy.defence = 55
+      enemy.attack_frequency = [45]
+      enemy.ai = 0
+      enemy.attack_speed = 16
+      enemy.exp = 32
+      enemy.gold = 40
+    when 19
+      enemy.id = 19
+      enemy.image_file_name = "pumpkin.png"
+      enemy.name = "ランタンおばけ"
+      enemy.description = "お金持ちのモンスター。死出の旅路の案内人と言われている。"
+      enemy.max_hp = 3000
+      enemy.attack = 58
+      enemy.defence = 55
+      enemy.attack_frequency = [20, 45, 50, 60]
+      enemy.ai = 0
+      enemy.attack_speed = 8
+      enemy.exp = 45
+      enemy.gold = 100
+    when 20
+      enemy.id = 20
+      enemy.image_file_name = "wight_king.png"
+      enemy.name = "ワイトキング"
+      enemy.description = "不死者の王！　めっちゃ強そう！"
+      enemy.max_hp = 30000
+      enemy.attack = 72
+      enemy.defence = 40
+      enemy.attack_frequency = [10, 45, 60, 72]
+      enemy.ai = 0
+      enemy.attack_speed = 10
+      enemy.exp = 100
+      enemy.gold = 100
 
     end
 

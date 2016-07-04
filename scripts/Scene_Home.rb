@@ -175,12 +175,31 @@ class Scene_Home < Scene_Base
         # カーソルを 95 フレーム点滅させるためにウェイト
         @wait_frame = 95
       end
-      # 洞窟を決定
+      # 森を決定
       if mouse_widthin_button?("forest") then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
-        # ダンジョンIDを1に設定
+        # ダンジョンIDを2に設定
         $dungeon_id = 2
+        # フェードアウト後に戦闘シーンへ遷移させる
+        @scene_index = 1
+        # カーソルを点滅させる
+        @cursor.flash = true
+        @cursor.visible = true
+        @cursor.index = 0
+        # BGM を停止する
+        $bgm["home"].stop(2.5)
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        # カーソルを 95 フレーム点滅させるためにウェイト
+        @wait_frame = 95
+      end
+      # 死者の館を決定
+      if mouse_widthin_button?("mansion") then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # ダンジョンIDを3に設定
+        $dungeon_id = 3
         # フェードアウト後に戦闘シーンへ遷移させる
         @scene_index = 1
         # カーソルを点滅させる

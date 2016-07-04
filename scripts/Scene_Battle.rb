@@ -122,6 +122,15 @@ class Scene_Battle < Scene_Base
         @enemy = $enemydata.get_enemy(13)
         @battle_count += 1
       end
+    when 3
+      # 死者の館
+      if @battle_count < 14
+        @enemy = $enemydata.get_enemy(rand(6) + 14)
+        @battle_count += 1
+      else
+        @enemy = $enemydata.get_enemy(20)
+        @battle_count += 1
+      end
     end
     
     # 戦闘前テキストウィンドウの生成
@@ -644,6 +653,16 @@ class Scene_Battle < Scene_Base
               item_name = $weapondata.get_weapon_data(idx)[:name]
             else
               idx = rand(5) + 5
+              $player.have_armor[idx][1] += 1
+              item_name = $armordata.get_armor_data(idx)[:name]
+            end
+          when 3
+            if drop_item == 0 then
+              idx = rand(5) + 10
+              $player.have_weapon[idx][1] += 1
+              item_name = $weapondata.get_weapon_data(idx)[:name]
+            else
+              idx = rand(5) + 10
               $player.have_armor[idx][1] += 1
               item_name = $armordata.get_armor_data(idx)[:name]
             end
