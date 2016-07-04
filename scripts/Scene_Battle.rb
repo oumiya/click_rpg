@@ -102,7 +102,10 @@ class Scene_Battle < Scene_Base
     end
     
     # フィーバー画像の読み込み
+    @fever_text = Image.load("image/system/fever.png")
+    @fever_anime = Image.load_tiles("image/system/fever_tile.png", 6, 6)
     @background_fever = Image.load("image/background/fever.png")
+    @fever_gauge_frame = Image.load("image/system/fever_gauge.png")
     @sparkly = Sparkly.new
     
     # フィーバーダンスの読み込み
@@ -213,6 +216,8 @@ class Scene_Battle < Scene_Base
     if $player.fever? then
       Window.draw(0, 0, @background_fever)
       @sparkly.draw()
+      idx = $frame_counter % 36
+      Window.draw(758, 11, @fever_anime[idx])
       
       if $playing_bgm != "fever" then
         $last_bgm = $playing_bgm
@@ -223,6 +228,16 @@ class Scene_Battle < Scene_Base
       end
     else
       Window.draw(0, 0, @background)
+      Window.draw(758, 11, @fever_text)
+      
+      fever_rate = $player.fever_point.to_f / Player::FEVER_MAX_POINT.to_f
+      fever_gauge = 434 * fever_rate
+      y = 510 - fever_gauge.ceil
+      
+      Window.draw_box_fill(824, y, 855, y + fever_gauge.ceil, [255, 202, 20])
+      Window.draw(816, 69, @fever_gauge_frame)
+      
+      
       
       if $playing_bgm == "fever" then
         $bgm["fever"].stop(0)
@@ -236,8 +251,6 @@ class Scene_Battle < Scene_Base
         end
       end
     end
-    
-    Window.draw_font(0, 0, "fever:" + $player.fever_point.to_s + " / " + Player::FEVER_MAX_POINT.to_s, @text_font)
     
     @p_damage = false          # プレイヤーがダメージを受けたか true, false
     @p_guard = false           # プレイヤーがガードしたか true, false
@@ -602,7 +615,7 @@ class Scene_Battle < Scene_Base
       @attack_effect.update()
       
       # あと何匹倒せば良いのかを表示
-      Message_Box.show("あと" + (15 - @battle_count).to_s + " 回", 0, 34)
+      Message_Box.show("あと" + (15 - @battle_count).to_s + "戦", 0, 34)
   end
   
   # プレイヤーのHPゲージの描画
