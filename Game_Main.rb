@@ -33,8 +33,8 @@ class Game_Main
     
     # 初期シーンをセット
     #$scene = Scene_Battle.new
-    #$scene = Scene_Home.new
-    $scene = Scene_Shop.new
+    $scene = Scene_Home.new
+    #$scene = Scene_Shop.new
     #$scene = Scene_Equip.new
     
     loaded = false
