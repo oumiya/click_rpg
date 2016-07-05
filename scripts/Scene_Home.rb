@@ -2,7 +2,6 @@ require 'dxruby'
 require_relative 'Scene_Base.rb'
 require_relative 'Scene_Battle.rb'
 require_relative 'Fade_Effect.rb'
-require_relative 'Hair.rb'
 require_relative 'Save_Data.rb'
 include Save_Data
 

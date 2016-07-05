@@ -65,8 +65,6 @@ class Game_Main
       end
 
       $frame_counter += 1
-      
-      $debug.draw
 
       Ayame.update
 
@@ -75,10 +73,6 @@ class Game_Main
   end
   
   def data_load()
-    # デバッグ情報
-    $debug = Debug_Window.new
-    $debug.visible = false
-    
     # フレームカウンター
     $frame_counter = 0
     

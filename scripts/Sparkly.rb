@@ -32,8 +32,8 @@ class Sparkly
     
     for i in 0..@sparkles.size - 1 do
       spark = Spark.new(@images[i % 8])
-      spark.x = rand(960)
-      spark.y = rand(540)
+      spark.x = rand(Game_Main::WINDOW_WIDTH)
+      spark.y = rand(Game_Main::WINDOW_HEIGHT)
       spark.scale_rate = rand()
 
       if spark.scale_rate < 0.3 then
@@ -49,7 +49,7 @@ class Sparkly
       Window.draw_scale(spark.x, spark.y, spark.image, spark.scale_rate, spark.scale_rate)
       spark.y -= 8
       if spark.y < 0 - (spark.image.height * spark.scale_rate).round then
-        spark.y = 540
+        spark.y = Game_Main::WINDOW_HEIGHT
       end
     }
   end
