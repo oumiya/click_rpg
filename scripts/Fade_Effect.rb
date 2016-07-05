@@ -50,7 +50,7 @@ class Fade_Effect
   end
   
   def draw()
-    Window.draw_alpha(0, 0, @black_box, @alpha, z=1000)
+    Window.draw_alpha(0, 0, @black_box, @alpha, 5000)
     
     if @effect_id == 0 then
       @alpha += 4

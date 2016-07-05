@@ -6,9 +6,9 @@ require './scripts/Scene_Home.rb'
 require './scripts/Scene_Battle.rb'
 require './scripts/Scene_Shop.rb'
 require './scripts/Scene_Equip.rb'
-require './scripts/Debug_Window.rb'
 require './scripts/Weapon_Data.rb'
 require './scripts/Armor_Data.rb'
+require './scripts/Hair.rb'
 require './scripts/Hair_Item.rb'
 require './scripts/Save_Data.rb'
 include Save_Data
@@ -65,8 +65,6 @@ class Game_Main
       end
 
       $frame_counter += 1
-      
-      $debug.draw
 
       Ayame.update
 
@@ -75,10 +73,6 @@ class Game_Main
   end
   
   def data_load()
-    # デバッグ情報
-    $debug = Debug_Window.new
-    $debug.visible = false
-    
     # フレームカウンター
     $frame_counter = 0
     
