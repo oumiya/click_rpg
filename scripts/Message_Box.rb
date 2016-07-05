@@ -7,7 +7,7 @@ module Message_Box
 
   # 指定した文章をメッセージボックスに表示します
   def show(text, x=-1, y=-1, font = Font.new(32))
-    lines = text.split("\n")
+    lines = text.split("<br>")
     line_height = font.size / 4
     
     height = 0

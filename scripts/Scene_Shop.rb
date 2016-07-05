@@ -50,6 +50,15 @@ class Scene_Shop < Scene_Base
     @fade_effect = Fade_Effect.new
     @fade_effect.setup(1)
     
+    # 画像を読み込み
+    @messages = Array.new
+    @messages.push(Image.load("image/system/thankyou.png"))
+    @messages.push(Image.load("image/system/you_have.png"))
+    @messages.push(Image.load("image/system/you_not_have.png"))
+    @messages.push(Image.load("image/system/not_enough_money2.png"))
+    @messages.push(Image.load("image/system/not_sell_weapon.png"))
+    @messages.push(Image.load("image/system/not_sell_armor.png"))
+    
     @scene_index = 0
     
     # 今選択されているタブ
@@ -119,7 +128,7 @@ class Scene_Shop < Scene_Base
     Window.draw_font(19, 254, "半額だぜ！", @font)
     
     Message_Box.show("装備品以外を一括で売却", 26, 353, @sell_font)
-    Message_Box.show("装備品以外を一個残して\n一括で売却", 26, 420, @sell_font)
+    Message_Box.show("装備品以外を一個残して<br>一括で売却", 26, 420, @sell_font)
     
     # アイテムリストの表示
     y = 84
@@ -180,7 +189,28 @@ class Scene_Shop < Scene_Base
     end
     
     if @message != nil then
-      Message_Box.show(@message)
+      idx = 0
+      if @message == "ありがとよ！" then
+        idx = 0
+      end
+      if @message == "あんた、それもう持ってるぜ" then
+        idx = 1
+      end
+      if @message == "お客さんはそいつを持ってないぜ！" then
+        idx = 2
+      end
+      if @message == "お金が足りないぜ" then
+        idx = 3
+      end
+      if @message == "装備中の武器は売れないぜ！" then
+        idx = 4
+      end
+      if @message == "装備中の防具は売れないぜ！" then
+        idx = 5
+      end
+      x = Game_Main::WINDOW_WIDTH / 2 - @messages[idx].width / 2
+      y = Game_Main::WINDOW_HEIGHT / 2 - @messages[idx].height / 2
+      Window.draw(x, y, @messages[idx])
       if @wait_frame <= 0 then
         @message = nil
       end
@@ -353,7 +383,7 @@ class Scene_Shop < Scene_Base
               @message = "ありがとよ！"
               @wait_frame = 60
             else
-              @message = weapon[:name] + "を買うにはお金が足りないぜ"
+              @message = "お金が足りないぜ"
               @wait_frame = 60
             end
           end
@@ -368,7 +398,7 @@ class Scene_Shop < Scene_Base
               @message = "ありがとよ！"
               @wait_frame = 60
             else
-              @message = armor[:name] + "を買うにはお金が足りないぜ"
+              @message = "お金が足りないぜ"
               @wait_frame = 60
             end
           end
@@ -396,7 +426,7 @@ class Scene_Shop < Scene_Base
             end
           
           else
-            @message = $hair_list[idx].name + "を買うにはお金が足りないぜ"
+            @message = "お金が足りないぜ"
             @wait_frame = 60
           end
         end
@@ -437,11 +467,11 @@ class Scene_Shop < Scene_Base
               else
                 $player.gold += weapon[:price] / 2
                 $player.have_weapon[idx][1] -= 1
-                @message = "ありがとうよ！"
+                @message = "ありがとよ！"
                 @wait_frame = 60
               end
             else
-              @message = "お客さんは" + weapon[:name] + "を持ってないぜ！"
+              @message = "お客さんはそいつを持ってないぜ！"
               @wait_frame = 60
             end
           end
@@ -460,12 +490,12 @@ class Scene_Shop < Scene_Base
                 @wait_frame = 60
               else
                 $player.gold += armor[:price] / 2
-                @message = "ありがとうよ！"
+                @message = "ありがとよ！"
                 $player.have_armor[idx][1] -= 1
                 @wait_frame = 60
               end
             else
-              @message = "お客さんは" + armor[:name] + "を持ってないぜ！"
+              @message = "お客さんはそいつを持ってないぜ！"
               @wait_frame = 60
             end
           end
