@@ -168,6 +168,33 @@ class Scene_Battle < Scene_Base
         @enemy = $enemydata.get_enemy(20)
         @battle_count += 1
       end
+    when 4
+      # 火吹き山
+      if @battle_count < 14
+        @enemy = $enemydata.get_enemy(rand(6) + 21)
+        @battle_count += 1
+      else
+        @enemy = $enemydata.get_enemy(27)
+        @battle_count += 1
+      end
+    when 5
+      # 氷の世界
+      if @battle_count < 14
+        @enemy = $enemydata.get_enemy(rand(6) + 28)
+        @battle_count += 1
+      else
+        @enemy = $enemydata.get_enemy(34)
+        @battle_count += 1
+      end
+    when 6
+      # まおーじょー
+      if @battle_count < 14
+        @enemy = $enemydata.get_enemy(rand(6) + 35)
+        @battle_count += 1
+      else
+        @enemy = $enemydata.get_enemy(41)
+        @battle_count += 1
+      end
     end
     
     # 戦闘前テキストウィンドウの生成
@@ -224,6 +251,7 @@ class Scene_Battle < Scene_Base
         $playing_bgm = "fever"
         $bgm["battle"].stop(0)
         $bgm["boss_battle"].stop(0)
+        $bgm["last_battle"].stop(0)
         $bgm["fever"].play(0, 0)
       end
     else
@@ -236,9 +264,7 @@ class Scene_Battle < Scene_Base
       
       Window.draw_box_fill(824, y, 855, y + fever_gauge.ceil, [255, 202, 20])
       Window.draw(816, 69, @fever_gauge_frame)
-      
-      
-      
+
       if $playing_bgm == "fever" then
         $bgm["fever"].stop(0)
         if @battle_count < 14 then
@@ -248,6 +274,12 @@ class Scene_Battle < Scene_Base
           $bgm["battle"].stop(0)
           $bgm["boss_battle"].play(0, 0)
           $playing_bgm = "boss_battle"
+        end
+        
+        if @enemy.id == 41 then
+          $bgm["battle"].stop(0)
+          $bgm["boss_battle"].stop(0)
+          $bgm["last_battle"].play(0, 0)
         end
       end
     end
@@ -376,29 +408,72 @@ class Scene_Battle < Scene_Base
       end
       
       @cut_counter += 1
-      if @cut_counter > 120 then
-        if @battle_count < 15 then
-          if $playing_bgm != "fever" then
-            if $playing_bgm != "battle" then
-              $playing_bgm = "battle"
-              $bgm["battle"].play(0, 0)
-            end
-          end
-        else
-          if $playing_bgm != "fever" then
-            if $playing_bgm != "boss_battle" then
-              $bgm["battle"].stop(0)
-              $playing_bgm = "boss_battle"
-              $bgm["boss_battle"].play(0, 0)
-            end
-          end
+      
+      if @cut_counter == 120 then
+        if @enemy.id == 41
+          $bgm["battle"].stop(0)
+          $bgm["boss_battle"].stop(0)
+          $bgm["fever"].stop(0)
+          # フィーバー状態の強制終了
+          $player.fever_frame = 0
+          # ラスボス戦のBGM演奏
+          $bgm["last_battle"].play(0, 0)
+          $playing_bgm = "last_battle"
         end
-        
-        $bgm["battle"].set_volume(90, 0)
-        $bgm["boss_battle"].set_volume(90, 0)
+      end
+      
+      if @cut_counter > 120 && @cut_counter < 240 then
+        if @enemy.id == 41
+          Message_Box.show("我が名は「まおー」<br>魔を統べる者だ", -1, 340)
+        else
+          if @battle_count < 15 then
+            if $playing_bgm != "fever" then
+              if $playing_bgm != "battle" then
+                $playing_bgm = "battle"
+                $bgm["battle"].play(0, 0)
+              end
+            end
+          else
+            if $playing_bgm != "fever" then
+              if $playing_bgm != "boss_battle" then
+                $bgm["battle"].stop(0)
+                $playing_bgm = "boss_battle"
+                $bgm["boss_battle"].play(0, 0)
+              end
+            end
+          end
+          
+          $bgm["battle"].set_volume(90, 0)
+          $bgm["boss_battle"].set_volume(90, 0)
+          @cut = 1
+          @cut_counter = 0
+        end
+      end
+      
+      if @cut_counter > 240 && @cut_counter < 360 then
+        if @enemy.id == 41 then
+          Message_Box.show("そこのお前！<br>なにゆえ　もがき　生きるのか？", -1, 340)
+        end
+      end
+      
+      if @cut_counter > 360 && @cut_counter < 480 then
+        if @enemy.id == 41 then
+          Message_Box.show("ほろびこそ　わが　よろこび<br>死にゆく者こそ　美しい", -1, 340)
+        end
+      end
+      
+      if @cut_counter > 480 && @cut_counter < 600 then
+        if @enemy.id == 41 then
+          Message_Box.show("さあ　わが　うでの中で<br>息絶えるがよい！", -1, 340)
+        end
+      end
+      
+      if @cut_counter > 600 then
         @cut = 1
         @cut_counter = 0
       end
+      
+      
       
       # 戦闘前ウィンドウの表示
       Window.draw(267, 187, @start_window, 1000)
@@ -687,31 +762,61 @@ class Scene_Battle < Scene_Base
           case $dungeon_id
           when 1
             if drop_item == 0 then
-              idx = rand(5)
+              idx = rand(8)
               $player.have_weapon[idx][1] += 1
               item_name = $weapondata.get_weapon_data(idx)[:name]
             else
-              idx = rand(5)
+              idx = rand(8)
               $player.have_armor[idx][1] += 1
               item_name = $armordata.get_armor_data(idx)[:name]
             end
           when 2
             if drop_item == 0 then
-              idx = rand(5) + 5
+              idx = rand(8) + 8
               $player.have_weapon[idx][1] += 1
               item_name = $weapondata.get_weapon_data(idx)[:name]
             else
-              idx = rand(5) + 5
+              idx = rand(8) + 8
               $player.have_armor[idx][1] += 1
               item_name = $armordata.get_armor_data(idx)[:name]
             end
           when 3
             if drop_item == 0 then
-              idx = rand(5) + 10
+              idx = rand(8) + 16
               $player.have_weapon[idx][1] += 1
               item_name = $weapondata.get_weapon_data(idx)[:name]
             else
-              idx = rand(5) + 10
+              idx = rand(8) + 16
+              $player.have_armor[idx][1] += 1
+              item_name = $armordata.get_armor_data(idx)[:name]
+            end
+          when 4
+            if drop_item == 0 then
+              idx = rand(8) + 25
+              $player.have_weapon[idx][1] += 1
+              item_name = $weapondata.get_weapon_data(idx)[:name]
+            else
+              idx = rand(8) + 25
+              $player.have_armor[idx][1] += 1
+              item_name = $armordata.get_armor_data(idx)[:name]
+            end
+          when 5
+            if drop_item == 0 then
+              idx = rand(8) + 33
+              $player.have_weapon[idx][1] += 1
+              item_name = $weapondata.get_weapon_data(idx)[:name]
+            else
+              idx = rand(8) + 33
+              $player.have_armor[idx][1] += 1
+              item_name = $armordata.get_armor_data(idx)[:name]
+            end
+          when 6
+            if drop_item == 0 then
+              idx = rand(10) + 40
+              $player.have_weapon[idx][1] += 1
+              item_name = $weapondata.get_weapon_data(idx)[:name]
+            else
+              idx = rand(10) + 40
               $player.have_armor[idx][1] += 1
               item_name = $armordata.get_armor_data(idx)[:name]
             end
@@ -822,6 +927,7 @@ class Scene_Battle < Scene_Base
         # 敗北音の再生
         $bgm["battle"].stop(0)
         $bgm["boss_battle"].stop(0)
+        $bgm["last_battle"].stop(0)
         $playing_bgm = nil
         $sounds["lose"].play(1, 0)
       end

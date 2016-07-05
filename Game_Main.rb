@@ -104,6 +104,7 @@ class Game_Main
     $bgm["boss_battle"] = Ayame.new("audio/bgm/boss_battle.mp3")
     $bgm["home"] = Ayame.new("audio/bgm/home.mp3")
     $bgm["fever"] = Ayame.new("audio/bgm/fever.mp3")
+    $bgm["last_battle"] = Ayame.new("audio/bgm/last_battle.mp3")
     $playing_bgm = nil
     $last_bgm = nil
    

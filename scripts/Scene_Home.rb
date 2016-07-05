@@ -8,7 +8,7 @@ include Save_Data
 # ホーム画面
 class Scene_Home < Scene_Base
   # 薬草の持てる上限数
-  MAX_HEAL_COUNT = 15
+  MAX_HEAL_COUNT = 20
 
   # ダンジョン選択用カーソルクラス
   class Dungeon_Cursor
@@ -232,6 +232,63 @@ class Scene_Home < Scene_Base
         @cursor.flash = true
         @cursor.visible = true
         @cursor.index = 2
+        # BGM を停止する
+        $bgm["home"].stop(2.5)
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        # カーソルを 95 フレーム点滅させるためにウェイト
+        @wait_frame = 95
+      end
+      # 火吹き山を決定
+      if mouse_widthin_button?("volcano") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 3) then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # ダンジョンIDを4に設定
+        $dungeon_id = 4
+        # フェードアウト後に戦闘シーンへ遷移させる
+        @scene_index = 1
+        # カーソルを点滅させる
+        @cursor.flash = true
+        @cursor.visible = true
+        @cursor.index = 3
+        # BGM を停止する
+        $bgm["home"].stop(2.5)
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        # カーソルを 95 フレーム点滅させるためにウェイト
+        @wait_frame = 95
+      end
+      # 氷の世界を決定
+      if mouse_widthin_button?("ice_world") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 4) then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # ダンジョンIDを5に設定
+        $dungeon_id = 5
+        # フェードアウト後に戦闘シーンへ遷移させる
+        @scene_index = 1
+        # カーソルを点滅させる
+        @cursor.flash = true
+        @cursor.visible = true
+        @cursor.index = 4
+        # BGM を停止する
+        $bgm["home"].stop(2.5)
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        # カーソルを 95 フレーム点滅させるためにウェイト
+        @wait_frame = 95
+      end
+      # まおーじょーを決定
+      if mouse_widthin_button?("castle") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 5) then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # ダンジョンIDを6に設定
+        $dungeon_id = 6
+        # フェードアウト後に戦闘シーンへ遷移させる
+        @scene_index = 1
+        # カーソルを点滅させる
+        @cursor.flash = true
+        @cursor.visible = true
+        @cursor.index = 5
         # BGM を停止する
         $bgm["home"].stop(2.5)
         # 画面を徐々にフェードアウトさせる
