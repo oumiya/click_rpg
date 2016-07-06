@@ -64,6 +64,25 @@ class Scene_Shop < Scene_Base
     # 今選択されているタブ
     @tab_index = 0
     
+    # カーソル
+    cursor_pos = Array.new
+    cursor_pos.push([279, 32])  # 0  武器ボタン
+    cursor_pos.push([390, 32])  # 1  防具ボタン
+    cursor_pos.push([503, 32])  # 2  髪型ボタン
+    cursor_pos.push([743, 32])  # 3  店を出るボタン
+    cursor_pos.push([277, 128]) # 4  道具セレクト1
+    cursor_pos.push([277, 168]) # 5  道具セレクト2
+    cursor_pos.push([277, 208]) # 6  道具セレクト3
+    cursor_pos.push([277, 248]) # 7  道具セレクト4
+    cursor_pos.push([277, 288]) # 8  道具セレクト5
+    cursor_pos.push([277, 328]) # 9  道具セレクト6
+    cursor_pos.push([277, 368]) # 10 道具セレクト7
+    cursor_pos.push([277, 408]) # 11 道具セレクト8
+    cursor_pos.push([277, 448]) # 12 道具セレクト9
+    cursor_pos.push([10, 366])  # 13 装備品以外を一括で売却
+    cursor_pos.push([10, 435])  # 14 装備品以外を一個残して一括で売却
+    @cursor = Cursor.new(cursor_pos)
+    
     @wait_frame = 0
     
     # 表示するメッセージ
@@ -71,6 +90,9 @@ class Scene_Shop < Scene_Base
     
     # 一括売却ボタンのフォント
     @sell_font = Font.new(20, "ＭＳ ゴシック")
+    
+    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
   # フレーム更新処理
@@ -188,6 +210,9 @@ class Scene_Shop < Scene_Base
       }
     end
     
+    # カーソルの表示
+    @cursor.update
+    
     if @message != nil then
       idx = 0
       if @message == "ありがとよ！" then
@@ -232,35 +257,80 @@ class Scene_Shop < Scene_Base
       return
     end
     
-    if Input.mouse_push?(M_LBUTTON) then
+    # コントロールモードの変更
+    control_mode_change()
+    
+    # カーソルキーの操作
+    if Input.pad_push?(P_UP) then
+      if @cursor.index == 4 then
+        @cursor.index = 0
+      elsif @cursor.index > 4 && @cursor.index <= 12 then
+        @cursor.index -= 1
+      elsif @cursor.index == 13
+        @cursor.index = 0
+      elsif @cursor.index == 14
+        @cursor.index = 13
+      end
+    end
+    if Input.pad_push?(P_LEFT) then
+      if @cursor.index == 0 then
+        @cursor.index = 13
+      elsif @cursor.index >= 1 && @cursor.index <= 3 then
+        @cursor.index -= 1
+      elsif @cursor.index >= 4 && @cursor.index <= 12
+        @cursor.index = 13
+      end
+    end
+    if Input.pad_push?(P_RIGHT) then
+      if @cursor.index == 3 then
+        @cursor.index = 0
+      elsif @cursor.index >= 0 && @cursor.index <= 2 then
+        @cursor.index += 1
+      elsif @cursor.index == 13 then
+        @cursor.index = 0
+      elsif @cursor.index == 14 then
+        @cursor.index = 0
+      end
+    end
+    if Input.pad_push?(P_DOWN) then
+      if @cursor.index >= 0 && @cursor.index <= 3 then
+        @cursor.index = 4
+      elsif @cursor.index >= 4 && @cursor.index < 13 then
+        @cursor.index += 1
+      elsif @cursor.index == 13
+        @cursor.index = 14
+      end
+    end
+    
+    if (Input.mouse_push?(M_LBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON0) && @control_mode == 1) then
       
       # 武器ボタンを押下
-      if mouse_widthin_button?("weapon") then
+      if @cursor.index == 0 then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         @tab_index = 0
       end
       # 防具ボタンを押下
-      if mouse_widthin_button?("armor") then
+      if @cursor.index == 1 then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         @tab_index = 1
       end
       # 髪型ボタンを押下
-      if mouse_widthin_button?("hair") then
+      if @cursor.index == 2 then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         @tab_index = 2
       end
       # 店を出るボタンを押下
-      if mouse_widthin_button?("quit") then
+      if @cursor.index == 3 then
         # 決定音を鳴らす
         $sounds["decision"].play(1, 0)
         @fade_effect.setup(0)
         @scene_index = 1
       end
       # 一括売却ボタンを押下
-      if mouse_widthin_button?("bulk1") then
+      if @cursor.index == 13 then
         $sounds["decision"].play(1, 0)
         # 武器売却処理
         $player.have_weapon.each_with_index{|weapon, idx|
@@ -307,7 +377,7 @@ class Scene_Shop < Scene_Base
         }
       end
       # 1個だけ残して一括売却ボタンを押下
-      if mouse_widthin_button?("bulk2") then
+      if @cursor.index == 14 then
         $sounds["decision"].play(1, 0)
         $sounds["decision"].play(1, 0)
         # 武器売却処理
@@ -356,23 +426,9 @@ class Scene_Shop < Scene_Base
       end
       
       # アイテム名を左クリック
-      i = 0
-      idx = -1
-      @item_hitbox.each{|hitbox|
-        
-        if Input.mouse_x >= hitbox[0] &&
-           Input.mouse_y >= hitbox[1] &&
-           Input.mouse_x <= hitbox[2] &&
-           Input.mouse_y <= hitbox[3] then
-           idx = i
-           # 決定音を鳴らす
-           $sounds["decision"].play(1, 0)
-           break
-        end
-        i = i + 1
-      }
-      
-      if idx > -1 then
+      if @cursor.index >= 4 && @cursor.index <= 12 then
+        $sounds["decision"].play(1, 0)
+        idx = @cursor.index - 4
         # 武器購入処理
         if @tab_index == 0 then
           weapon = $weapondata.get_weapon_data(idx)
@@ -434,25 +490,10 @@ class Scene_Shop < Scene_Base
     end
     
     # 売却処理
-    if Input.mouse_push?(M_RBUTTON) then
-      # アイテム名を右クリック
-      i = 0
-      idx = -1
-      @item_hitbox.each{|hitbox|
-        
-        if Input.mouse_x >= hitbox[0] &&
-           Input.mouse_y >= hitbox[1] &&
-           Input.mouse_x <= hitbox[2] &&
-           Input.mouse_y <= hitbox[3] then
-           idx = i
-           # 決定音を鳴らす
-           $sounds["decision"].play(1, 0)
-           break
-        end
-        i = i + 1
-      }
-      
-      if idx > -1 then
+    if (Input.mouse_push?(M_RBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON1) && @control_mode == 1) then
+      if @cursor.index >= 4 && @cursor.index <= 12 then
+        $sounds["decision"].play(1, 0)
+        idx = @cursor.index - 4
         # 武器売却処理
         if @tab_index == 0 then
           weapon = $weapondata.get_weapon_data(idx)
@@ -504,23 +545,44 @@ class Scene_Shop < Scene_Base
       end
     end
     
-    
-    
-    
-    # アイテム名ホバーすると四角が出る
-    @item_hitbox.each{|hitbox|
-      
-      if Input.mouse_x >= hitbox[0] &&
-         Input.mouse_y >= hitbox[1] &&
-         Input.mouse_x <= hitbox[2] &&
-         Input.mouse_y <= hitbox[3] then
-         
-         Window.draw_box(hitbox[0], hitbox[1], hitbox[2], hitbox[3], [255, 0, 0])
-         
+    # マウスホバー処理
+    if @control_mode == 0 then
+      # 武器ボタン
+      if mouse_widthin_button?("weapon") then
+        @cursor.index = 0
       end
-    }
-    
-    
+      # 防具ボタン
+      if mouse_widthin_button?("armor") then
+        @cursor.index = 1
+      end
+      # 髪型ボタン
+      if mouse_widthin_button?("hair") then
+        @cursor.index = 2
+      end
+      # 店を出るボタン
+      if mouse_widthin_button?("quit") then
+        @cursor.index = 3
+      end
+      # 一括売却ボタン
+      if mouse_widthin_button?("bulk1") then
+        @cursor.index = 13
+      end
+      # 1個だけ残して一括売却ボタン
+      if mouse_widthin_button?("bulk2") then
+        @cursor.index = 14
+      end
+      # アイテム名ホバーすると四角が出る
+      @item_hitbox.each_with_index{|hitbox, i|
+      
+        if Input.mouse_x >= hitbox[0] &&
+           Input.mouse_y >= hitbox[1] &&
+           Input.mouse_x <= hitbox[2] &&
+           Input.mouse_y <= hitbox[3] then
+         
+           @cursor.index = i + 4
+        end
+      }
+    end
   end
   
   # ループ後処理
@@ -532,6 +594,25 @@ class Scene_Shop < Scene_Base
   # 遷移しない場合は nil を返す
   def get_next_scene()
     return @next_scene
+  end
+  
+  # コントロールモードのチェンジ
+  def control_mode_change()
+    d = ((Input.mouse_x - @prev_mouse_pos[0]) ** 2).abs
+    d += ((Input.mouse_y - @prev_mouse_pos[1]) ** 2).abs
+    d = Math.sqrt(d)
+    
+    if d > 32 then
+      @control_mode = 0
+      Input.mouse_enable = true
+    end
+    
+    if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
+      @control_mode = 1
+      Input.mouse_enable = false
+    end
+    
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
   end
   
     # マウスカーソルがボタンの座標内に入っているかどうかを返します

@@ -472,7 +472,7 @@ class Enemy_Data
       enemy.attack_frequency = [3, 45, 65, 72]
       enemy.ai = 1
       enemy.attack_speed = 8
-      enemy.exp = 400
+      enemy.exp = 200
       enemy.gold = 500
     when 36
       enemy.id = 36
@@ -485,7 +485,7 @@ class Enemy_Data
       enemy.attack_frequency = [12, 24, 48]
       enemy.ai = 1
       enemy.attack_speed = 8
-      enemy.exp = 500
+      enemy.exp = 300
       enemy.gold = 600
     when 37
       enemy.id = 37
@@ -498,7 +498,7 @@ class Enemy_Data
       enemy.attack_frequency = [60]
       enemy.ai = 0
       enemy.attack_speed = 16
-      enemy.exp = 600
+      enemy.exp = 400
       enemy.gold = 800
     when 38
       enemy.id = 38
@@ -511,7 +511,7 @@ class Enemy_Data
       enemy.attack_frequency = [30]
       enemy.ai = 0
       enemy.attack_speed = 8
-      enemy.exp = 700
+      enemy.exp = 500
       enemy.gold = 1000
     when 39
       enemy.id = 39
@@ -524,7 +524,7 @@ class Enemy_Data
       enemy.attack_frequency = [30,45,60,75,80]
       enemy.ai = 0
       enemy.attack_speed = 8
-      enemy.exp = 840
+      enemy.exp = 420
       enemy.gold = 420
     when 40
       enemy.id = 40
@@ -544,7 +544,7 @@ class Enemy_Data
       enemy.image_file_name = "evil_king.png"
       enemy.name = "まおー"
       enemy.description = "そんでロリかい！"
-      enemy.max_hp = 32000
+      enemy.max_hp = 52000
       enemy.attack = 180
       enemy.defence = 150
       enemy.attack_frequency = [10, 45, 60, 72]

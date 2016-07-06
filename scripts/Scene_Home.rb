@@ -1,45 +1,15 @@
 require 'dxruby'
-require_relative 'Scene_Base.rb'
-require_relative 'Scene_Battle.rb'
+require_relative 'Cursor.rb'
 require_relative 'Fade_Effect.rb'
 require_relative 'Save_Data.rb'
+require_relative 'Scene_Base.rb'
+require_relative 'Scene_Battle.rb'
 include Save_Data
 
 # ホーム画面
 class Scene_Home < Scene_Base
   # 薬草の持てる上限数
   MAX_HEAL_COUNT = 20
-
-  # ダンジョン選択用カーソルクラス
-  class Dungeon_Cursor
-    attr_accessor :index
-    attr_accessor :flash
-    attr_accessor :visible
-    
-    def initialize()
-      @pos = [[114, 39], [314, 39], [514, 42], [713, 44], [515, 232], [712, 233], [523, 413], [726, 413], [523, 477], [726, 477]]
-      @image = Image.load("image/system/cursor.png")
-      @visible = true
-      @flash = false
-      @index = 0
-    end
-    
-    def update()
-      if @visible then
-        draw()
-      end
-    end
-    
-    def draw()
-      if @flash then
-        if $frame_counter % 6 > 2 then
-          Window.draw(@pos[@index][0], @pos[@index][1], @image)
-        end
-      else
-        Window.draw(@pos[@index][0], @pos[@index][1], @image)
-      end
-    end
-  end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()
@@ -49,7 +19,7 @@ class Scene_Home < Scene_Base
     # 背景画像の読み込み
     @back_image = Image.load("image/system/home.png")
     # ダンジョン選択カーソル
-    @cursor = Dungeon_Cursor.new
+    @cursor = Cursor.new([[114, 39], [314, 39], [514, 42], [713, 44], [515, 232], [712, 233], [523, 413], [726, 413], [523, 477], [726, 477]])
     # お金が足りないよウィンドウの準備
     @not_enough_money = Image.load("image/system/not_enough_money.png")
     @not_enough_money_show = false
@@ -89,6 +59,9 @@ class Scene_Home < Scene_Base
     save()
     
     @message = ""
+    
+    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
   # フレーム更新処理
@@ -153,6 +126,7 @@ class Scene_Home < Scene_Base
     end
     
     # キー入力処理
+    control_mode_change()
     
     # ボタン処理
     if Input.pad_push?(P_UP) then
@@ -181,208 +155,74 @@ class Scene_Home < Scene_Base
       end
     end
     
-    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
-      # 洞窟を決定
-      if mouse_widthin_button?("cave") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 0) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # ダンジョンIDを1に設定
-        $dungeon_id = 1
-        # フェードアウト後に戦闘シーンへ遷移させる
-        @scene_index = 1
-        # カーソルを点滅させる
-        @cursor.flash = true
-        @cursor.visible = true
-        @cursor.index = 0
-        # BGM を停止する
-        $bgm["home"].stop(2.5)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        # カーソルを 95 フレーム点滅させるためにウェイト
-        @wait_frame = 95
+    # マウスの左クリック か 決定ボタン押下
+    if (Input.mouse_push?(M_LBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON0) && @control_mode == 1) then
+      # 遷移先ダンジョンを決定
+      if @cursor.index <= 5 then
+        dungeon_trantision(@cursor.index + 1)
       end
-      # 森を決定
-      if mouse_widthin_button?("forest") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 1) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # ダンジョンIDを2に設定
-        $dungeon_id = 2
-        # フェードアウト後に戦闘シーンへ遷移させる
-        @scene_index = 1
-        # カーソルを点滅させる
-        @cursor.flash = true
-        @cursor.visible = true
-        @cursor.index = 1
-        # BGM を停止する
-        $bgm["home"].stop(2.5)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        # カーソルを 95 フレーム点滅させるためにウェイト
-        @wait_frame = 95
-      end
-      # 死者の館を決定
-      if mouse_widthin_button?("mansion") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 2) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # ダンジョンIDを3に設定
-        $dungeon_id = 3
-        # フェードアウト後に戦闘シーンへ遷移させる
-        @scene_index = 1
-        # カーソルを点滅させる
-        @cursor.flash = true
-        @cursor.visible = true
-        @cursor.index = 2
-        # BGM を停止する
-        $bgm["home"].stop(2.5)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        # カーソルを 95 フレーム点滅させるためにウェイト
-        @wait_frame = 95
-      end
-      # 火吹き山を決定
-      if mouse_widthin_button?("volcano") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 3) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # ダンジョンIDを4に設定
-        $dungeon_id = 4
-        # フェードアウト後に戦闘シーンへ遷移させる
-        @scene_index = 1
-        # カーソルを点滅させる
-        @cursor.flash = true
-        @cursor.visible = true
-        @cursor.index = 3
-        # BGM を停止する
-        $bgm["home"].stop(2.5)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        # カーソルを 95 フレーム点滅させるためにウェイト
-        @wait_frame = 95
-      end
-      # 氷の世界を決定
-      if mouse_widthin_button?("ice_world") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 4) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # ダンジョンIDを5に設定
-        $dungeon_id = 5
-        # フェードアウト後に戦闘シーンへ遷移させる
-        @scene_index = 1
-        # カーソルを点滅させる
-        @cursor.flash = true
-        @cursor.visible = true
-        @cursor.index = 4
-        # BGM を停止する
-        $bgm["home"].stop(2.5)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        # カーソルを 95 フレーム点滅させるためにウェイト
-        @wait_frame = 95
-      end
-      # まおーじょーを決定
-      if mouse_widthin_button?("castle") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 5) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # ダンジョンIDを6に設定
-        $dungeon_id = 6
-        # フェードアウト後に戦闘シーンへ遷移させる
-        @scene_index = 1
-        # カーソルを点滅させる
-        @cursor.flash = true
-        @cursor.visible = true
-        @cursor.index = 5
-        # BGM を停止する
-        $bgm["home"].stop(2.5)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        # カーソルを 95 フレーム点滅させるためにウェイト
-        @wait_frame = 95
-      end
+      
       # 薬草を買うボタンを押下
-      if mouse_widthin_button?("buy_heal") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 6) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0) 
-        
-        # ゴールドが足りているか？
-        if $player.gold >= 50 then
-          if $player.heal_count >= MAX_HEAL_COUNT then
-            @message = "薬草はもうそんなに持てないよ！"
-            @wait_frame = 60
-          else
-            $player.gold -= 50
-            $player.heal_count += 1
-          end
-        else
-          @wait_frame = 60
-          @not_enough_money_show = true
-        end
-      end
-      # ショップボタンを押下
-      if mouse_widthin_button?("shop") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 8) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        @scene_index = 3
+      if @cursor.index == 6 then
+        buy_heal_button()
       end
       # 装備変更ボタン押下
-      if mouse_widthin_button?("equip") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 7) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        @scene_index = 2
+      if @cursor.index == 7 then
+        equip_trantision()
       end
-      if mouse_widthin_button?("quit") || (Input.pad_push?(P_BUTTON0) && @cursor.index == 9) then
-        # 決定音を鳴らす
-        $sounds["decision"].play(1, 0)
-        # 一応やめる前にセーブしておく
-        save()
-        # 画面を徐々にフェードアウトさせる
-        @fade_effect.setup(0)
-        @scene_index = 4
+      # ショップボタンを押下
+      if @cursor.index == 8 then
+        shop_trantision()
+      end
+      # ゲームをやめるボタンを押下
+      if @cursor.index == 9 then
+        game_quit()
       end
     end
     
     # マウスカーソルホバー
-    #@cursor.visible = false
-    if mouse_widthin_button?("cave") then
-       @cursor.index = 0
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("forest") then
-       @cursor.index = 1
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("mansion") then
-       @cursor.index = 2
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("volcano") then
-       @cursor.index = 3
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("ice_world") then
-       @cursor.index = 4
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("castle") then
-       @cursor.index = 5
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("buy_heal") then
-       @cursor.index = 6
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("equip") then
-       @cursor.index = 7
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("shop") then
-       @cursor.index = 8
-       @cursor.visible = true
-    end
-    if mouse_widthin_button?("quit") then
-       @cursor.index = 9
-       @cursor.visible = true
+    # 操作モードが マウスモード の場合のみ
+    if @control_mode == 0 then
+      if mouse_widthin_button?("cave") then
+         @cursor.index = 0
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("forest") then
+         @cursor.index = 1
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("mansion") then
+         @cursor.index = 2
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("volcano") then
+         @cursor.index = 3
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("ice_world") then
+         @cursor.index = 4
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("castle") then
+         @cursor.index = 5
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("buy_heal") then
+         @cursor.index = 6
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("equip") then
+         @cursor.index = 7
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("shop") then
+         @cursor.index = 8
+         @cursor.visible = true
+      end
+      if mouse_widthin_button?("quit") then
+         @cursor.index = 9
+         @cursor.visible = true
+      end
     end
     
   end
@@ -396,6 +236,94 @@ class Scene_Home < Scene_Base
   # 遷移しない場合は nil を返す
   def get_next_scene()
     return @next_scene
+  end
+  
+  # 指定のダンジョンに遷移する
+  def dungeon_trantision(dungeon_id)
+    # 決定音を鳴らす
+    $sounds["decision"].play(1, 0)
+    # ダンジョンIDを1に設定
+    $dungeon_id = dungeon_id
+    # フェードアウト後に戦闘シーンへ遷移させる
+    @scene_index = 1
+    # カーソルを点滅させる
+    @cursor.flash = true
+    @cursor.visible = true
+    @cursor.index = dungeon_id - 1
+    # BGM を停止する
+    $bgm["home"].stop(2.5)
+    # 画面を徐々にフェードアウトさせる
+    @fade_effect.setup(0)
+    # カーソルを 95 フレーム点滅させるためにウェイト
+    @wait_frame = 95
+  end
+  
+  # 薬草を買うボタンを押下
+  def buy_heal_button()
+    # 決定音を鳴らす
+    $sounds["decision"].play(1, 0) 
+    
+    # ゴールドが足りているか？
+    if $player.gold >= 50 then
+      if $player.heal_count >= MAX_HEAL_COUNT then
+        @message = "薬草はもうそんなに持てないよ！"
+        @wait_frame = 60
+      else
+        $player.gold -= 50
+        $player.heal_count += 1
+      end
+    else
+      @wait_frame = 60
+      @not_enough_money_show = true
+    end
+  end
+  
+  # 装備画面に遷移
+  def equip_trantision()
+    # 決定音を鳴らす
+    $sounds["decision"].play(1, 0)
+    # 画面を徐々にフェードアウトさせる
+    @fade_effect.setup(0)
+    @scene_index = 2
+  end
+  
+  # ショップ画面に遷移
+  def shop_trantision()
+    # 決定音を鳴らす
+    $sounds["decision"].play(1, 0)
+    # 画面を徐々にフェードアウトさせる
+    @fade_effect.setup(0)
+    @scene_index = 3
+  end
+  
+  # ゲームをやめるボタンを押下
+  def game_quit()
+    # 決定音を鳴らす
+    $sounds["decision"].play(1, 0)
+    # 一応やめる前にセーブしておく
+    save()
+    # 画面を徐々にフェードアウトさせる
+    @fade_effect.setup(0)
+    @scene_index = 4
+  end
+  
+  # コントロールモードのチェンジ
+  def control_mode_change()
+    d = ((Input.mouse_x - @prev_mouse_pos[0]) ** 2).abs
+    d += ((Input.mouse_y - @prev_mouse_pos[1]) ** 2).abs
+    d = Math.sqrt(d)
+    
+    if d > 32 then
+      @control_mode = 0
+      Input.mouse_enable = true
+    end
+    
+    if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
+      @control_mode = 1
+      Input.mouse_enable = false
+    end
+    
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
   end
   
   # 各ボタンの座標配列を初期化します

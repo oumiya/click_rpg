@@ -1,9 +1,10 @@
 require 'dxruby'
-require_relative 'Scene_Base.rb'
-require_relative 'Scene_Home.rb'
+require_relative 'Cursor.rb'
 require_relative 'Fade_Effect.rb'
 require_relative 'Message_Box.rb'
 require_relative 'Save_Data.rb'
+require_relative 'Scene_Base.rb'
+require_relative 'Scene_Home.rb'
 include Save_Data
 
 # ホーム画面
@@ -76,6 +77,9 @@ class Scene_Equip < Scene_Base
     # 今選択されている防具ページ
     @armor_page = 0
     
+    # カーソル 0 武器ボタン 1 防具 ボタン 2 髪型ボタン 3 街に戻るボタン 4 ～ 12 武器か防具選択ボタン 13 前のページ 14 次のページ
+    @cursor = Cursor.new([[414,25], [528, 25], [640, 25], [742, 25], [415, 128], [415, 168], [415, 208], [415, 248], [415, 288], [415, 328], [415, 368], [415, 408], [415, 448], [408, 508], [718, 508]])
+    
     @wait_frame = 0
     
     # 表示するメッセージ
@@ -100,6 +104,9 @@ class Scene_Equip < Scene_Base
     # ページの最大数
     @max_weapon_page = (@weapons.size.to_f / 9.0).ceil
     @max_armor_page = (@armors.size.to_f / 9.0).ceil
+    
+    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
   # フレーム更新処理
@@ -258,6 +265,13 @@ class Scene_Equip < Scene_Base
       }
     end
     
+    # カーソルの表示
+    @cursor.update
+    
+    # 髪の色と肌の色を変更するための注意文
+    fnt = Font.new(24)
+    Window.draw_font(14, 219, "髪の色と肌の色はマウスで", fnt)
+    Window.draw_font(14, 219 + fnt.size + 4, "色をクリックすると変更できます", fnt)
     if @message != nil then
       Message_Box.show(@message)
       if @wait_frame <= 0 then
@@ -281,29 +295,69 @@ class Scene_Equip < Scene_Base
       return
     end
     
-    if Input.mouse_push?(M_LBUTTON) then
-      # 決定音を鳴らす
-      $sounds["decision"].play(1, 0)
-      
+    # コントロールモードの変更
+    control_mode_change()
+    
+    # カーソルキーの操作
+    if Input.pad_push?(P_UP) then
+      if @cursor.index == 4 then
+        @cursor.index = 0
+      elsif @cursor.index > 4 && @cursor.index <= 12 then
+        @cursor.index -= 1
+      elsif @cursor.index > 12 then
+        @cursor.index = 12
+      end
+    end
+    if Input.pad_push?(P_LEFT) then
+      if @cursor.index == 0 then
+        @cursor.index = 3
+      elsif @cursor.index >= 1 && @cursor.index <= 3 then
+        @cursor.index -= 1
+      elsif @cursor.index == 13 then
+        @cursor.index = 14
+      elsif @cursor.index == 14 then
+        @cursor.index = 13
+      end
+    end
+    if Input.pad_push?(P_RIGHT) then
+      if @cursor.index == 3 then
+        @cursor.index = 0
+      elsif @cursor.index >= 0 && @cursor.index <= 2 then
+        @cursor.index += 1
+      elsif @cursor.index == 13 then
+        @cursor.index = 14
+      elsif @cursor.index == 14 then
+        @cursor.index = 13
+      end
+    end
+    if Input.pad_push?(P_DOWN) then
+      if @cursor.index >= 0 && @cursor.index <= 3 then
+        @cursor.index = 4
+      elsif @cursor.index >= 4 && @cursor.index < 13 then
+        @cursor.index += 1
+      end
+    end
+    
+    if (Input.mouse_push?(M_LBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON0) && @control_mode == 1) then
       # 武器ボタンを押下
-      if mouse_widthin_button?("weapon") then
+      if @cursor.index == 0 then
         @tab_index = 0
       end
       # 防具ボタンを押下
-      if mouse_widthin_button?("armor") then
+      if @cursor.index == 1 then
         @tab_index = 1
       end
       # 髪型ボタンを押下
-      if mouse_widthin_button?("hair") then
+      if @cursor.index == 2 then
         @tab_index = 2
       end
       # 店を出るボタンを押下
-      if mouse_widthin_button?("quit") then
+      if @cursor.index == 3 then
         @fade_effect.setup(0)
         @scene_index = 1
       end
       # 次のページボタンを押下
-      if mouse_widthin_button?("next_page") then
+      if @cursor.index == 14 then
         if @tab_index == 0 then
           if @max_weapon_page > 1 then
             @weapon_page += 1
@@ -323,7 +377,7 @@ class Scene_Equip < Scene_Base
       end
       
       # 前のページボタンを押下
-      if mouse_widthin_button?("prev_page") then
+      if @cursor.index == 13 then
         if @tab_index == 0 then
           @weapon_page -= 1
           if @weapon_page < 0 then
@@ -339,21 +393,8 @@ class Scene_Equip < Scene_Base
       end
       
       # アイテム名を左クリック
-      i = 0
-      idx = -1
-      @item_hitbox.each{|hitbox|
-        
-        if Input.mouse_x >= hitbox[0] &&
-           Input.mouse_y >= hitbox[1] &&
-           Input.mouse_x <= hitbox[2] &&
-           Input.mouse_y <= hitbox[3] then
-           idx = i
-           break
-        end
-        i = i + 1
-      }
-      
-      if idx > -1 then
+      if @cursor.index >= 4 && @cursor.index <= 12 then
+        idx = @cursor.index - 4
         # 武器装備処理
         if @tab_index == 0 then
           idx = idx + @weapon_page * 9
@@ -451,19 +492,45 @@ class Scene_Equip < Scene_Base
       end
     end
     
-    # アイテム名ホバーすると四角が出る
-    @item_hitbox.each{|hitbox|
-      
-      if Input.mouse_x >= hitbox[0] &&
-         Input.mouse_y >= hitbox[1] &&
-         Input.mouse_x <= hitbox[2] &&
-         Input.mouse_y <= hitbox[3] then
-         
-         Window.draw_box(hitbox[0], hitbox[1], hitbox[2], hitbox[3], [255, 0, 0])
-         
+    # マウスホバー処理
+    if @control_mode == 0 then
+      # 武器ボタン
+      if mouse_widthin_button?("weapon") then
+        @cursor.index = 0
       end
-    }
-    
+      # 防具ボタン
+      if mouse_widthin_button?("armor") then
+        @cursor.index = 1
+      end
+      # 髪型ボタン
+      if mouse_widthin_button?("hair") then
+        @cursor.index = 2
+      end
+      # 店を出る
+      if mouse_widthin_button?("quit") then
+        @cursor.index = 3
+      end    
+      # 前のページボタンを押下
+      if mouse_widthin_button?("prev_page") then
+        @cursor.index = 13
+      end
+      # 次のページボタンを押下
+      if mouse_widthin_button?("next_page") then
+        @cursor.index = 14
+      end
+      
+      # アイテム名ホバーすると四角が出る
+      @item_hitbox.each_with_index{|hitbox, i|
+        
+        if Input.mouse_x >= hitbox[0] &&
+           Input.mouse_y >= hitbox[1] &&
+           Input.mouse_x <= hitbox[2] &&
+           Input.mouse_y <= hitbox[3] then
+           
+           @cursor.index = i + 4
+        end
+      }
+    end
     
   end
   
@@ -476,6 +543,25 @@ class Scene_Equip < Scene_Base
   # 遷移しない場合は nil を返す
   def get_next_scene()
     return @next_scene
+  end
+  
+  # コントロールモードのチェンジ
+  def control_mode_change()
+    d = ((Input.mouse_x - @prev_mouse_pos[0]) ** 2).abs
+    d += ((Input.mouse_y - @prev_mouse_pos[1]) ** 2).abs
+    d = Math.sqrt(d)
+    
+    if d > 32 then
+      @control_mode = 0
+      Input.mouse_enable = true
+    end
+    
+    if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
+      @control_mode = 1
+      Input.mouse_enable = false
+    end
+    
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
   end
   
     # マウスカーソルがボタンの座標内に入っているかどうかを返します

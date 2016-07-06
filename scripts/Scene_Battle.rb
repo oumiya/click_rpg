@@ -1,12 +1,13 @@
 require 'dxruby'
-require_relative 'Scene_Base.rb'
-require_relative 'Enemy.rb'
-require_relative 'Attack_Icon.rb'
-require_relative 'Guard_Rank_Text.rb'
 require_relative 'Attack_Effect.rb'
-require_relative 'Sparkly.rb'
-require_relative 'Save_Data.rb'
+require_relative 'Attack_Icon.rb'
+require_relative 'Cursor.rb'
+require_relative 'Enemy.rb'
+require_relative 'Guard_Rank_Text.rb'
 require_relative 'Message_Box.rb'
+require_relative 'Save_Data.rb'
+require_relative 'Scene_Base.rb'
+require_relative 'Sparkly.rb'
 include Save_Data
 
 # 戦闘シーン
@@ -14,37 +15,6 @@ class Scene_Battle < Scene_Base
   
   ENEMY_X = 237  # 敵画像の表示原点 X座標
   ENEMY_Y = 72   # 敵画像の表示原点 Y座標
-
-  # ダンジョン選択用カーソルクラス
-  class Cursor
-    attr_accessor :index
-    attr_accessor :flash
-    attr_accessor :visible
-    
-    def initialize()
-      @pos = [[244, 326], [520, 326]]
-      @image = Image.load("image/system/cursor.png")
-      @visible = true
-      @flash = false
-      @index = 0
-    end
-    
-    def update()
-      if @visible then
-        draw()
-      end
-    end
-    
-    def draw()
-      if @flash then
-        if $frame_counter % 6 > 2 then
-          Window.draw(@pos[@index][0], @pos[@index][1], @image)
-        end
-      else
-        Window.draw(@pos[@index][0], @pos[@index][1], @image)
-      end
-    end
-  end
 
   def initialize()
     super
@@ -121,7 +91,7 @@ class Scene_Battle < Scene_Base
     @dance_index = 0
     
     # 選択カーソルの初期化
-    @cursor = Cursor.new
+    @cursor = Cursor.new([[244, 326], [520, 326]])
     
     # バトルカウント
     @battle_count = 0
@@ -137,6 +107,9 @@ class Scene_Battle < Scene_Base
     @go_home = false
     
     @next_scene = nil
+    
+    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
   def before_battle()
@@ -238,6 +211,7 @@ class Scene_Battle < Scene_Base
   
   # フレーム更新処理
   def update()
+    control_mode_change()
     $player.fever_start()
 
     if $player.fever? then
@@ -946,6 +920,25 @@ class Scene_Battle < Scene_Base
         @cut_counter = -1
       end
     end
+  end
+  
+  # コントロールモードのチェンジ
+  def control_mode_change()
+    d = ((Input.mouse_x - @prev_mouse_pos[0]) ** 2).abs
+    d += ((Input.mouse_y - @prev_mouse_pos[1]) ** 2).abs
+    d = Math.sqrt(d)
+    
+    if d > 32 then
+      @control_mode = 0
+      Input.mouse_enable = true
+    end
+    
+    if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
+      @control_mode = 1
+      Input.mouse_enable = false
+    end
+    
+    @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
   end
   
 end

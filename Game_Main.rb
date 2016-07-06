@@ -24,6 +24,14 @@ class Game_Main
     Window.width = WINDOW_WIDTH
     Window.height = WINDOW_HEIGHT
     Window.caption = "ボクが勇者になって奴隷のあのコを救うんだ！"
+    
+    # ゲームパッドのカーソルキーにリピート設定
+    wait = 10
+    interval = 10
+    Input.set_pad_repeat(P_UP, wait, interval)
+    Input.set_pad_repeat(P_LEFT, wait, interval)
+    Input.set_pad_repeat(P_RIGHT, wait, interval)
+    Input.set_pad_repeat(P_DOWN, wait, interval)
   end
   
   # メイン処理
