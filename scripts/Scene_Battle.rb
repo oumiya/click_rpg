@@ -833,6 +833,7 @@ class Scene_Battle < Scene_Base
         if @enemy.id == 41 then
           if $player.cleared == false then
             $bgm["last_battle"].stop(1)
+            $bgm["fever"].stop(1)
             @next_scene = Scene_Ending.new
           end
         end

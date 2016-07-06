@@ -70,6 +70,9 @@ http://sozai.7gates.net/
 ぴぽや  
 http://piposozai.blog76.fc2.com/
 
+Web素材.net ビジネス向け
+http://web-sozai.net/
+
 ## BGMをお借りしたサイト
 
 魔王魂  

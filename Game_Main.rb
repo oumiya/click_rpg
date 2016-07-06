@@ -8,6 +8,7 @@ require './scripts/Player.rb'
 require './scripts/Save_Data.rb'
 require './scripts/Scene_Battle.rb'
 require './scripts/Scene_Ending.rb'
+require './scripts/Scene_Event.rb'
 require './scripts/Scene_Equip.rb'
 require './scripts/Scene_Home.rb'
 require './scripts/Scene_Shop.rb'
@@ -42,10 +43,11 @@ class Game_Main
     
     # 初期シーンをセット
     #$scene = Scene_Battle.new
-    $scene = Scene_Home.new
+    #$scene = Scene_Home.new
     #$scene = Scene_Shop.new
     #$scene = Scene_Equip.new
     #$scene = Scene_Ending.new
+    $scene = Scene_Event.new("opening.txt")
     
     loaded = false
     
@@ -159,7 +161,15 @@ class Game_Main
     # プレイヤー情報の初期化
     $player = Player.new
     load()
-
+    
+    if $player.opening == nil then
+      $player.opening = false
+    end
+    
+    if $player.opening == true then
+      $scene = Scene_Home.new
+    end
+    
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6
     $dungeon_id = 0

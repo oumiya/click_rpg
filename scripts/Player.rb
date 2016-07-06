@@ -24,6 +24,7 @@ class Player
   attr_accessor :have_armor        # 所持している防具
   attr_accessor :fever_point       # 現在のフィーバーポイント
   attr_accessor :fever_frame       # フィーバー持続時間（フレーム）
+  attr_accessor :opening           # オープニング見た
   attr_accessor :cleared           # クリア済みフラグ
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
@@ -53,6 +54,7 @@ class Player
     end
     @fever_point = 0
     @fever_frame = 0
+    @opening = false
     @cleared = false
     
 

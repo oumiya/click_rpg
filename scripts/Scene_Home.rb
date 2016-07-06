@@ -55,6 +55,8 @@ class Scene_Home < Scene_Base
       end
     end
     
+    $player.opening = true
+    
     # ホーム画面を開いた時に自動セーブ
     save()
     
