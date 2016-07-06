@@ -1,16 +1,17 @@
 require 'dxruby'
 require_relative 'ayame'
-require './scripts/Player.rb'
-require './scripts/Enemy_Data.rb'
-require './scripts/Scene_Home.rb'
-require './scripts/Scene_Battle.rb'
-require './scripts/Scene_Shop.rb'
-require './scripts/Scene_Equip.rb'
-require './scripts/Weapon_Data.rb'
 require './scripts/Armor_Data.rb'
+require './scripts/Enemy_Data.rb'
 require './scripts/Hair.rb'
 require './scripts/Hair_Item.rb'
+require './scripts/Player.rb'
 require './scripts/Save_Data.rb'
+require './scripts/Scene_Battle.rb'
+require './scripts/Scene_Ending.rb'
+require './scripts/Scene_Equip.rb'
+require './scripts/Scene_Home.rb'
+require './scripts/Scene_Shop.rb'
+require './scripts/Weapon_Data.rb'
 include Save_Data
 
 # ゲームのメインクラス
@@ -44,6 +45,7 @@ class Game_Main
     $scene = Scene_Home.new
     #$scene = Scene_Shop.new
     #$scene = Scene_Equip.new
+    #$scene = Scene_Ending.new
     
     loaded = false
     
@@ -113,6 +115,8 @@ class Game_Main
     $bgm["home"] = Ayame.new("audio/bgm/home.mp3")
     $bgm["fever"] = Ayame.new("audio/bgm/fever.mp3")
     $bgm["last_battle"] = Ayame.new("audio/bgm/last_battle.mp3")
+    $bgm["ending"] = Ayame.new("audio/bgm/ending.mp3")
+    $bgm["evil_king"] = Ayame.new("audio/bgm/evil_king.mp3")
     $playing_bgm = nil
     $last_bgm = nil
    

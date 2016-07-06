@@ -7,7 +7,7 @@ require_relative 'Scene_Base.rb'
 require_relative 'Scene_Home.rb'
 include Save_Data
 
-# ホーム画面
+# 装備変更画面
 class Scene_Equip < Scene_Base
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()

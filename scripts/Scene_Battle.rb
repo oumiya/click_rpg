@@ -7,6 +7,7 @@ require_relative 'Guard_Rank_Text.rb'
 require_relative 'Message_Box.rb'
 require_relative 'Save_Data.rb'
 require_relative 'Scene_Base.rb'
+require_relative 'Scene_Ending.rb'
 require_relative 'Sparkly.rb'
 include Save_Data
 
@@ -829,6 +830,12 @@ class Scene_Battle < Scene_Base
       end
       
       if @cut_counter > 225 then
+        if @enemy.id == 41 then
+          if $player.cleared == false then
+            $bgm["last_battle"].stop(1)
+            @next_scene = Scene_Ending.new
+          end
+        end
         # 次の戦闘へボタンの表示
         if @battle_count < 15
           Window.draw(542, 327, @next_battle)

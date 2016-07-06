@@ -6,7 +6,7 @@ require_relative 'Message_Box.rb'
 require_relative 'Save_Data.rb'
 include Save_Data
 
-# ホーム画面
+# ショップ画面
 class Scene_Shop < Scene_Base
   # 髪型アイテム
   class Hair_Item
