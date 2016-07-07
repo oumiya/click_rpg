@@ -61,7 +61,7 @@ class Player
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)
     base_value = 10  # 基本増加量
-    base_rate = 1.15 # 基本増加率
+    base_rate = 1.2 # 基本増加率
     @exp_table[0] = 10
     
     for i in 1..@exp_table.length-1 do

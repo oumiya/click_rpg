@@ -488,7 +488,7 @@ class Scene_Battle < Scene_Base
   
   # ダメージ計算
   def calc_damage(attack, defence)
-    damage = (attack.to_f * 4.0 - defence * 2.0).round
+    damage = (attack.to_f / 2.0 - defence / 4.0).round
     if damage < 1 then
       damage = 1 # 確定で 1 ダメージは与える
     end
@@ -726,79 +726,7 @@ class Scene_Battle < Scene_Base
         end
         
         # この戦闘でプレイヤーはアイテムを手に入れたか？
-        item_hit = rand(15)
-        if $player.fever? then
-          item_hit =15
-        end
-        
-        if item_hit > 10 then
-          drop_item = rand(2) # 0 なら武器 1 なら防具
-          item_name = ""
-          case $dungeon_id
-          when 1
-            if drop_item == 0 then
-              idx = rand(8)
-              $player.have_weapon[idx][1] += 1
-              item_name = $weapondata.get_weapon_data(idx)[:name]
-            else
-              idx = rand(8)
-              $player.have_armor[idx][1] += 1
-              item_name = $armordata.get_armor_data(idx)[:name]
-            end
-          when 2
-            if drop_item == 0 then
-              idx = rand(8) + 8
-              $player.have_weapon[idx][1] += 1
-              item_name = $weapondata.get_weapon_data(idx)[:name]
-            else
-              idx = rand(8) + 8
-              $player.have_armor[idx][1] += 1
-              item_name = $armordata.get_armor_data(idx)[:name]
-            end
-          when 3
-            if drop_item == 0 then
-              idx = rand(8) + 16
-              $player.have_weapon[idx][1] += 1
-              item_name = $weapondata.get_weapon_data(idx)[:name]
-            else
-              idx = rand(8) + 16
-              $player.have_armor[idx][1] += 1
-              item_name = $armordata.get_armor_data(idx)[:name]
-            end
-          when 4
-            if drop_item == 0 then
-              idx = rand(8) + 25
-              $player.have_weapon[idx][1] += 1
-              item_name = $weapondata.get_weapon_data(idx)[:name]
-            else
-              idx = rand(8) + 25
-              $player.have_armor[idx][1] += 1
-              item_name = $armordata.get_armor_data(idx)[:name]
-            end
-          when 5
-            if drop_item == 0 then
-              idx = rand(8) + 33
-              $player.have_weapon[idx][1] += 1
-              item_name = $weapondata.get_weapon_data(idx)[:name]
-            else
-              idx = rand(8) + 33
-              $player.have_armor[idx][1] += 1
-              item_name = $armordata.get_armor_data(idx)[:name]
-            end
-          when 6
-            if drop_item == 0 then
-              idx = rand(10) + 40
-              $player.have_weapon[idx][1] += 1
-              item_name = $weapondata.get_weapon_data(idx)[:name]
-            else
-              idx = rand(10) + 40
-              $player.have_armor[idx][1] += 1
-              item_name = $armordata.get_armor_data(idx)[:name]
-            end
-          end
-          
-          @win_window.draw_font(15, 123, item_name + "を手に入れた！", @text_font)
-        end
+        item_drop()
         
         # プレイヤー情報を保存
         save()
@@ -947,6 +875,48 @@ class Scene_Battle < Scene_Base
     end
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
+  end
+  
+  # アイテムドロップ処理
+  def item_drop()
+    # アイテムドロップの抽選
+    item_hit = rand(8)
+    
+    # フィーバー中は抽選確率アップ
+    if $player.fever? then
+      item_hit = rand(4)
+    end
+    
+    # アイテムドロップ抽選に当選したか？
+    if item_hit == 0 then
+      # 武器か防具の抽選
+      drop_item = rand(2) # 0 なら武器 1 なら防具
+      item_name = ""
+      
+      # ゴミ、ノーマル、レア、スーパレアの抽選
+      idx = rand(100)
+      if idx < 40
+        idx = 0
+      elsif idx < 70
+        idx = 1
+      elsif idx < 90
+        idx = 2
+      else
+        idx = 3
+      end
+      
+      idx = ($dungeon_id - 1) * 4 + idx
+      
+      if drop_item == 0 then
+        $player.have_weapon[idx][1] += 1
+        item_name = $weapondata.get_weapon_data(idx)[:name]
+      else
+        $player.have_armor[idx][1] += 1
+        item_name = $armordata.get_armor_data(idx)[:name]
+      end
+      
+      @win_window.draw_font(15, 123, item_name + "を手に入れた！", @text_font)
+    end
   end
   
 end

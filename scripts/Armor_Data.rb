@@ -4,61 +4,34 @@ class Armor_Data
   # 防具データをハッシュの配列で定義
   def initialize()
     @armor = Array.new
-    @armor.push({:name=>"汚いシャツ", :value=>1, :price=>10, :filename=>"old_shirt.png"})
-    @armor.push({:name=>"白シャツ", :value=>2, :price=>50, :filename=>"shirt-white.png"})
-    @armor.push({:name=>"灰色シャツ", :value=>3, :price=>100, :filename=>"shirt-gray.png"})
-    @armor.push({:name=>"黒シャツ", :value=>4, :price=>200, :filename=>"shirt-black.png"})
-    @armor.push({:name=>"赤シャツ", :value=>5, :price=>400, :filename=>"shirt-red.png"})
-    @armor.push({:name=>"青シャツ", :value=>6, :price=>800, :filename=>"shirt-blue.png"})
-    @armor.push({:name=>"黄色シャツ", :value=>7, :price=>1600, :filename=>"shirt-yellow.png"})
-    @armor.push({:name=>"白シャツ（長袖）", :value=>8, :price=>3200, :filename=>"long_shirt-white.png"})
-    @armor.push({:name=>"灰色シャツ（長袖）", :value=>10, :price=>6400, :filename=>"long_shirt-gray.png"}) #2
-    @armor.push({:name=>"黒シャツ（長袖）", :value=>12, :price=>12800, :filename=>"long_shirt-black.png"}) #2
-    @armor.push({:name=>"赤シャツ（長袖）", :value=>14, :price=>25600, :filename=>"long_shirt-red.png"}) #2
-    @armor.push({:name=>"青シャツ（長袖）", :value=>16, :price=>51200, :filename=>"long_shirt-blue.png"}) #2
-    @armor.push({:name=>"黄色シャツ（長袖）", :value=>18, :price=>102400, :filename=>"long_shirt-yellow.png"}) #2
-    @armor.push({:name=>"白ポロシャツ", :value=>20, :price=>102400, :filename=>"polo_shirt-white.png"}) #2
-    @armor.push({:name=>"灰色ポロシャツ", :value=>22, :price=>102400, :filename=>"polo_shirt-gray.png"}) #2
-    @armor.push({:name=>"黒ポロシャツ", :value=>24, :price=>102400, :filename=>"polo_shirt-black.png"}) #2
-    @armor.push({:name=>"赤ポロシャツ", :value=>27, :price=>102400, :filename=>"polo_shirt-red.png"}) #3
-    @armor.push({:name=>"青ポロシャツ", :value=>30, :price=>102400, :filename=>"polo_shirt-blue.png"}) #3
-    @armor.push({:name=>"黄色ポロシャツ", :value=>33, :price=>102400, :filename=>"polo_shirt-yellow.png"}) #3
-    @armor.push({:name=>"白タンクトップ", :value=>36, :price=>102400, :filename=>"tanktop-white.png"}) #3
-    @armor.push({:name=>"灰色タンクトップ", :value=>39, :price=>102400, :filename=>"tanktop-gray.png"}) #3
-    @armor.push({:name=>"黒タンクトップ", :value=>42, :price=>102400, :filename=>"tanktop-black.png"}) #3
-    @armor.push({:name=>"赤タンクトップ", :value=>45, :price=>102400, :filename=>"tanktop-red.png"}) #3
-    @armor.push({:name=>"青タンクトップ", :value=>48, :price=>102400, :filename=>"tanktop-blue.png"}) #3
-    @armor.push({:name=>"黄色タンクトップ", :value=>52, :price=>102400, :filename=>"tanktop-yellow.png"}) #4
-    @armor.push({:name=>"白ブラ", :value=>56, :price=>102400, :filename=>"bra-white.png"}) #4
-    @armor.push({:name=>"灰色ブラ", :value=>60, :price=>102400, :filename=>"bra-gray.png"}) #4
-    @armor.push({:name=>"黒ブラ", :value=>64, :price=>102400, :filename=>"bra-black.png"}) #4
-    @armor.push({:name=>"赤ブラ", :value=>68, :price=>102400, :filename=>"bra-red.png"}) #4
-    @armor.push({:name=>"青ブラ", :value=>72, :price=>102400, :filename=>"bra-blue.png"}) #4
-    @armor.push({:name=>"黄色ブラ", :value=>76, :price=>102400, :filename=>"bra-yellow.png"}) #4
-    @armor.push({:name=>"白ワンピース", :value=>80, :price=>102400, :filename=>"onepiece-white.png"}) #4
-    @armor.push({:name=>"灰色ワンピース", :value=>85, :price=>102400, :filename=>"onepiece-gray.png"}) #5
-    @armor.push({:name=>"黒ワンピース", :value=>90, :price=>102400, :filename=>"onepiece-black.png"}) #5
-    @armor.push({:name=>"赤ワンピース", :value=>95, :price=>102400, :filename=>"onepiece-red.png"}) #5
-    @armor.push({:name=>"青ワンピース", :value=>100, :price=>102400, :filename=>"onepiece-blue.png"}) #5
-    @armor.push({:name=>"黄色ワンピース", :value=>105, :price=>102400, :filename=>"onepiece-yellow.png"}) #5
-    @armor.push({:name=>"白ジャケット", :value=>110, :price=>102400, :filename=>"jacket-white.png"}) #5
-    @armor.push({:name=>"灰色ジャケット", :value=>115, :price=>102400, :filename=>"jacket-gray.png"}) #5
-    @armor.push({:name=>"黒ジャケット", :value=>120, :price=>102400, :filename=>"jacket-black.png"}) #5
-    @armor.push({:name=>"赤ジャケット", :value=>125, :price=>102400, :filename=>"jacket-red.png"}) #5
-    @armor.push({:name=>"青ジャケット", :value=>130, :price=>102400, :filename=>"jacket-blue.png"}) #5
-    @armor.push({:name=>"黄色ジャケット", :value=>135, :price=>102400, :filename=>"jacket-yellow.png"}) #5
-    @armor.push({:name=>"白の鎧", :value=>140, :price=>102400, :filename=>"armor-white.png"}) #5
-    @armor.push({:name=>"灰色の鎧", :value=>145, :price=>102400, :filename=>"armor-gray.png"}) #5
-    @armor.push({:name=>"黒の鎧", :value=>150, :price=>102400, :filename=>"armor-black.png"}) #5
-    @armor.push({:name=>"赤の鎧", :value=>155, :price=>102400, :filename=>"armor-red.png"}) #5
-    @armor.push({:name=>"青の鎧", :value=>160, :price=>102400, :filename=>"armor-blue.png"}) #5
-    @armor.push({:name=>"黄の鎧", :value=>165, :price=>102400, :filename=>"armor-yellow.png"})
-    @armor.push({:name=>"Yパンツ", :value=>180, :price=>102400, :filename=>"y-pants.png"})
+    @armor.push({:name=>"丈夫な服", :value=>1, :price=>10, :filename=>"clothes.png"})
+    @armor.push({:name=>"革の鎧", :value=>2, :price=>20, :filename=>"leather.png"})
+    @armor.push({:name=>"合板の鎧", :value=>5, :price=>50, :filename=>"plywood.png"})
+    @armor.push({:name=>"スケイルメイル", :value=>8, :price=>100, :filename=>"scales.png"})
+    @armor.push({:name=>"チェーンメイル", :value=>9, :price=>220, :filename=>"chain.png"})
+    @armor.push({:name=>"鉄の鎧", :value=>11, :price=>350, :filename=>"iron.png"})
+    @armor.push({:name=>"飛天の服", :value=>13, :price=>400, :filename=>"hiten.png"})
+    @armor.push({:name=>"魔法の服", :value=>15, :price=>800, :filename=>"magic.png"})
+    @armor.push({:name=>"漆黒の服", :value=>18, :price=>1000, :filename=>"black.png"})
+    @armor.push({:name=>"黒銀の鎧", :value=>20, :price=>1500, :filename=>"silver.png"})
+    @armor.push({:name=>"悪魔の鎧", :value=>22, :price=>2500, :filename=>"devil.png"})
+    @armor.push({:name=>"死神の服", :value=>24, :price=>4000, :filename=>"death.png"})
+    @armor.push({:name=>"火鼠の衣", :value=>28, :price=>5500, :filename=>"fire_mouse.png"})
+    @armor.push({:name=>"石綿の衣", :value=>30, :price=>7000, :filename=>"asbestos.png"})
+    @armor.push({:name=>"戦国鎧", :value=>32, :price=>8500, :filename=>"sengoku.png"})
+    @armor.push({:name=>"風林火山", :value=>35, :price=>10000, :filename=>"furinkazan.png"})
+    @armor.push({:name=>"厚い服", :value=>38, :price=>11500, :filename=>"heavy.png"})
+    @armor.push({:name=>"魔法の鎧", :value=>40, :price=>13000, :filename=>"magic_armor.png"})
+    @armor.push({:name=>"氷の鎧", :value=>42, :price=>14500, :filename=>"ice_armor.png"})
+    @armor.push({:name=>"ジュピターの鎧", :value=>44, :price=>16000, :filename=>"jupiter.png"})
+    @armor.push({:name=>"白金の鎧", :value=>45, :price=>17500, :filename=>"platinum.png"})
+    @armor.push({:name=>"勇者の鎧", :value=>48, :price=>19000, :filename=>"brave.png"})
+    @armor.push({:name=>"荒武者の鎧", :value=>50, :price=>20500, :filename=>"aramusha.png"})
+    @armor.push({:name=>"神秘の服", :value=>55, :price=>22000, :filename=>"mystery.png"})
     
     @images = Array.new
     @armor.each{|a|
       img = Image.load("image/armor/" + a[:filename])
-      img.set_color_key([0,0,0])
       @images.push(img)
     }
   end
