@@ -170,6 +170,9 @@ class Game_Main
       $scene = Scene_Home.new
     end
     
+    # ホーム画面のカーソル記憶
+    $cursor_idx = 0
+    
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6
     $dungeon_id = 0

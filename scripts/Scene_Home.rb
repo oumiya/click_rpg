@@ -20,6 +20,7 @@ class Scene_Home < Scene_Base
     @back_image = Image.load("image/system/home.png")
     # ダンジョン選択カーソル
     @cursor = Cursor.new([[114, 39], [314, 39], [514, 42], [713, 44], [515, 232], [712, 233], [523, 413], [726, 413], [523, 477], [726, 477]])
+    @cursor.index = $cursor_idx
     # お金が足りないよウィンドウの準備
     @not_enough_money = Image.load("image/system/not_enough_money.png")
     @not_enough_money_show = false
@@ -48,7 +49,7 @@ class Scene_Home < Scene_Base
       # ホームのBGMが流れていたらそのまま継続して流す
       if $playing_bgm != "home" then
         $bgm.each{|bgm_name, bgm_ayame|
-          bgm_ayame.stop(0)
+          bgm_ayame.stop(1)
         }
         $bgm["home"].play(0, 0)
         $playing_bgm  = "home"
@@ -134,6 +135,7 @@ class Scene_Home < Scene_Base
     if Input.pad_push?(P_UP) then
       if @cursor.index >=4 && @cursor.index <= 9 then
         @cursor.index -= 2
+        $cursor_idx = @cursor.index
       end
     end
     
@@ -141,12 +143,14 @@ class Scene_Home < Scene_Base
       @cursor.index += 1
       if @cursor.index > 9 then
         @cursor.index = 0
+        $cursor_idx = @cursor.index
       end
     end
     
     if Input.pad_push?(P_DOWN) then
       if @cursor.index >=2 && @cursor.index <= 7 then
         @cursor.index += 2
+        $cursor_idx = @cursor.index
       end
     end
     
@@ -154,6 +158,7 @@ class Scene_Home < Scene_Base
       @cursor.index -= 1
       if @cursor.index < 0 then
         @cursor.index = 9
+        $cursor_idx = @cursor.index
       end
     end
     
@@ -187,43 +192,43 @@ class Scene_Home < Scene_Base
     if @control_mode == 0 then
       if mouse_widthin_button?("cave") then
          @cursor.index = 0
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("forest") then
          @cursor.index = 1
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("mansion") then
          @cursor.index = 2
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("volcano") then
          @cursor.index = 3
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("ice_world") then
          @cursor.index = 4
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("castle") then
          @cursor.index = 5
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("buy_heal") then
          @cursor.index = 6
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("equip") then
          @cursor.index = 7
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("shop") then
          @cursor.index = 8
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
       if mouse_widthin_button?("quit") then
          @cursor.index = 9
-         @cursor.visible = true
+         $cursor_idx = @cursor.index
       end
     end
     
@@ -252,6 +257,7 @@ class Scene_Home < Scene_Base
     @cursor.flash = true
     @cursor.visible = true
     @cursor.index = dungeon_id - 1
+    $cursor_idx = @cursor.index
     # BGM を停止する
     $bgm["home"].stop(2.5)
     # 画面を徐々にフェードアウトさせる
