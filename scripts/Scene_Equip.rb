@@ -105,7 +105,6 @@ class Scene_Equip < Scene_Base
     @max_weapon_page = (@weapons.size.to_f / 9.0).ceil
     @max_armor_page = (@armors.size.to_f / 9.0).ceil
     
-    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
@@ -150,9 +149,9 @@ class Scene_Equip < Scene_Base
     
     # 攻撃力の描画
     Window.draw_font(12, 26, "攻撃力", @font)
-    Window.draw_font(120, 26, $player.ATK.to_s, @font)
+    Window.draw_font(120, 26, $player.real_ATK.to_s, @font)
     Window.draw_font(12, 64, "防御力", @font)
-    Window.draw_font(120, 64, $player.DEF.to_s, @font)
+    Window.draw_font(120, 64, $player.real_DEF.to_s, @font)
 
     # 罫線の描画
     Window.draw_box(433, 70, 910, 110, [255, 255, 255])
@@ -338,7 +337,7 @@ class Scene_Equip < Scene_Base
       end
     end
     
-    if (Input.mouse_push?(M_LBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON0) && @control_mode == 1) then
+    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON0) && $control_mode == 1) then
       # 武器ボタンを押下
       if @cursor.index == 0 then
         @tab_index = 0
@@ -493,7 +492,7 @@ class Scene_Equip < Scene_Base
     end
     
     # マウスホバー処理
-    if @control_mode == 0 then
+    if $control_mode == 0 then
       # 武器ボタン
       if mouse_widthin_button?("weapon") then
         @cursor.index = 0
@@ -552,12 +551,12 @@ class Scene_Equip < Scene_Base
     d = Math.sqrt(d)
     
     if d > 32 then
-      @control_mode = 0
+      $control_mode = 0
       Input.mouse_enable = true
     end
     
     if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
-      @control_mode = 1
+      $control_mode = 1
       Input.mouse_enable = false
     end
     

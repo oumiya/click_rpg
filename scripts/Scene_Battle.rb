@@ -7,6 +7,7 @@ require_relative 'Guard_Rank_Text.rb'
 require_relative 'Message_Box.rb'
 require_relative 'Save_Data.rb'
 require_relative 'Scene_Base.rb'
+require_relative 'Scene_Box.rb'
 require_relative 'Scene_Ending.rb'
 require_relative 'Sparkly.rb'
 include Save_Data
@@ -51,6 +52,11 @@ class Scene_Battle < Scene_Base
     @dungeon_end.box_fill(2, 2, 135, 39, [128, 255, 255, 255])
     @dungeon_end.box_fill(4, 4, 132, 37, [128, 0, 0, 0])
     @dungeon_end.draw_font(9, 9, "街に戻る", @text_font)
+    
+    @show_result = Image.new(138, 42, [128, 0, 0, 0])
+    @show_result.box_fill(2, 2, 135, 39, [128, 255, 255, 255])
+    @show_result.box_fill(4, 4, 132, 37, [128, 0, 0, 0])
+    @show_result.draw_font(9, 9, "　　次へ　", @text_font)
     
     # 背景画像読み込み
     @background = nil
@@ -109,7 +115,6 @@ class Scene_Battle < Scene_Base
     
     @next_scene = nil
     
-    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
@@ -117,7 +122,7 @@ class Scene_Battle < Scene_Base
     case $dungeon_id
     when 1
       # どうくつダンジョン
-      if @battle_count < 14
+      if $step_id < 5 || @battle_count < 7
         @enemy = $enemydata.get_enemy(rand(6))
         @battle_count += 1
       else
@@ -126,7 +131,7 @@ class Scene_Battle < Scene_Base
       end
     when 2
       # 森のダンジョン
-      if @battle_count < 14
+      if $step_id < 5 || @battle_count < 7
         @enemy = $enemydata.get_enemy(rand(6) + 7)
         @battle_count += 1
       else
@@ -135,7 +140,7 @@ class Scene_Battle < Scene_Base
       end
     when 3
       # 死者の館
-      if @battle_count < 14
+      if $step_id < 5 || @battle_count < 7
         @enemy = $enemydata.get_enemy(rand(6) + 14)
         @battle_count += 1
       else
@@ -144,7 +149,7 @@ class Scene_Battle < Scene_Base
       end
     when 4
       # 火吹き山
-      if @battle_count < 14
+      if $step_id < 5 || @battle_count < 7
         @enemy = $enemydata.get_enemy(rand(6) + 21)
         @battle_count += 1
       else
@@ -153,7 +158,7 @@ class Scene_Battle < Scene_Base
       end
     when 5
       # 氷の世界
-      if @battle_count < 14
+      if $step_id < 5 || @battle_count < 7
         @enemy = $enemydata.get_enemy(rand(6) + 28)
         @battle_count += 1
       else
@@ -162,7 +167,7 @@ class Scene_Battle < Scene_Base
       end
     when 6
       # まおーじょー
-      if @battle_count < 14
+      if $step_id < 5 || @battle_count < 7
         @enemy = $enemydata.get_enemy(rand(6) + 35)
         @battle_count += 1
       else
@@ -242,7 +247,7 @@ class Scene_Battle < Scene_Base
 
       if $playing_bgm == "fever" then
         $bgm["fever"].stop(0)
-        if @battle_count < 14 then
+        if @battle_count != 8 || $step_id != 5 then
           $bgm["battle"].play(0, 0)
           $playing_bgm = "battle"
         else
@@ -401,7 +406,7 @@ class Scene_Battle < Scene_Base
         if @enemy.id == 41
           Message_Box.show("我が名は「まおー」<br>魔を統べる者だ", -1, 340)
         else
-          if @battle_count < 15 then
+          if @battle_count != 8 || $step_id != 5 then
             if $playing_bgm != "fever" then
               if $playing_bgm != "battle" then
                 $playing_bgm = "battle"
@@ -467,6 +472,14 @@ class Scene_Battle < Scene_Base
         else
           Window.draw_alpha(0, 0, @black_box, 255, z=1000)
           @next_scene = Scene_Home.new
+        end
+      elsif @go_result then
+        if @cut_counter < 60 then
+          Window.draw_alpha(0, 0, @black_box, @alpha, z=1000)
+          @alpha += 4
+        else
+          Window.draw_alpha(0, 0, @black_box, 255, z=1000)
+          @next_scene = Scene_Box.new
         end
       else
         battle_end()
@@ -665,7 +678,7 @@ class Scene_Battle < Scene_Base
       @attack_effect.update()
       
       # あと何匹倒せば良いのかを表示
-      Message_Box.show("あと" + (15 - @battle_count).to_s + "戦", 0, 34)
+      Message_Box.show("あと" + (9 - @battle_count).to_s + "戦", 0, 34)
   end
   
   # プレイヤーのHPゲージの描画
@@ -766,14 +779,14 @@ class Scene_Battle < Scene_Base
           end
         end
         # 次の戦闘へボタンの表示
-        if @battle_count < 15
+        if @battle_count < 8
           Window.draw(542, 327, @next_battle)
           Window.draw(269, 327, @dungeon_end)
         else
-          Window.draw(542, 327, @dungeon_end)
+          Window.draw(542, 327, @show_result)
         end
         
-        if Input.pad_push?(P_LEFT) && @battle_count < 15 then
+        if Input.pad_push?(P_LEFT) && @battle_count < 8 then
           @cursor.index = 0
         end
         
@@ -795,12 +808,20 @@ class Scene_Battle < Scene_Base
                @before_end = true
              end
              
-             if @battle_count < 15
+             if @battle_count < 8
                @cut = 0
                @cut_counter = -1
              else
-               @go_home = true
+               @go_result = true
                @cut_counter = -1
+               
+               # 進行度の計算
+               progress = ($dungeon_id - 1) * 5
+               progress += ($step_id)
+               
+               if $player.progress < progress then
+                 $player.progress = progress
+               end
              end
           end
           
@@ -865,12 +886,12 @@ class Scene_Battle < Scene_Base
     d = Math.sqrt(d)
     
     if d > 32 then
-      @control_mode = 0
+      $control_mode = 0
       Input.mouse_enable = true
     end
     
     if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
-      @control_mode = 1
+      $control_mode = 1
       Input.mouse_enable = false
     end
     

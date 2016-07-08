@@ -109,6 +109,7 @@ class Game_Main
     $sounds["v_win"] = Ayame.new("audio/se/voice_win.mp3")              # 戦闘勝利音声
     $sounds["v_lose"] = Ayame.new("audio/se/voice_lose.mp3")            # 戦闘敗北音声
     $sounds["decision"] = Ayame.new("audio/se/decision.mp3")            # 決定音
+    $sounds["box"] = Ayame.new("audio/se/box.mp3")                      # 宝箱
     
     # BGMを読み込む
     $bgm = Hash.new
@@ -176,6 +177,11 @@ class Game_Main
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6
     $dungeon_id = 0
+    # ステップID ステップは全部で 5 ステップ
+    # 値は 1 ～ 5
+    $step_id = 0
+    
+    $control_mode = 1 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
   end
 end
 

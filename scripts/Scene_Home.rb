@@ -3,13 +3,13 @@ require_relative 'Cursor.rb'
 require_relative 'Fade_Effect.rb'
 require_relative 'Save_Data.rb'
 require_relative 'Scene_Base.rb'
-require_relative 'Scene_Battle.rb'
+require_relative 'Scene_Select_Battale.rb'
 include Save_Data
 
 # ホーム画面
 class Scene_Home < Scene_Base
   # 薬草の持てる上限数
-  MAX_HEAL_COUNT = 20
+  MAX_HEAL_COUNT = 10
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()
@@ -61,9 +61,10 @@ class Scene_Home < Scene_Base
     # ホーム画面を開いた時に自動セーブ
     save()
     
+    $dungeon_id = 0
+    
     @message = ""
     
-    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
@@ -108,9 +109,9 @@ class Scene_Home < Scene_Base
     # フェードアウト/フェードインの表示
     @fade_effect.update
     if @fade_effect.effect_end? then
-      # 戦闘シーンに移行
+      # ダンジョン選択シーンに移行
       if @scene_index == 1 then
-        @next_scene = Scene_Battle.new
+        @next_scene = Scene_Select_Battale.new
       end
       # 装備シーンに移行
       if @scene_index == 2 then
@@ -163,7 +164,7 @@ class Scene_Home < Scene_Base
     end
     
     # マウスの左クリック か 決定ボタン押下
-    if (Input.mouse_push?(M_LBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON0) && @control_mode == 1) then
+    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON0) && $control_mode == 1) then
       # 遷移先ダンジョンを決定
       if @cursor.index <= 5 then
         dungeon_trantision(@cursor.index + 1)
@@ -189,7 +190,7 @@ class Scene_Home < Scene_Base
     
     # マウスカーソルホバー
     # 操作モードが マウスモード の場合のみ
-    if @control_mode == 0 then
+    if $control_mode == 0 then
       if mouse_widthin_button?("cave") then
          @cursor.index = 0
          $cursor_idx = @cursor.index
@@ -247,23 +248,23 @@ class Scene_Home < Scene_Base
   
   # 指定のダンジョンに遷移する
   def dungeon_trantision(dungeon_id)
-    # 決定音を鳴らす
-    $sounds["decision"].play(1, 0)
-    # ダンジョンIDを1に設定
-    $dungeon_id = dungeon_id
-    # フェードアウト後に戦闘シーンへ遷移させる
-    @scene_index = 1
-    # カーソルを点滅させる
-    @cursor.flash = true
-    @cursor.visible = true
-    @cursor.index = dungeon_id - 1
-    $cursor_idx = @cursor.index
-    # BGM を停止する
-    $bgm["home"].stop(2.5)
-    # 画面を徐々にフェードアウトさせる
-    @fade_effect.setup(0)
-    # カーソルを 95 フレーム点滅させるためにウェイト
-    @wait_frame = 95
+    clear_dungeon = ($player.progress.to_f / 5.0).floor
+    clear_dungeon += 1
+    if clear_dungeon >= dungeon_id then
+      # 決定音を鳴らす
+      $sounds["decision"].play(1, 0)
+      # ダンジョンIDを1に設定
+      $dungeon_id = dungeon_id
+      # フェードアウト後に戦闘シーンへ遷移させる
+      @scene_index = 1
+      # カーソルを点滅させる
+      @cursor.flash = true
+      @cursor.visible = true
+      @cursor.index = dungeon_id - 1
+      $cursor_idx = @cursor.index
+      # 画面を徐々にフェードアウトさせる
+      @fade_effect.setup(0)
+    end
   end
   
   # 薬草を買うボタンを押下
@@ -322,12 +323,12 @@ class Scene_Home < Scene_Base
     d = Math.sqrt(d)
     
     if d > 32 then
-      @control_mode = 0
+      $control_mode = 0
       Input.mouse_enable = true
     end
     
     if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
-      @control_mode = 1
+      $control_mode = 1
       Input.mouse_enable = false
     end
     
@@ -382,9 +383,9 @@ class Scene_Home < Scene_Base
     y += 23
     Window.draw_font(x, y, $player.max_hp.to_s, @status_font) # HP
     y += 23
-    Window.draw_font(x, y, $player.ATK.to_s, @status_font) # 攻撃力
+    Window.draw_font(x, y, $player.real_ATK.to_s, @status_font) # 攻撃力
     y += 23
-    Window.draw_font(x, y, $player.DEF.to_s, @status_font) # 防御力
+    Window.draw_font(x, y, $player.real_DEF.to_s, @status_font) # 防御力
     y += 21
     Window.draw_font(x, y, $player.gold.to_s, @status_font) # ゴールド
     y += 23

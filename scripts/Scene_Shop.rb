@@ -91,7 +91,6 @@ class Scene_Shop < Scene_Base
     # 一括売却ボタンのフォント
     @sell_font = Font.new(20, "ＭＳ ゴシック")
     
-    @control_mode = 0 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
@@ -302,7 +301,7 @@ class Scene_Shop < Scene_Base
       end
     end
     
-    if (Input.mouse_push?(M_LBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON0) && @control_mode == 1) then
+    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON0) && $control_mode == 1) then
       
       # 武器ボタンを押下
       if @cursor.index == 0 then
@@ -490,7 +489,7 @@ class Scene_Shop < Scene_Base
     end
     
     # 売却処理
-    if (Input.mouse_push?(M_RBUTTON) && @control_mode == 0) || (Input.pad_push?(P_BUTTON1) && @control_mode == 1) then
+    if (Input.mouse_push?(M_RBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON1) && $control_mode == 1) then
       if @cursor.index >= 4 && @cursor.index <= 12 then
         $sounds["decision"].play(1, 0)
         idx = @cursor.index - 4
@@ -546,7 +545,7 @@ class Scene_Shop < Scene_Base
     end
     
     # マウスホバー処理
-    if @control_mode == 0 then
+    if $control_mode == 0 then
       # 武器ボタン
       if mouse_widthin_button?("weapon") then
         @cursor.index = 0
@@ -603,12 +602,12 @@ class Scene_Shop < Scene_Base
     d = Math.sqrt(d)
     
     if d > 32 then
-      @control_mode = 0
+      $control_mode = 0
       Input.mouse_enable = true
     end
     
     if Input.pad_push?(P_UP) || Input.pad_push?(P_LEFT) || Input.pad_push?(P_RIGHT) || Input.pad_push?(P_DOWN) then
-      @control_mode = 1
+      $control_mode = 1
       Input.mouse_enable = false
     end
     

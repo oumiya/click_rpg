@@ -26,6 +26,7 @@ module Save_Data
     save_data["fever_frame"] = $player.fever_frame   # フィーバー持続時間
     save_data["opening"] = $player.opening           # オープニングを見たかどうか
     save_data["cleared"] = $player.cleared           # クリア済みかどうか
+    save_data["progress"] = $player.progress         # 進行度
   
     open("save_data.dat", 'w') do |io|
       JSON.dump(save_data, io)
@@ -59,6 +60,7 @@ module Save_Data
       $player.fever_frame = save_data["fever_frame"]    # フィーバー持続時間
       $player.opening = save_data["opening"]            # オープニングを見たかどうか
       $player.cleared = save_data["cleared"]            # クリア済みかどうか
+      $player.progress = save_data["progress"]          # 進行度
     end
     
   end

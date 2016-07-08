@@ -26,6 +26,7 @@ class Player
   attr_accessor :fever_frame       # フィーバー持続時間（フレーム）
   attr_accessor :opening           # オープニング見た
   attr_accessor :cleared           # クリア済みフラグ
+  attr_accessor :progress          # 進行度
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
   
@@ -48,7 +49,7 @@ class Player
     @equip_armor = -1
     @have_weapon = Array.new
     @have_armor = Array.new
-    for i in 0..49 do
+    for i in 0..23 do
       @have_weapon.push([i, 0])
       @have_armor.push([i, 0])
     end
@@ -56,6 +57,7 @@ class Player
     @fever_frame = 0
     @opening = false
     @cleared = false
+    @progress = 0
     
 
     # 経験値テーブルの作成
@@ -93,6 +95,18 @@ class Player
     return res
   end
   
+  def real_ATK()
+    res = 0
+    if @equip_weapon >= 0 then
+      value = $weapondata.get_weapon_data(@equip_weapon)[:value]
+      res = @attack + value
+    else
+      res = @attack
+    end
+    
+    return res
+  end
+  
   def DEF()
     res = 0
     if @equip_armor >= 0 then
@@ -104,6 +118,18 @@ class Player
     
     if fever?() then
       res *= 2
+    end
+    
+    return res
+  end
+  
+  def real_DEF()
+    res = 0
+    if @equip_armor >= 0 then
+      value = $armordata.get_armor_data(@equip_armor)[:value]
+      res = @defence + value
+    else
+      res = @defence
     end
     
     return res
@@ -129,7 +155,9 @@ class Player
   
   # レベルアップ時のステータスアップ
   def status_up()
+    rate = @hp.to_f / @max_hp.to_f
     @max_hp += 25             # 固定で 25 上昇する
+    @hp = @max_hp * rate
     @attack +=  (1 + rand(2)) # 1 ～ 2 上昇する
     @defence += (1 + rand(2)) # 1 ～ 2 上昇する
   end
