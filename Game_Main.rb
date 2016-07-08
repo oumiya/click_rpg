@@ -47,7 +47,7 @@ class Game_Main
     #$scene = Scene_Shop.new
     #$scene = Scene_Equip.new
     #$scene = Scene_Ending.new
-    $scene = Scene_Event.new("opening.txt")
+    $scene = Scene_Event.new("opening.dat")
     
     loaded = false
     

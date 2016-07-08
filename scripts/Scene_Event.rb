@@ -65,6 +65,11 @@ class Scene_Event < Scene_Base
     # テキスト表示用のフォント
     @font = Font.new(24)
     @message_window = Image.load("image/system/message_window.png")
+    @message_window_state = 0 # 0 が非表示 1 が表示中 2 が表示済み 3 が消去中 で 3 から 1に戻る
+    @message_window_alpha = 0
+    @message_status = 0 # 1 が表示中
+    @message_idx = 0
+    @message_line = 0
     # ピクチャー表示用の透明度
     @picture_alpha = 0
     # ピクチャー表示モード
@@ -114,6 +119,16 @@ class Scene_Event < Scene_Base
     
     # ウェイト処理
     return if wait?
+    
+    # メッセージウィンドウの表示/消去中
+    if @message_window_state == 1 || @message_window_state == 3 then
+      return
+    end
+    
+    # メッセージの表示中
+    if @message_status == 1 then
+      return
+    end
     
     # キー入力待ち
     if @key_wait == true then
@@ -170,14 +185,52 @@ class Scene_Event < Scene_Base
         Window.draw_alpha(0, 0, @picture, @picture_alpha)
       end
       # メッセージの描画
-      if @name != nil && @message != nil then
+      if @message_window_state == 1 || @message_window_state == 3 then
+        Window.draw_alpha(76, 372, @message_window, @message_window_alpha)
+        if @message_window_state == 1 then
+          @message_window_alpha += 9
+          if @message_window_alpha > 255
+            @message_window_alpha = 255
+            @message_window_state = 2
+          end
+        end
+        if @message_window_state == 3 then
+          @message_window_alpha -= 9
+          if @message_window_alpha < 0 then
+            @message_window_alpha = 0
+            @message_window_state = 0
+          end
+        end
+        return
+      end
+      if @message_window_state == 2 then
         Window.draw(76, 372, @message_window)
-        Window.draw_font(86, 380, @name, @font)
+      end
+      if @name != nil && @message != nil then
+        Window.draw_font(84, 380, @name, @font)
+        
         y = 416
-        @message.each{|line|
-          Window.draw_font(86, y, line, @font)
+        n = @message_line
+        if @message_line >= @message.size then
+          n -= 1
+          @message_status = 0
+        end
+        
+        for i in 0..n do
+          line = @message[i]
+          j = line.size
+          if i == @message_line then
+            @message_idx += 1
+            j = @message_idx
+            if @message_idx >= line.size then
+              @message_idx = 0
+              @message_line += 1
+            end
+          end
+          Window.draw_font(86, y, line[0, j], @font)
           y = y + @font.size
-        }
+        end
+
       end
     end
   end
@@ -236,26 +289,31 @@ class Scene_Event < Scene_Base
     when "se_load"
       se_load(argument1, argument2)
     when "mes"
+      @message_window_state = 1
       mes(argument1, argument2)
     when "bg"
       bg(argument1)
     when "chr"
       charcter(argument1, argument2)
     when "pic"
+      @message_window_state = 3
       picture(argument1)
     when "bg_clear"
       bg_clear
     when "chr_clear"
       chr_clear(argument1)
     when "pic_clear"
+      @message_window_state = 3
       pic_clear
     when "bgm"
       bgm(argument1)
     when "se"
       se(argument1)
     when "fade_in"
+      @message_window_state = 3
       fade_in()
     when "fade_out"
+      @message_window_state = 3
       @fade_effect.setup(0)
     when "wait"
       set_wait_frame(argument1.to_i)
@@ -296,7 +354,9 @@ class Scene_Event < Scene_Base
     @name = name
     @message = message.split("<br>")
     @key_wait = true
-    @wait_frame = 20
+    @message_status = 1 # 1 が表示中
+    @message_idx = 0
+    @message_line = 0
   end
   
   # 背景画像を表示
