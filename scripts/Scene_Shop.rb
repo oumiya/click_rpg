@@ -301,7 +301,7 @@ class Scene_Shop < Scene_Base
       end
     end
     
-    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON0) && $control_mode == 1) then
+    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?($attack_button) && $control_mode == 1) then
       
       # 武器ボタンを押下
       if @cursor.index == 0 then
@@ -489,7 +489,7 @@ class Scene_Shop < Scene_Base
     end
     
     # 売却処理
-    if (Input.mouse_push?(M_RBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON1) && $control_mode == 1) then
+    if (Input.mouse_push?(M_RBUTTON) && $control_mode == 0) || (Input.pad_push?($guard_button) && $control_mode == 1) then
       if @cursor.index >= 4 && @cursor.index <= 12 then
         $sounds["decision"].play(1, 0)
         idx = @cursor.index - 4

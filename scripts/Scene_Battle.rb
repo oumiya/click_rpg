@@ -510,11 +510,11 @@ class Scene_Battle < Scene_Base
   
   # 攻撃処理
   def attack()
-    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
+    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
       if (Input.mouse_x >= @enemy.sx + ENEMY_X &&
          Input.mouse_y >= @enemy.sy + ENEMY_Y + @e_atk_move &&
          Input.mouse_x <= @enemy.ex + ENEMY_X &&
-         Input.mouse_y <= @enemy.ey + ENEMY_Y + @e_atk_move) || Input.pad_push?(P_BUTTON0)then
+         Input.mouse_y <= @enemy.ey + ENEMY_Y + @e_atk_move) || Input.pad_push?($attack_button)then
          
         if @attack_effect.visible == false || @attack_effect.frame_count > 15 then
           diff = $frame_counter - @combo_frame
@@ -564,7 +564,7 @@ class Scene_Battle < Scene_Base
   # ガードのキー入力処理
   def guard()
     # シフトキーでガード
-    if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) || Input.mouse_push?(M_RBUTTON) || Input.pad_push?(P_BUTTON1) || Input.pad_push?(P_LEFT) then
+    if Input.key_push?(K_LSHIFT) || Input.key_push?(K_RSHIFT) || Input.mouse_push?(M_RBUTTON) || Input.pad_push?($guard_button) || Input.pad_push?(P_LEFT) then
       # 攻撃アイコンがガードボタン内にあるか？
       @attack_icons.each{|icon|
         if icon.visible == true then
@@ -607,7 +607,7 @@ class Scene_Battle < Scene_Base
   
   # 回復ボタンのキー入力処理
   def heal()
-    if Input.key_push?(K_SPACE) || Input.pad_push?(P_BUTTON2) then
+    if Input.key_push?(K_SPACE) || Input.pad_push?($heal_button) then
         if $player.heal_count > 0 then
           # HP が減っている場合のみ回復処理
           if $player.hp < $player.max_hp then
@@ -796,13 +796,13 @@ class Scene_Battle < Scene_Base
         
         @cursor.draw
         
-        if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
+        if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
           # 戦闘後、次の戦闘へ行くボタンを押した
           # （ボス戦終了後は街へ戻るボタンに変化）
           if (Input.mouse_x >= 542 &&
              Input.mouse_y >= 327 &&
              Input.mouse_x <= 680 &&
-             Input.mouse_y <= 369) || (Input.pad_push?(P_BUTTON0) && @cursor.index == 1) then
+             Input.mouse_y <= 369) || (Input.pad_push?($attack_button) && @cursor.index == 1) then
              
              if @before_end == false then
                @before_end = true
@@ -829,7 +829,7 @@ class Scene_Battle < Scene_Base
           if (Input.mouse_x >= 269 &&
              Input.mouse_y >= 327 &&
              Input.mouse_x <= 407 &&
-             Input.mouse_y <= 369) || (Input.pad_push?(P_BUTTON0) && @cursor.index == 0) then
+             Input.mouse_y <= 369) || (Input.pad_push?($attack_button) && @cursor.index == 0) then
              
              @go_home = true
              @cut_counter = -1

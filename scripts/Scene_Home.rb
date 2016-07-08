@@ -164,7 +164,7 @@ class Scene_Home < Scene_Base
     end
     
     # マウスの左クリック か 決定ボタン押下
-    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON0) && $control_mode == 1) then
+    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?($attack_button) && $control_mode == 1) then
       # 遷移先ダンジョンを決定
       if @cursor.index <= 5 then
         dungeon_trantision(@cursor.index + 1)

@@ -11,6 +11,7 @@ require './scripts/Scene_Ending.rb'
 require './scripts/Scene_Event.rb'
 require './scripts/Scene_Equip.rb'
 require './scripts/Scene_Home.rb'
+require './scripts/Scene_Key_Config.rb'
 require './scripts/Scene_Shop.rb'
 require './scripts/Weapon_Data.rb'
 include Save_Data
@@ -42,11 +43,6 @@ class Game_Main
     $frame_counter = 0
     
     # 初期シーンをセット
-    #$scene = Scene_Battle.new
-    #$scene = Scene_Home.new
-    #$scene = Scene_Shop.new
-    #$scene = Scene_Equip.new
-    #$scene = Scene_Ending.new
     $scene = Scene_Event.new("opening.dat")
     
     loaded = false
@@ -182,6 +178,29 @@ class Game_Main
     $step_id = 0
     
     $control_mode = 1 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
+    
+    # ゲームのコンフィグ情報を読み込む
+    $attack_button = P_BUTTON0
+    $guard_button = P_BUTTON1
+    $heal_button = P_BUTTON2
+    
+    f = File.open("config.ini")
+    f.each{|line|
+      config = line.strip.split(":")
+      if config.size >= 2 then
+        config[0] = config[0].strip
+        config[1] = config[1].strip
+        case config[0]
+        when "attack_button"
+          $attack_button = config[1].to_i
+        when "guard_button"
+          $guard_button = config[1].to_i
+        when "heal_button"
+          $heal_button = config[1].to_i
+        end
+      end
+    }
+    
   end
 end
 

@@ -85,7 +85,7 @@ class Scene_Box < Scene_Base
     Message_Box.show("街へ戻る", -1, -1, @font, 128)
     
     # キー入力待ち
-    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
+    if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
       @next_scene = Scene_Home.new
     end
     

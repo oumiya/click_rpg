@@ -132,7 +132,7 @@ class Scene_Event < Scene_Base
     
     # キー入力待ち
     if @key_wait == true then
-      if Input.mouse_push?(M_LBUTTON) || Input.pad_push?(P_BUTTON0) then
+      if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
         @message = nil
         @name = nil
         @key_wait = false

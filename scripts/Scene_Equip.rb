@@ -337,7 +337,7 @@ class Scene_Equip < Scene_Base
       end
     end
     
-    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?(P_BUTTON0) && $control_mode == 1) then
+    if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?($attack_button) && $control_mode == 1) then
       # 武器ボタンを押下
       if @cursor.index == 0 then
         @tab_index = 0
