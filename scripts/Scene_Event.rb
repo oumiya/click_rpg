@@ -307,8 +307,12 @@ class Scene_Event < Scene_Base
       pic_clear
     when "bgm"
       bgm(argument1)
+    when "bgm_stop"
+      bgm_stop()
     when "se"
       se(argument1)
+    when "se_stop"
+      se_stop()
     when "fade_in"
       @message_window_state = 3
       fade_in()
@@ -415,10 +419,24 @@ class Scene_Event < Scene_Base
     @music.play(0, 1)
   end
   
+  # BGM を停止
+  def bgm_stop()
+    if @music != nil then
+      @music.stop(1)
+    end
+  end
+  
   # 効果音を再生
   def se(tag)
     @se = @sound[tag]
-    @se.play(0, 0)
+    @se.play(1, 0)
+  end
+  
+  # 効果音を停止
+  def se_stop()
+    if @se != nil then
+      @se.stop(0)
+    end
   end
   
   # フェードイン/描画開始
