@@ -3,6 +3,7 @@ require_relative 'Cursor.rb'
 require_relative 'Fade_Effect.rb'
 require_relative 'Save_Data.rb'
 require_relative 'Scene_Base.rb'
+require_relative 'Scene_Key_Config.rb'
 require_relative 'Scene_Select_Battale.rb'
 include Save_Data
 
@@ -186,6 +187,11 @@ class Scene_Home < Scene_Base
       if @cursor.index == 9 then
         game_quit()
       end
+      
+      # ゲームパッドのコンフィグ設定
+      if mouse_widthin_button?("pad_config") then
+        @next_scene = Scene_Key_Config.new
+      end
     end
     
     # マウスカーソルホバー
@@ -354,6 +360,8 @@ class Scene_Home < Scene_Base
     @button["shop"] = [538, 471, 714, 531]       # ショップボタン
     @button["quit"] = [739, 471, 915, 531]       # ゲームをやめるボタン
     
+    # 上部メニューボタン
+    @button["pad_config"] = [0, 0, 160, 36]
   end
   
   # マウスカーソルがボタンの座標内に入っているかどうかを返します
