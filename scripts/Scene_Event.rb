@@ -76,6 +76,7 @@ class Scene_Event < Scene_Base
     # 0 何もしない 1 徐々に透明度を低くする 255 に達したら 0 に戻る
     # 2 徐々に透明度を高くする 0 に達したら 0 に戻る
     @picture_mode = 0
+    @fade_out = false
   end
   
   # フレーム更新処理
@@ -115,6 +116,10 @@ class Scene_Event < Scene_Base
     @fade_effect.update
     if @fade_effect.effect_end? == false then
       return
+    else
+      if @fade_out then
+        Window.draw_box_fill(0, 0, Game_Main::WINDOW_WIDTH - 1, Game_Main::WINDOW_HEIGHT - 1, [0,0,0])
+      end
     end
     
     # ウェイト処理
@@ -291,6 +296,8 @@ class Scene_Event < Scene_Base
     when "mes"
       @message_window_state = 1
       mes(argument1, argument2)
+    when "click"
+      click()
     when "bg"
       bg(argument1)
     when "chr"
@@ -319,6 +326,7 @@ class Scene_Event < Scene_Base
     when "fade_out"
       @message_window_state = 3
       @fade_effect.setup(0)
+      @fade_out = true
     when "wait"
       set_wait_frame(argument1.to_i)
     when "scene"
@@ -364,6 +372,12 @@ class Scene_Event < Scene_Base
     @message_status = 1 # 1 が表示中
     @message_idx = 0
     @message_line = 0
+  end
+  
+  # クリック待ち
+  def click()
+    @key_wait = true
+    @wait_frame = 30
   end
   
   # 背景画像を表示
@@ -444,6 +458,7 @@ class Scene_Event < Scene_Base
   
   # フェードイン/描画開始
   def fade_in()
+    @fade_out = false
     @draw_start = true
     @fade_effect.setup(1)
   end
