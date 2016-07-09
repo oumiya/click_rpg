@@ -14,7 +14,7 @@ class Scene_Event < Scene_Base
   def initialize(event_filename)
     @event_data = nil
     @idx = 0
-    File.open("event/" + event_filename) do |file|
+    File.open("event/" + event_filename, 'r:utf-8') do |file|
       @event_data = file.read.split("\n")
     end
     @wait_frame = 0
@@ -207,7 +207,7 @@ class Scene_Event < Scene_Base
         Window.draw(76, 372, @message_window)
       end
       if @name != nil && @message != nil then
-        Window.draw_font(84, 380, @name, @font)
+        Window.draw_font(84, 377, @name, @font)
         
         y = 416
         n = @message_line
@@ -356,6 +356,9 @@ class Scene_Event < Scene_Base
   # 文章を表示
   def mes(name, message)
     @name = name
+    if @name == "主人公" then
+      @name = $player.name
+    end
     @message = message.split("<br>")
     @key_wait = true
     @message_status = 1 # 1 が表示中

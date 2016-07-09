@@ -1,3 +1,4 @@
+require 'tk'
 require 'dxruby'
 require_relative 'ayame'
 require './scripts/Armor_Data.rb'
@@ -15,6 +16,11 @@ require './scripts/Scene_Key_Config.rb'
 require './scripts/Scene_Shop.rb'
 require './scripts/Weapon_Data.rb'
 include Save_Data
+
+def warning( msg )
+  ret_value  = TkDialog.new('message'=>'名前は8文字以内で入力してください', 'buttons'=>'Ok', 'default'=>0, 'bitmap'=>'warning').value
+  msg.text( ret_value )
+end
 
 # ゲームのメインクラス
 class Game_Main
@@ -165,6 +171,32 @@ class Game_Main
     
     if $player.opening == true then
       $scene = Scene_Home.new
+    else
+      root_window = TkRoot.new {
+        title "あなたの名前を入力してください"
+        resizable 0,0
+      }
+
+      x = root_window.winfo_screenwidth / 2 - 160
+      y = root_window.winfo_screenheight / 2 - 120
+
+      root_window.geometry = "320x50+" + x.to_s + "+" + y.to_s
+
+      var = TkVariable.new('ルウ')
+      TkEntry.new(root_window, textvariable: var, width: 16).pack
+
+      TkButton.new(root_window, text: 'OK', command: proc{
+        name = var.value.encode("UTF-8", "Shift_JIS")
+        if name.size > 8 then
+          msg = TkMessage.new.pack
+          warning(msg)
+        else
+          $player.name = name
+          root_window.destroy
+        end
+      }).pack
+
+      Tk.mainloop
     end
     
     # ホーム画面のカーソル記憶

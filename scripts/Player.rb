@@ -6,6 +6,7 @@ class Player
   FEVER_MAX_FRAME = 600
   FEVER_MAX_POINT = 500
   
+  attr_accessor :name              # プレイヤー名
   attr_accessor :level             # レベル
   attr_accessor :max_hp            # 最大HP
   attr_accessor :hp                # 現在のHP
@@ -32,6 +33,7 @@ class Player
   
   def initialize()
     # 初期化
+    @name = "ルウ"
     @level = 1
     @max_hp = 100
     @hp = @max_hp
