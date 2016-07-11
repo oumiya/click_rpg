@@ -66,5 +66,9 @@ class Fade_Effect
     
     @frame_count += 1
   end
+  
+  def dispose()
+    @black_box.dispose
+  end
 
 end

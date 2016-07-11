@@ -34,4 +34,10 @@ class Guard_Rank_Text
       end
     end
   end
+  
+  def dispose()
+    @perfect.dispose
+    @good.dispose
+    @poor.dispose
+  end
 end

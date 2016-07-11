@@ -66,7 +66,7 @@ class Scene_Select_Battale < Scene_Base
     @dungeon_y += 99
     
     # ステップ名描画用フォント
-    @step_font = Font.new(24)
+    @wave_font = Font.new(24)
     
     # 説明文の描画用フォント
     @memo_font = Font.new(32)
@@ -126,7 +126,7 @@ class Scene_Select_Battale < Scene_Base
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
     @wait_frame = 0
     @scene_index = 0
-    $step_id = 0
+    $wave_id = 0
   end
   
   # フレーム更新処理
@@ -187,19 +187,19 @@ class Scene_Select_Battale < Scene_Base
     # マウスカーソルホバー
     # 操作モードが マウスモード の場合のみ
     if $control_mode == 0 then
-      if mouse_widthin_button?("step1") then
+      if mouse_widthin_button?("wave1") then
          @cursor.index = 0
       end
-      if mouse_widthin_button?("step2") then
+      if mouse_widthin_button?("wave2") then
          @cursor.index = 1
       end
-      if mouse_widthin_button?("step3") then
+      if mouse_widthin_button?("wave3") then
          @cursor.index = 2
       end
-      if mouse_widthin_button?("step4") then
+      if mouse_widthin_button?("wave4") then
          @cursor.index = 3
       end
-      if mouse_widthin_button?("step5") then
+      if mouse_widthin_button?("wave5") then
          @cursor.index = 4
       end
       if mouse_widthin_button?("back") then
@@ -241,11 +241,11 @@ class Scene_Select_Battale < Scene_Base
     @button = Hash.new
     
     #各ボタンの範囲46
-    @button["step1"] = [169, 226, 431, 272]
-    @button["step2"] = [169, 282, 431, 328]
-    @button["step3"] = [169, 340, 431, 386]
-    @button["step4"] = [169, 397, 431, 443]
-    @button["step5"] = [169, 453, 431, 499]
+    @button["wave1"] = [169, 226, 431, 272]
+    @button["wave2"] = [169, 282, 431, 328]
+    @button["wave3"] = [169, 340, 431, 386]
+    @button["wave4"] = [169, 397, 431, 443]
+    @button["wave5"] = [169, 453, 431, 499]
     @button["back"]  = [17,  487, 137, 529]
     
   end
@@ -288,17 +288,17 @@ class Scene_Select_Battale < Scene_Base
   end
 
   # 指定のダンジョンに遷移する
-  def dungeon_trantision(step_id)
+  def dungeon_trantision(wave_id)
     # 進行度の計算
     progress = ($dungeon_id - 1) * 5
-    progress += (step_id)
+    progress += (wave_id)
     progress -= 1
     
     if progress <= $player.progress then
       # 決定音を鳴らす
       $sounds["decision"].play(1, 0)
       # ステップID設定
-      $step_id = step_id
+      $wave_id = wave_id
       # フェードアウト後に戦闘シーンへ遷移させる
       @scene_index = 1
       # カーソルを点滅させる
@@ -323,29 +323,29 @@ class Scene_Select_Battale < Scene_Base
     Window.draw_font(@dungeon_x, @dungeon_y, @dungeon_name, @dungeon_font)
     
     # 各ステップの描画
-    Window.draw_font(180, 239, "Step 1. 入り口", @step_font)
-    Window.draw_font(180, 295, "Step 2. 序盤戦", @step_font)
-    Window.draw_font(180, 355, "Step 3. 中盤戦", @step_font)
-    Window.draw_font(180, 412, "Step 4. 終盤戦", @step_font)
-    Window.draw_font(180, 468, "Step 5. ボス戦", @step_font)
+    Window.draw_font(180, 239, "Wave 1. 入り口", @wave_font)
+    Window.draw_font(180, 295, "Wave 2. 序盤戦", @wave_font)
+    Window.draw_font(180, 355, "Wave 3. 中盤戦", @wave_font)
+    Window.draw_font(180, 412, "Wave 4. 終盤戦", @wave_font)
+    Window.draw_font(180, 468, "Wave 5. ボス戦", @wave_font)
     
     # クリア済みかどうか
     if get_progress(1) <= $player.progress then
-      Window.draw_font(355, 249, "CLEAR", @step_font)
+      Window.draw_font(355, 249, "CLEAR", @wave_font)
     end
     if get_progress(2) <= $player.progress then
-      Window.draw_font(355, 306, "CLEAR", @step_font)
+      Window.draw_font(355, 306, "CLEAR", @wave_font)
     end
     if get_progress(3) <= $player.progress then
-      Window.draw_font(355, 364, "CLEAR", @step_font)
+      Window.draw_font(355, 364, "CLEAR", @wave_font)
     end
     if get_progress(4) <= $player.progress then
-      Window.draw_font(355, 421, "CLEAR", @step_font)
+      Window.draw_font(355, 421, "CLEAR", @wave_font)
     end
     if get_progress(5) <= $player.progress then
-      Window.draw_font(355, 477, "CLEAR", @step_font)
+      Window.draw_font(355, 477, "CLEAR", @wave_font)
     elsif $player.cleared == true
-      Window.draw_font(355, 477, "CLEAR", @step_font)
+      Window.draw_font(355, 477, "CLEAR", @wave_font)
     end
     
     # 説明文の描画
@@ -362,9 +362,9 @@ class Scene_Select_Battale < Scene_Base
   end
   
   # 進行度の計算
-  def get_progress(step_id)
+  def get_progress(wave_id)
     progress = ($dungeon_id - 1) * 5
-    progress += (step_id)
+    progress += (wave_id)
     return progress
   end
 

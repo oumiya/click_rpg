@@ -83,6 +83,9 @@ class Scene_Ending < Scene_Base
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()
     super
+    $bgm.each{|bgm_name, bgm_ayame|
+      bgm_ayame.stop(1)
+    }
     $player.cleared = true
     save()
     @next_scene = nil
@@ -237,7 +240,7 @@ class Scene_Ending < Scene_Base
     # プレイヤーを描画
     Window.draw(@px, 0, @player_image)
     if @message != nil then
-      Message_Box.show(@message, -1, 380, @font, 128)
+      Message_Box.show(@message, -1, 380, @font)
     end
     # スタッフロールを描画
     staff_roll_draw()

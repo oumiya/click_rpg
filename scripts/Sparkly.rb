@@ -15,6 +15,10 @@ class Sparkly
     def initialize(image)
       @image = image
     end
+    
+    def dispose
+      @image.dispose
+    end
   end
   
   def initialize()
@@ -51,6 +55,12 @@ class Sparkly
       if spark.y < 0 - (spark.image.height * spark.scale_rate).round then
         spark.y = Game_Main::WINDOW_HEIGHT
       end
+    }
+  end
+  
+  def dispose()
+    @images.each{|i|
+      i.dispose
     }
   end
 end

@@ -53,4 +53,12 @@ class Attack_Effect
       
     end
   end
+  
+  def dispose
+    @frames.each{|f|
+      f.each{|image|
+        image.dispose
+      }
+    }
+  end
 end

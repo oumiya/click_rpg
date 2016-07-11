@@ -70,8 +70,12 @@ http://sozai.7gates.net/
 ぴぽや  
 http://piposozai.blog76.fc2.com/
 
-Web素材.net ビジネス向け
+Web素材.net ビジネス向け  
 http://web-sozai.net/
+
+空想曲線  
+http://kopacurve.blog33.fc2.com/
+
 
 ## BGMをお借りしたサイト
 

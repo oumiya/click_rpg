@@ -2,7 +2,7 @@ require_relative 'Enemy.rb'
 
 # 敵データ
 class Enemy_Data
-  # 敵データを取得
+  # 敵データを作成
   def get_enemy(id)
     enemy = Enemy.new
     case id
@@ -552,7 +552,8 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 2000
       enemy.gold = 10000
-
+    else
+      puts id
     end
 
     # 現在HPに最大HPを代入

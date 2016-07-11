@@ -54,7 +54,6 @@ class Game_Main
     loaded = false
     
     Window.loop do
-      
       if loaded == false then
         font = Font.new(32)
         width = font.get_width("Now Loading...")
@@ -67,7 +66,7 @@ class Game_Main
         loaded = true
         $scene.start # シーンの初期化
       end
-
+      
       $scene.update
       
       break if $scene == nil
@@ -77,7 +76,7 @@ class Game_Main
         $scene = $scene.get_next_scene # シーンを遷移
         $scene.start                   # シーンの初期化
       end
-
+      
       $frame_counter += 1
 
       Ayame.update
@@ -90,12 +89,8 @@ class Game_Main
     # フレームカウンター
     $frame_counter = 0
     
-    # システム画像を読み込む
-    $system_image = Hash.new
-    $system_image["attack_icon"] = Image.load("image/system/attack_icon.png")
-    $system_image["guard_gauge"] = Image.load("image/system/guard_gauge.png")
-    $system_image["heal_button"] = Image.load("image/system/heal_button.png")
-    $system_image["hp_gauge"] = Image.load("image/system/hp_gauge.png")
+    # メッセージウィンドウ
+    $mes_window = Image.load_tiles("image/system/window.png", 3, 3)
     
     # 効果音を読み込む
     $sounds = Hash.new
@@ -204,10 +199,10 @@ class Game_Main
     
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6
-    $dungeon_id = 0
+    #$dungeon_id = 0
     # ステップID ステップは全部で 5 ステップ
     # 値は 1 ～ 5
-    $step_id = 0
+    $wave_id = 0
     
     $control_mode = 1 # 操作モード 0 がマウスモードで 1 がゲームパッドモード
     

@@ -12,6 +12,10 @@ class Scene_Home < Scene_Base
   # 薬草の持てる上限数
   MAX_HEAL_COUNT = 10
   
+  def initialize()
+    GC.start
+  end
+  
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()
     # 遷移先シーンを格納
@@ -48,7 +52,7 @@ class Scene_Home < Scene_Base
     else
       # ホーム以外のBGMが流れていたら停止してホームのBGMを鳴らす
       # ホームのBGMが流れていたらそのまま継続して流す
-      if $playing_bgm != "home" then
+      if $bgm["home"].playing? == false then
         $bgm.each{|bgm_name, bgm_ayame|
           bgm_ayame.stop(1)
         }

@@ -32,6 +32,7 @@ class Enemy
     @combo_count = 0
     @wait_frame = 0
     @idx = 0
+    @effect_index = 0
   end
   
   def attack_frame?()
@@ -138,5 +139,12 @@ class Enemy
         alpha = 0
       end
     end
+  end
+  
+  def dispose()
+    @image.dispose
+    die_effects.each{|i|
+      i.dispose
+    }
   end
 end
