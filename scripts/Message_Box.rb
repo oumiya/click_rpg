@@ -2,11 +2,13 @@ require 'dxruby'
 
 # テキストを画面に表示するためのモジュール
 module Message_Box
-
+  
+  @@font = Font.new(32)
+  
   MARGIN = 16
 
   # 指定した文章をメッセージボックスに表示します
-  def show(text, x=-1, y=-1, font = Font.new(32), alpha=255)
+  def show(text, x=-1, y=-1, font = @@font)
     lines = text.split("<br>")
     line_height = font.size / 4
     
@@ -40,13 +42,10 @@ module Message_Box
     end
     
     # まず黒地を描く
-    image = Image.new(width, height)
-    image.box_fill(0, 0, width - 1, height-1, [0, 0, 0])
+    Window.draw_box_fill(x, y, x + width, y + height, [0, 0, 0], 1100)
     # 白線を描画
-    image.box(2, 2, width - 3, height - 3, [255, 255, 255])
-    image.box(3, 3, width - 4, height - 4, [255, 255, 255])
-    
-    Window.draw_alpha(x, y, image, alpha, 1100)
+    Window.draw_box(x + 2, y + 2, x + width - 2, y + height - 2, [255, 255, 255], 1101)
+    Window.draw_box(x + 3, y + 3, x + width - 3, y + height - 3, [255, 255, 255], 1102)
     
     # テキストを描画
     x = x + MARGIN
