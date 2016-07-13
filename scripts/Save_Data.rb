@@ -28,6 +28,9 @@ module Save_Data
     save_data["opening"] = $player.opening           # オープニングを見たかどうか
     save_data["cleared"] = $player.cleared           # クリア済みかどうか
     save_data["progress"] = $player.progress         # 進行度
+    save_data["town"] = $player.town                 # 街
+    save_data["income"] = $player.income             # 1戦闘ごとの収入
+    save_data["flag"] = $player.flag                 # ストーリーフラグ
   
     open("save_data.dat", 'w') do |io|
       JSON.dump(save_data, io)
@@ -42,7 +45,7 @@ module Save_Data
         JSON.load(io)
       end
       
-      $player.name = save_data["name"].to_i             # 名前
+      $player.name = save_data["name"].to_s             # 名前
       $player.level = save_data["level"].to_i           # レベル
       $player.max_hp = save_data["max_hp"].to_i         # 最大HP
       $player.attack = save_data["attack"].to_i         # 攻撃力
@@ -63,6 +66,9 @@ module Save_Data
       $player.opening = save_data["opening"]            # オープニングを見たかどうか
       $player.cleared = save_data["cleared"]            # クリア済みかどうか
       $player.progress = save_data["progress"]          # 進行度
+      $player.town = save_data["town"]                  # 街
+      $player.income = save_data["income"]              # 1戦闘ごとの収入
+      $player.flag = save_data["flag"]                  # ストーリーフラグ
     end
     
   end

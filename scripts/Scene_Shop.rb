@@ -614,7 +614,7 @@ class Scene_Shop < Scene_Base
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
   end
   
-    # マウスカーソルがボタンの座標内に入っているかどうかを返します
+  # マウスカーソルがボタンの座標内に入っているかどうかを返します
   def mouse_widthin_button?(button_name)
     hitbox = @button_hitbox[button_name]
     

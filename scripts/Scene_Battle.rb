@@ -210,6 +210,7 @@ class Scene_Battle
       end
       
       if @state_count == 240 then
+        @result.result = false
         @next_scene = Scene_Box.new(@result)
       end
     elsif @state == 4 then
@@ -267,6 +268,7 @@ class Scene_Battle
         if @enemies[@enemy_idx].id == 41 then
           @next_scene = Scene_Ending.new
         else
+          @result.result = true
           @next_scene = Scene_Box.new(@result)
         end
       else

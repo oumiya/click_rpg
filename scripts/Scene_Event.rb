@@ -22,6 +22,9 @@ class Scene_Event < Scene_Base
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
   def start()
+    $bgm.each{|bgm_name, bgm_ayame|
+      bgm_ayame.stop(1)
+    }
     # 背景画像のハッシュ
     @background_data = Hash.new
     # 背景画像表示用のimage

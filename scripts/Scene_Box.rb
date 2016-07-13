@@ -54,7 +54,10 @@ class Scene_Box < Scene_Base
     $player.gold += @result.gold
     
     @item_name = ""
-    item_drop() # 必ず1個は当たる
+    if @result.result == true then
+      item_drop() # 必ず1個は当たる
+    end
+    
     for i in 0..@result.battle_count do
       if rand(8) == 0 then
         item_drop()
@@ -62,6 +65,13 @@ class Scene_Box < Scene_Base
     end
     
     @message += @item_name
+    
+    # 街づくり収入
+    if $player.income > 0 then
+      income = $player.income * @result.battle_count
+      $player.gold += income
+      @message += income.to_s + "ゴールドの税収を獲得！<br>"
+    end
   end
   
   # フレーム更新処理

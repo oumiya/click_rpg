@@ -6,10 +6,13 @@ class Wave_Result
   attr_accessor :exp
   # 合計金額
   attr_accessor :gold
+  # ウェーブの結果 true 勝利 false 敗北
+  attr_accessor :result
   
   def initialize()
     @battle_count = 0
     @exp = 0
     @gold = 0
+    @result = false
   end
 end

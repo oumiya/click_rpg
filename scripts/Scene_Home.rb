@@ -3,6 +3,8 @@ require_relative 'Cursor.rb'
 require_relative 'Fade_Effect.rb'
 require_relative 'Save_Data.rb'
 require_relative 'Scene_Base.rb'
+require_relative 'Scene_Creation.rb'
+require_relative 'Scene_Event.rb'
 require_relative 'Scene_Key_Config.rb'
 require_relative 'Scene_Select_Battale.rb'
 include Save_Data
@@ -71,6 +73,11 @@ class Scene_Home < Scene_Base
     @message = ""
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
+    
+    if $player.flag[0] == false && $player.gold > 1000 then
+      $player.flag[0] = true
+      @next_scene = Scene_Event.new("creation.dat")
+    end
   end
   
   # フレーム更新処理
@@ -126,9 +133,9 @@ class Scene_Home < Scene_Base
       if @scene_index == 3 then
         @next_scene = Scene_Shop.new
       end
-      # ゲームをやめる
+      # 街づくり
       if @scene_index == 4 then
-        $scene = nil
+        @next_scene = Scene_Creation.new
       end
     else
       return
@@ -187,9 +194,9 @@ class Scene_Home < Scene_Base
       if @cursor.index == 8 then
         shop_trantision()
       end
-      # ゲームをやめるボタンを押下
+      # 街づくりボタンを押下
       if @cursor.index == 9 then
-        game_quit()
+        creation()
       end
       
       # ゲームパッドのコンフィグ設定
@@ -315,15 +322,20 @@ class Scene_Home < Scene_Base
     @scene_index = 3
   end
   
-  # ゲームをやめるボタンを押下
-  def game_quit()
+  # クリエーションボタンを押下
+  def creation()
     # 決定音を鳴らす
     $sounds["decision"].play(1, 0)
     # 一応やめる前にセーブしておく
     save()
-    # 画面を徐々にフェードアウトさせる
-    @fade_effect.setup(0)
-    @scene_index = 4
+    if $player.flag[0] == true then
+      # 画面を徐々にフェードアウトさせる
+      @fade_effect.setup(0)
+      @scene_index = 4
+    else
+      @message = "このモードはまだ開放されていません"
+      @wait_frame = 95
+    end
   end
   
   # コントロールモードのチェンジ

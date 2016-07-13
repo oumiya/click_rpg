@@ -28,6 +28,9 @@ class Player
   attr_accessor :opening           # オープニング見た
   attr_accessor :cleared           # クリア済みフラグ
   attr_accessor :progress          # 進行度
+  attr_accessor :town              # クリエーションモードの街情報
+  attr_accessor :income            # 1ターンごとに街から得られる収入
+  attr_accessor :flag              # ストーリー進行フラグ
   
   MAX_LEVEL = 100 # プレイヤーの最大レベル
   
@@ -60,7 +63,18 @@ class Player
     @opening = false
     @cleared = false
     @progress = 0
-    
+    @town = Array.new(20)
+    for i in 0..19 do
+      @town[i] = Array.new(13)
+      for j in 0..12 do
+        @town[i][j] = 0
+      end
+    end
+    @income = 0
+    @flag = Array.new(100)
+    for i in 0..99 do
+      @flag[i] = false
+    end
 
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)
