@@ -40,7 +40,7 @@ class Armor_Data
   def draw()
     return if $player.equip_armor < 0
     return if $player.equip_armor >= @images.size
-    Window.draw(29, 285, @images[$player.equip_armor])
+    Window.draw(29, 285, @images[$player.have_armor[$player.equip_armor]["idx"]])
   end
   
   # 防具データを返す

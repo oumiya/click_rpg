@@ -140,7 +140,6 @@ class Scene_Shop < Scene_Base
     
     Window.draw_font(311, 74, "アイテム名", @font)
     Window.draw_font(624, 74, "金額", @font)
-    Window.draw_font(794, 74, "所持数", @font)
     
     Window.draw_font(19, 94, "アイテム名を", @font)
     Window.draw_font(19, 134, "左クリックで購入", @font)
@@ -161,10 +160,8 @@ class Scene_Shop < Scene_Base
       idx = 1
       for i in start_i..end_i do
         weapon = $weapondata.get_weapon_data(i)
-        have_count = $player.have_weapon[i][1]
         Window.draw_font(311, y + (@font.size + 8) * idx, weapon[:name], @font)
         Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", weapon[:price]), @font)
-        Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
         idx += 1
       end
     elsif @tab_index == 1 then

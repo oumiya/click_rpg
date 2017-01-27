@@ -1,6 +1,7 @@
 require_relative 'Enemy.rb'
 
 # 敵データ
+# 属性について 0:無属性 1:火属性 2:氷属性 3:土属性 4:風属性 5:光属性 6:闇属性
 class Enemy_Data
   # 敵データを作成
   def get_enemy(id)
@@ -19,6 +20,7 @@ class Enemy_Data
       enemy.attack_speed = 6
       enemy.exp = 1
       enemy.gold = 10
+      enemy.element = ""
     when 1
       enemy.id = 1
       enemy.image_file_name = "rat.png"
@@ -32,6 +34,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 1
       enemy.gold = 10
+      enemy.element = ""
     when 2
       enemy.id = 2
       enemy.image_file_name = "slime.png"
@@ -45,6 +48,7 @@ class Enemy_Data
       enemy.attack_speed = 6
       enemy.exp = 1
       enemy.gold = 10
+      enemy.element = "土"
     when 3
       enemy.id = 3
       enemy.image_file_name = "goblin.png"
@@ -58,6 +62,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 2
       enemy.gold = 10
+      enemy.element = ""
     when 4
       enemy.id = 4
       enemy.image_file_name = "skeleton.png"
@@ -71,6 +76,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 3
       enemy.gold = 10
+      enemy.element = "闇"
     when 5
       enemy.id = 5
       enemy.image_file_name = "monkey.png"
@@ -84,6 +90,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 5
       enemy.gold = 10
+      enemy.element = "土"
     when 6
       enemy.id = 6
       enemy.image_file_name = "dragon.png"
@@ -97,6 +104,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 10
       enemy.gold = 10
+      enemy.element = "火"
     when 7
       enemy.id = 7
       enemy.image_file_name = "dog.png"
@@ -110,6 +118,7 @@ class Enemy_Data
       enemy.attack_speed = 12
       enemy.exp = 10
       enemy.gold = 15
+      enemy.element = ""
     when 8
       enemy.id = 8
       enemy.image_file_name = "g_monkey.png"
@@ -123,6 +132,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 10
       enemy.gold = 15
+      enemy.element = "風"
     when 9
       enemy.id = 9
       enemy.image_file_name = "bear.png"
@@ -136,6 +146,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 18
       enemy.gold = 20
+      enemy.element = ""
     when 10
       enemy.id = 10
       enemy.image_file_name = "redcap.png"
@@ -149,6 +160,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 10
       enemy.gold = 10
+      enemy.element = "闇"
     when 11
       enemy.id = 11
       enemy.image_file_name = "bandit.png"
@@ -162,6 +174,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 20
       enemy.gold = 30
+      enemy.element = ""
     when 12
       enemy.id = 12
       enemy.image_file_name = "torrent.png"
@@ -175,6 +188,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 20
       enemy.gold = 20
+      enemy.element = "土"
     when 13
       enemy.id = 13
       enemy.image_file_name = "duroid.png"
@@ -188,6 +202,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 50
       enemy.gold = 50
+      enemy.element = "光"
     when 14
       enemy.id = 14
       enemy.image_file_name = "skelton_knight.png"
@@ -201,6 +216,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 25
       enemy.gold = 40
+      enemy.element = "闇"
     when 15
       enemy.id = 15
       enemy.image_file_name = "ghost.png"
@@ -214,6 +230,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 23
       enemy.gold = 30
+      enemy.element = "闇"
     when 16
       enemy.id = 16
       enemy.image_file_name = "zombie.png"
@@ -227,6 +244,7 @@ class Enemy_Data
       enemy.attack_speed = 6
       enemy.exp = 30
       enemy.gold = 50
+      enemy.element = "闇"
     when 17
       enemy.id = 17
       enemy.image_file_name = "vampire.png"
@@ -240,6 +258,7 @@ class Enemy_Data
       enemy.attack_speed = 12
       enemy.exp = 28
       enemy.gold = 50
+      enemy.element = "闇"
     when 18
       enemy.id = 18
       enemy.image_file_name = "zombie_dog.png"
@@ -253,6 +272,7 @@ class Enemy_Data
       enemy.attack_speed = 16
       enemy.exp = 32
       enemy.gold = 40
+      enemy.element = "闇"
     when 19
       enemy.id = 19
       enemy.image_file_name = "pumpkin.png"
@@ -266,6 +286,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 45
       enemy.gold = 100
+      enemy.element = "闇"
     when 20
       enemy.id = 20
       enemy.image_file_name = "wight_king.png"
@@ -279,6 +300,7 @@ class Enemy_Data
       enemy.attack_speed = 10
       enemy.exp = 100
       enemy.gold = 100
+      enemy.element = "闇"
     when 21
       enemy.id = 21
       enemy.image_file_name = "giant.png"
@@ -292,6 +314,7 @@ class Enemy_Data
       enemy.attack_speed = 6
       enemy.exp = 50
       enemy.gold = 50
+      enemy.element = ""
     when 22
       enemy.id = 22
       enemy.image_file_name = "fire_rock.png"
@@ -305,6 +328,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 55
       enemy.gold = 60
+      enemy.element = "土"
     when 23
       enemy.id = 23
       enemy.image_file_name = "blazeman.png"
@@ -318,6 +342,7 @@ class Enemy_Data
       enemy.attack_speed = 12
       enemy.exp = 52
       enemy.gold = 80
+      enemy.element = "火"
     when 24
       enemy.id = 24
       enemy.image_file_name = "rizard.png"
@@ -331,6 +356,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 55
       enemy.gold = 100
+      enemy.element = "火"
     when 25
       enemy.id = 25
       enemy.image_file_name = "technopolice.png"
@@ -344,6 +370,7 @@ class Enemy_Data
       enemy.attack_speed = 12
       enemy.exp = 100
       enemy.gold = 50
+      enemy.element = "風"
     when 26
       enemy.id = 26
       enemy.image_file_name = "red_bull.png"
@@ -357,6 +384,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 60
       enemy.gold = 30
+      enemy.element = "火"
     when 27
       enemy.id = 27
       enemy.image_file_name = "red_dragon.png"
@@ -370,6 +398,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 200
       enemy.gold = 500
+      enemy.element = "火"
     when 28
       enemy.id = 28
       enemy.image_file_name = "snowman.png"
@@ -383,6 +412,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 120
       enemy.gold = 500
+      enemy.element = "氷"
     when 29
       enemy.id = 29
       enemy.image_file_name = "iceman.png"
@@ -396,6 +426,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 125
       enemy.gold = 300
+      enemy.element = "氷"
     when 30
       enemy.id = 30
       enemy.image_file_name = "killer.png"
@@ -409,6 +440,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 145
       enemy.gold = 600
+      enemy.element = ""
     when 31
       enemy.id = 31
       enemy.image_file_name = "gadamanks.png"
@@ -422,6 +454,7 @@ class Enemy_Data
       enemy.attack_speed = 12
       enemy.exp = 155
       enemy.gold = 250
+      enemy.element = ""
     when 32
       enemy.id = 32
       enemy.image_file_name = "manmoss.png"
@@ -435,6 +468,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 180
       enemy.gold = 1000
+      enemy.element = ""
     when 33
       enemy.id = 33
       enemy.image_file_name = "twick.png"
@@ -448,6 +482,7 @@ class Enemy_Data
       enemy.attack_speed = 12
       enemy.exp = 200
       enemy.gold = 300
+      enemy.element = "氷"
     when 34
       enemy.id = 34
       enemy.image_file_name = "icewoman.png"
@@ -461,6 +496,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 800
       enemy.gold = 500
+      enemy.element = "氷"
     when 35
       enemy.id = 35
       enemy.image_file_name = "daemon.png"
@@ -474,6 +510,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 200
       enemy.gold = 500
+      enemy.element = "闇"
     when 36
       enemy.id = 36
       enemy.image_file_name = "vampire2.png"
@@ -487,6 +524,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 300
       enemy.gold = 600
+      enemy.element = "闇"
     when 37
       enemy.id = 37
       enemy.image_file_name = "grater_daemon.png"
@@ -500,6 +538,7 @@ class Enemy_Data
       enemy.attack_speed = 16
       enemy.exp = 400
       enemy.gold = 800
+      enemy.element = "闇"
     when 38
       enemy.id = 38
       enemy.image_file_name = "joker.png"
@@ -513,6 +552,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 500
       enemy.gold = 1000
+      enemy.element = "火"
     when 39
       enemy.id = 39
       enemy.image_file_name = "death.png"
@@ -526,6 +566,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 420
       enemy.gold = 420
+      enemy.element = "風"
     when 40
       enemy.id = 40
       enemy.image_file_name = "iron_giant.png"
@@ -539,6 +580,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 1000
       enemy.gold = 1000
+      enemy.element = "土"
     when 41
       enemy.id = 41
       enemy.image_file_name = "evil_king.png"
@@ -552,6 +594,7 @@ class Enemy_Data
       enemy.attack_speed = 8
       enemy.exp = 2000
       enemy.gold = 10000
+      enemy.element = "闇"
     else
       puts id
     end
@@ -564,6 +607,24 @@ class Enemy_Data
     enemy.create_die_effect()
     # 敵の当たり判定を作成
     enemy.calc_hitbox()
+    
+    # 敵が無属性の場合は属性をランダムに付与する
+    if enemy.element == "" then
+      lottery = rand(7)
+      if lottery == 1 then
+        enemy.element = "火"
+      elsif lottery == 2 then
+        enemy.element = "氷"
+      elsif lottery == 3 then
+        enemy.element = "土"
+      elsif lottery == 4 then
+        enemy.element = "風"
+      elsif lottery == 5 then
+        enemy.element = "光"
+      elsif lottery == 6 then
+        enemy.element = "闇"
+      end
+    end
     
     return enemy
   end

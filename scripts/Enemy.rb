@@ -12,6 +12,7 @@ class Enemy
   attr_accessor :hp                # 現在のHP
   attr_accessor :attack            # 攻撃力
   attr_accessor :defence           # 防御力
+  attr_accessor :element           # 敵の属性
   attr_accessor :attack_frequency  # 攻撃頻度（フレーム単位）※ 配列
   attr_accessor :ai                # AIタイプ(0: 攻撃頻度に忠実 1:ランダムに攻撃）
   attr_accessor :attack_index      # 攻撃頻度のどれを選ぶかのインデックス

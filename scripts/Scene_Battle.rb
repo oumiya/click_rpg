@@ -434,6 +434,37 @@ class Scene_Battle
             $sounds["p_damage_sound"].play(1,0)
             damage = calc_damage(@enemies[@enemy_idx].attack, $player.DEF)
             
+            # ダメージ属性補正
+            if $player.have_armor[$player.equip_armor]["element"] == "火" && @enemies[@enemy_idx].element == "火" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "氷" && @enemies[@enemy_idx].element == "氷" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "土" && @enemies[@enemy_idx].element == "土" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "風" && @enemies[@enemy_idx].element == "風" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "光" && @enemies[@enemy_idx].element == "光" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "闇" && @enemies[@enemy_idx].element == "闇" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
             $player.hp -= damage
             
             if $player.hp < 0 then
@@ -530,6 +561,31 @@ class Scene_Battle
           
           damage = (damage.to_f * combo_correction_value).ceil
           
+          # ダメージ属性補正
+          if $player.have_weapon[$player.equip_weapon]["element"] == "火" && @enemies[@enemy_idx].element == "氷" then
+            damage *= 2
+          end
+          
+          if $player.have_weapon[$player.equip_weapon]["element"] == "氷" && @enemies[@enemy_idx].element == "火" then
+            damage *= 2
+          end
+          
+          if $player.have_weapon[$player.equip_weapon]["element"] == "土" && @enemies[@enemy_idx].element == "風" then
+            damage *= 2
+          end
+          
+          if $player.have_weapon[$player.equip_weapon]["element"] == "風" && @enemies[@enemy_idx].element == "土" then
+            damage *= 2
+          end
+          
+          if $player.have_weapon[$player.equip_weapon]["element"] == "光" && @enemies[@enemy_idx].element == "闇" then
+            damage *= 2
+          end
+          
+          if $player.have_weapon[$player.equip_weapon]["element"] == "闇" && @enemies[@enemy_idx].element == "光" then
+            damage *= 2
+          end
+          
           @enemies[@enemy_idx].hp -= damage
           if @enemies[@enemy_idx].hp < 0 then
             @enemies[@enemy_idx].hp = 0
@@ -581,6 +637,37 @@ class Scene_Battle
                 $player.fever_point += 4
               end
               damage *= 0.7
+            end
+            
+            # ダメージ属性補正
+            if $player.have_armor[$player.equip_armor]["element"] == "火" && @enemies[@enemy_idx].element == "火" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "氷" && @enemies[@enemy_idx].element == "氷" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "土" && @enemies[@enemy_idx].element == "土" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "風" && @enemies[@enemy_idx].element == "風" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "光" && @enemies[@enemy_idx].element == "光" then
+              p "damage 1/2"
+              damage /= 2
+            end
+            
+            if $player.have_armor[$player.equip_armor]["element"] == "闇" && @enemies[@enemy_idx].element == "闇" then
+              p "damage 1/2"
+              damage /= 2
             end
             
             $player.hp -= damage
