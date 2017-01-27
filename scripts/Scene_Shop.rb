@@ -44,7 +44,6 @@ class Scene_Shop < Scene_Base
     @button_hitbox["hair"] = [513, 20, 623, 68]
     @button_hitbox["quit"] = [762, 20, 908, 68]
     @button_hitbox["bulk1"] = [28, 355, 276, 403]
-    @button_hitbox["bulk2"] = [28, 422, 276, 495]
     
     # フェードアウト/フェードイン用の演出クラスを準備
     @fade_effect = Fade_Effect.new
@@ -141,14 +140,17 @@ class Scene_Shop < Scene_Base
     Window.draw_font(311, 74, "アイテム名", @font)
     Window.draw_font(624, 74, "金額", @font)
     
+    if @tab_index == 2 then
+      Window.draw_font(794, 74, "所持数", @font)
+    end
+    
     Window.draw_font(19, 94, "アイテム名を", @font)
     Window.draw_font(19, 134, "左クリックで購入", @font)
-    Window.draw_font(19, 174, "右クリックで売却", @font)
+
     Window.draw_font(19, 214, "売却額は購入額の", @font)
     Window.draw_font(19, 254, "半額だぜ！", @font)
     
     Message_Box.show("装備品以外を一括で売却", 26, 353, @sell_font)
-    Message_Box.show("装備品以外を一個残して<br>一括で売却", 26, 420, @sell_font)
     
     # アイテムリストの表示
     y = 84
@@ -175,10 +177,8 @@ class Scene_Shop < Scene_Base
       idx = 1
       for i in start_i..end_i do
         armor = $armordata.get_armor_data(i)
-        have_count = $player.have_armor[i][1]
         Window.draw_font(311, y + (@font.size + 8) * idx, armor[:name], @font)
         Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", armor[:price]), @font)
-        Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
         idx += 1
       end
     elsif @tab_index == 2 then
@@ -294,7 +294,7 @@ class Scene_Shop < Scene_Base
       elsif @cursor.index >= 4 && @cursor.index < 13 then
         @cursor.index += 1
       elsif @cursor.index == 13
-        @cursor.index = 14
+        @cursor.index = 13
       end
     end
     
@@ -327,98 +327,45 @@ class Scene_Shop < Scene_Base
       end
       # 一括売却ボタンを押下
       if @cursor.index == 13 then
+
         $sounds["decision"].play(1, 0)
+        
+        total = 0
+        
         # 武器売却処理
-        $player.have_weapon.each_with_index{|weapon, idx|
-          if weapon[1] > 0 then
-            total = 0
-            # 装備しているか？
-            if $player.equip_weapon == idx && weapon[1] > 1 then
-              total == weapon[1] - 1
-              weapon[1] = 1
-            elsif $player.equip_weapon == idx && weapon[1] == 1 then
-              total = 0
-            else
-              total = weapon[1]
-              weapon[1] = 0
-            end
-            
-            if total > 0
-              total *= $weapondata.get_weapon_data(idx)[:price] / 2
-              $player.gold += total
+        if $player.have_weapon.size > 1 then
+          p "de"
+          
+          save_weapon = {"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]}
+
+          for i in 0...$player.have_weapon.size - 1 do
+            if $player.equip_weapon != i then
+              total += $weapondata.get_weapon_data(i)[:price] / 2
             end
           end
-        }
+          
+          $player.have_weapon.clear
+          $player.have_weapon.push(save_weapon)
+          $player.equip_weapon = 0
+        end
         
         # 防具売却処理
-        $player.have_armor.each_with_index{|armor, idx|
-          if armor[1] > 0 then
-            total = 0
-            # 装備しているか？
-            if $player.equip_armor == idx && armor[1] > 1 then
-              total == armor[1] - 1
-              armor[1] = 1
-            elsif $player.equip_armor == idx && armor[1] == 1 then
-              total = 0
-            else
-              total = armor[1]
-              armor[1] = 0
-            end
-            
-            if total > 0
-              total *= $armordata.get_armor_data(idx)[:price] / 2
-              $player.gold += total
+        if $player.have_armor.size > 1 then
+          save_armor = {"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]}
+
+          for i in 0...$player.have_armor.size - 1 do
+            if $player.equip_armor != i then
+              total += $armordata.get_armor_data(i)[:price] / 2
             end
           end
-        }
-      end
-      # 1個だけ残して一括売却ボタンを押下
-      if @cursor.index == 14 then
-        $sounds["decision"].play(1, 0)
-        $sounds["decision"].play(1, 0)
-        # 武器売却処理
-        $player.have_weapon.each_with_index{|weapon, idx|
-          if weapon[1] > 0 then
-            total = 0
-            # 装備しているか？
-            if $player.equip_weapon == idx && weapon[1] > 2 then
-              total == weapon[1] - 1
-              weapon[1] = 1
-            elsif $player.equip_weapon == idx && weapon[1] == 1 then
-              total = 0
-            else
-              total = weapon[1] - 1
-              weapon[1] = 1
-            end
-            
-            if total > 0
-              total *= $weapondata.get_weapon_data(idx)[:price] / 2
-              $player.gold += total
-            end
-          end
-        }
+          
+          $player.have_armor.clear
+          $player.have_armor.push(save_armor)
+          $player.equip_armor = 0
+        end
         
-        # 防具売却処理
-        $player.have_armor.each_with_index{|armor, idx|
-          if armor[1] > 0 then
-            total = 0
-            # 装備しているか？
-            if $player.equip_armor == idx && armor[1] > 2 then
-              total == armor[1] - 1
-              armor[1] = 1
-            elsif $player.equip_armor == idx && armor[1] == 1 then
-              total = 0
-            else
-              total = armor[1] - 1
-              armor[1] = 1
-            end
-            
-            if total > 0
-              total *= $armordata.get_armor_data(idx)[:price] / 2
-              $player.gold += total
-            end
-          end
-        }
+        $player.gold += total
+        
       end
       
       # アイテム名を左クリック
@@ -430,7 +377,10 @@ class Scene_Shop < Scene_Base
           weapon = $weapondata.get_weapon_data(idx)
           if weapon != nil then
             if $player.gold >= weapon[:price] then
-              $player.have_weapon[idx][1] += 1
+              weapon_name = $weapondata.get_weapon_data(idx)[:name]
+              value = $weapondata.get_weapon_data(idx)[:value]
+              buy_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>"", "bonus"=>0, "value"=>value}
+              $player.have_weapon.push(buy_weapon)
               $player.gold -= weapon[:price]
               @message = "ありがとよ！"
               @wait_frame = 60
@@ -445,7 +395,10 @@ class Scene_Shop < Scene_Base
           armor = $armordata.get_armor_data(idx)
           if armor != nil then
             if $player.gold >= armor[:price] then
-              $player.have_armor[idx][1] += 1
+              armor_name = $armordata.get_armor_data(idx)[:name]
+              value = $armordata.get_armor_data(idx)[:value]
+              buy_armor = {"idx"=>idx, "name"=>armor_name, "element"=>"", "bonus"=>0, "heal"=>0, "value"=>value}
+              $player.have_armor.push(buy_armor)
               $player.gold -= armor[:price]
               @message = "ありがとよ！"
               @wait_frame = 60
@@ -485,62 +438,6 @@ class Scene_Shop < Scene_Base
       end
     end
     
-    # 売却処理
-    if (Input.mouse_push?(M_RBUTTON) && $control_mode == 0) || (Input.pad_push?($guard_button) && $control_mode == 1) then
-      if @cursor.index >= 4 && @cursor.index <= 12 then
-        $sounds["decision"].play(1, 0)
-        idx = @cursor.index - 4
-        # 武器売却処理
-        if @tab_index == 0 then
-          weapon = $weapondata.get_weapon_data(idx)
-          
-          if weapon != nil then
-            # 該当の武器を1コ以上持っている
-            if $player.have_weapon[idx][1] > 0 then
-              # 該当の武器を装備している場合 かつ 該当の武器が1個しかない場合は売れない
-              if $player.equip_weapon == idx && $player.have_weapon[idx][1] == 1 then
-                @message = "装備中の武器は売れないぜ！"
-                @wait_frame = 60
-              else
-                $player.gold += weapon[:price] / 2
-                $player.have_weapon[idx][1] -= 1
-                @message = "ありがとよ！"
-                @wait_frame = 60
-              end
-            else
-              @message = "お客さんはそいつを持ってないぜ！"
-              @wait_frame = 60
-            end
-          end
-          
-        end
-        
-        # 防具購入処理
-        if @tab_index == 1 then
-          armor = $armordata.get_armor_data(idx)
-          if armor != nil then
-            # 該当の防具を1コ以上持っている
-            if $player.have_armor[idx][1] > 0 then
-              # 該当の防具を装備している場合は売れない
-              if $player.equip_armor == idx && $player.have_armor[idx][1] == 1then
-                @message = "装備中の防具は売れないぜ！"
-                @wait_frame = 60
-              else
-                $player.gold += armor[:price] / 2
-                @message = "ありがとよ！"
-                $player.have_armor[idx][1] -= 1
-                @wait_frame = 60
-              end
-            else
-              @message = "お客さんはそいつを持ってないぜ！"
-              @wait_frame = 60
-            end
-          end
-        end
-
-      end
-    end
-    
     # マウスホバー処理
     if $control_mode == 0 then
       # 武器ボタン
@@ -563,10 +460,7 @@ class Scene_Shop < Scene_Base
       if mouse_widthin_button?("bulk1") then
         @cursor.index = 13
       end
-      # 1個だけ残して一括売却ボタン
-      if mouse_widthin_button?("bulk2") then
-        @cursor.index = 14
-      end
+
       # アイテム名ホバーすると四角が出る
       @item_hitbox.each_with_index{|hitbox, i|
       
