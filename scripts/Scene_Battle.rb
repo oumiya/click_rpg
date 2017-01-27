@@ -28,6 +28,7 @@ class Scene_Battle
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y]
     @wait_frame = 0
     @result = Wave_Result.new
+    @heal_wait = 0
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -119,6 +120,18 @@ class Scene_Battle
     
     # キー入力処理
     input()
+    
+    # HP自動回復処理
+    @heal_wait += 1
+    if @heal_wait > 60 then
+      heal_point = $player.max_hp / 100
+      heal_point *= $player.have_armor[$player.equip_armor]["heal"]
+      $player.hp += heal_point
+      if $player.hp >= $player.max_hp then
+        $player.hp = $player.max_hp
+      end
+      @heal_wait = 0
+    end
     
     # 画面状態の遷移処理
     state_change()
