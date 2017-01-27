@@ -20,7 +20,12 @@ class Player
   attr_accessor :skin_color        # 肌の色
   attr_accessor :have_hair         # 所持している髪型
   attr_accessor :equip_weapon      # 装備している武器
+  attr_accessor :weapon_bonus      # 装備している武器のボーナス
+  attr_accessor :weapon_element    # 装備している武器の属性
   attr_accessor :equip_armor       # 装備している防具
+  attr_accessor :armor_bonus       # 装備している防具のボーナス
+  attr_accessor :armor_element     # 装備している防具の属性
+  attr_accessor :armor_heal        # 装備している防具の自動回復 毎秒n%回復
   attr_accessor :have_weapon       # 所持している武器
   attr_accessor :have_armor        # 所持している防具
   attr_accessor :fever_point       # 現在のフィーバーポイント
@@ -38,10 +43,10 @@ class Player
     # 初期化
     @name = "ルウ"
     @level = 1
-    @max_hp = 100
+    @max_hp = 1000
     @hp = @max_hp
-    @attack = 20
-    @defence = 15
+    @attack = 200
+    @defence = 150
     @heal_count = 5
     @exp = 0
     @gold = 0
@@ -54,10 +59,6 @@ class Player
     @equip_armor = -1
     @have_weapon = Array.new
     @have_armor = Array.new
-    for i in 0..23 do
-      @have_weapon.push([i, 0])
-      @have_armor.push([i, 0])
-    end
     @fever_point = 0
     @fever_frame = 0
     @opening = false
@@ -98,7 +99,12 @@ class Player
   def ATK()
     res = 0
     if @equip_weapon >= 0 then
-      value = $weapondata.get_weapon_data(@equip_weapon)[:value]
+      value = $weapondata.get_weapon_data(@have_weapon[@equip_weapon]["idx"])[:value]
+      # 武器ボーナス
+      if @have_weapon[@equip_weapon]["bonus"] > 0 then
+        value_bonus = value / 10
+        value += value_bonus * @have_weapon[@equip_weapon]["bonus"]
+      end
       res = @attack + value
     else
       res = @attack
@@ -114,7 +120,12 @@ class Player
   def real_ATK()
     res = 0
     if @equip_weapon >= 0 then
-      value = $weapondata.get_weapon_data(@equip_weapon)[:value]
+      value = $weapondata.get_weapon_data(@have_weapon[@equip_weapon]["idx"])[:value]
+      # 武器ボーナス
+      if @have_weapon[@equip_weapon]["bonus"] > 0 then
+        value_bonus = value / 10
+        value += value_bonus * @have_weapon[@equip_weapon]["bonus"]
+      end
       res = @attack + value
     else
       res = @attack
@@ -126,7 +137,12 @@ class Player
   def DEF()
     res = 0
     if @equip_armor >= 0 then
-      value = $armordata.get_armor_data(@equip_armor)[:value]
+      value = $armordata.get_armor_data(@have_armor[@equip_armor]["idx"])[:value]
+      # 防具ボーナス
+      if @have_armor[@equip_armor]["bonus"] > 0 then
+        value_bonus = value / 10
+        value += value_bonus * @have_armor[@equip_armor]["bonus"]
+      end
       res = @defence + value
     else
       res = @defence
@@ -142,7 +158,12 @@ class Player
   def real_DEF()
     res = 0
     if @equip_armor >= 0 then
-      value = $armordata.get_armor_data(@equip_armor)[:value]
+      value = $armordata.get_armor_data(@have_armor[@equip_armor]["idx"])[:value]
+      # 防具ボーナス
+      if @have_armor[@equip_armor]["bonus"] > 0 then
+        value_bonus = value / 10
+        value += value_bonus * @have_armor[@equip_armor]["bonus"]
+      end
       res = @defence + value
     else
       res = @defence
@@ -172,10 +193,10 @@ class Player
   # レベルアップ時のステータスアップ
   def status_up()
     rate = @hp.to_f / @max_hp.to_f
-    @max_hp += 25             # 固定で 25 上昇する
+    @max_hp += 250             # 固定で 25 上昇する
     @hp = @max_hp * rate
-    @attack +=  (1 + rand(2)) # 1 ～ 2 上昇する
-    @defence += (1 + rand(2)) # 1 ～ 2 上昇する
+    @attack +=  (10 + rand(20)) # 1 ～ 2 上昇する
+    @defence += (10 + rand(20)) # 1 ～ 2 上昇する
   end
   
   # フィーバー状態を開始

@@ -85,25 +85,9 @@ class Scene_Equip < Scene_Base
     # 表示するメッセージ
     @message = nil
     
-    # 現在持っている武器リストを作る
-    @weapons = Array.new
-    for i in 0..$player.have_weapon.size-1 do
-      if $player.have_weapon[i][1] > 0 then
-        @weapons.push(i)
-      end
-    end
-    
-    # 現在持っている防具リストを作る
-    @armors = Array.new
-    for i in 0..$player.have_armor.size-1 do
-      if $player.have_armor[i][1] > 0 then
-        @armors.push(i)
-      end
-    end
-    
     # ページの最大数
-    @max_weapon_page = (@weapons.size.to_f / 9.0).ceil
-    @max_armor_page = (@armors.size.to_f / 9.0).ceil
+    @max_weapon_page = ($player.have_weapon.size.to_f / 9.0).ceil
+    @max_armor_page = ($player.have_armor.size.to_f / 9.0).ceil
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
@@ -200,18 +184,18 @@ class Scene_Equip < Scene_Base
       # 武器リストの表示
       start_i = @weapon_page * 9
       end_i = start_i + 8
-      if end_i >= @weapons.length then
-        end_i = @weapons.length - 1
+      if end_i >= $player.have_weapon.length then
+        end_i = $player.have_weapon.length - 1
       end
       
       idx = 1
       for i in start_i..end_i do
-        weapon = $weapondata.get_weapon_data(@weapons[i])
-        have_count = $player.have_weapon[@weapons[i]][1]
-        if @weapons[i] == $player.equip_weapon then
-          Window.draw_font(449, y + (@font.size + 8) * idx, weapon[:name] + " E", @font)
+        weapon = $weapondata.get_weapon_data($player.have_weapon[i]["idx"])
+        have_count = 1
+        if i == $player.equip_weapon then
+          Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_weapon[i]["name"] + " E", @font)
         else
-          Window.draw_font(449, y + (@font.size + 8) * idx, weapon[:name], @font)
+          Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_weapon[i]["name"], @font)
         end
         Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
         idx += 1
@@ -220,18 +204,18 @@ class Scene_Equip < Scene_Base
       # 防具リストの表示
       start_i = @armor_page * 9
       end_i = start_i + 8
-      if end_i >= @armors.length then
-        end_i = @armors.length - 1
+      if end_i >= $player.have_armor.length then
+        end_i = $player.have_armor.length - 1
       end
       
       idx = 1
       for i in start_i..end_i do
-        armor = $armordata.get_armor_data(@armors[i])
-        have_count = $player.have_armor[@armors[i]][1]
-        if @armors[i] == $player.equip_armor then
-          Window.draw_font(449, y + (@font.size + 8) * idx, armor[:name] + " E", @font)
+        armor = $armordata.get_armor_data($player.have_armor[i]["idx"])
+        have_count = 1
+        if i == $player.equip_armor then
+          Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_armor[i]["name"] + " E", @font)
         else
-          Window.draw_font(449, y + (@font.size + 8) * idx, armor[:name], @font)
+          Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_armor[i]["name"], @font)
         end
         Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
         idx += 1
@@ -397,15 +381,15 @@ class Scene_Equip < Scene_Base
         # 武器装備処理
         if @tab_index == 0 then
           idx = idx + @weapon_page * 9
-          if idx < @weapons.size then
-            $player.equip_weapon = @weapons[idx]
+          if idx < $player.have_weapon.size then
+            $player.equip_weapon = idx
           end
         end
         # 防具装備処理
         if @tab_index == 1 then
           idx = idx + @armor_page * 9
-          if idx < @armors.size then
-            $player.equip_armor = @armors[idx]
+          if idx < $player.have_armor.size then
+            $player.equip_armor = idx
           end
         end
         # 髪型装備処理

@@ -121,15 +121,181 @@ class Scene_Box < Scene_Base
       idx = 3
     end
     
+    # ボーナスの抽選
+    # まずボーナスがつくかどうか（ボーナスは50%の確率で付与）
+    lottery = rand(100)
+    bonus = 0
+    if lottery < 50 then
+      # ボーナス値の抽選
+      lottery = rand(100) + 1
+      if lottery >= 96
+        bonus = 10
+      elsif lottery >= 91
+        bonus = 9
+      elsif lottery >= 85
+        bonus = 8
+      elsif lottery >= 78
+        bonus = 7
+      elsif lottery >= 70
+        bonus = 6
+      elsif lottery >= 61
+        bonus = 5
+      elsif lottery >= 51
+        bonus = 4
+      elsif lottery >= 40
+        bonus = 3
+      elsif lottery >= 29
+        bonus = 2
+      else
+        bonus = 1
+      end
+    end
+    
+    # 属性の抽選
+    # 属性について 0:無は空文字 1:火属性 2:氷属性 3:土属性 4:風属性 5:光属性 6:闇属性
+    # まず属性がつくかどうか（属性は65%の確率で付与）
+    lottery = rand(100)
+    element = ""
+    if lottery < 65 then
+      if drop_item == 0 then
+        element = $weapondata.get_weapon_data(idx)[:element]
+      else
+        element = $armordata.get_armor_data(idx)[:element]
+      end
+      
+      # 属性が無属性の時は属性を付与する
+      if element == "" then
+        lottery = rand(6) + 1
+        if lottery == 1 then
+          element = "火"
+        end
+        if lottery == 2 then
+          element = "氷"
+        end
+        if lottery == 3 then
+          element = "土"
+        end
+        if lottery == 4 then
+          element = "風"
+        end
+        if lottery == 5 then
+          element = "光"
+        end
+        if lottery == 6 then
+          element = "闇"
+        end
+      end
+    end
+    
+    # 防具の場合のみ自動回復の抽選
+    heal = 0
+    if drop_item == 1 then
+      # 防具の自動回復は10%の確率で付与 毎秒1% ～ 毎秒10% まで
+      lottery = rand(100)
+      if lottery < 10 then
+        lottery = rand(100) + 1
+        if lottery >= 96
+          heal = 10
+        elsif lottery >= 91
+          heal = 9
+        elsif lottery >= 85
+          heal = 8
+        elsif lottery >= 78
+          heal = 7
+        elsif lottery >= 70
+          heal = 6
+        elsif lottery >= 61
+          heal = 5
+        elsif lottery >= 51
+          heal = 4
+        elsif lottery >= 40
+          heal = 3
+        elsif lottery >= 29
+          heal = 2
+        else
+          heal = 1
+        end
+      end
+    end
+    
     idx = ($dungeon_id - 1) * 4 + idx
     
     if drop_item == 0 then
-      $player.have_weapon[idx][1] += 1
-      @item_name += $weapondata.get_weapon_data(idx)[:name] + "を手に入れた！<br>"
+      reward_name = $weapondata.get_weapon_data(idx)[:name]
+      if bonus > 0 then
+        reward_name += "+" + bonus.to_s
+      end
+      if element != "" then
+        reward_name = reward_name + "(" + element + ")"
+      end
+      
+      # 実攻撃力の計算
+      value = $weapondata.get_weapon_data(idx)[:value]
+      if bonus > 0 then
+        value_bonus = value / 10
+        value += value_bonus * bonus
+      end
+      
+      reward_weapon = {"idx"=>idx, "name"=>reward_name, "element"=>element, "bonus"=>bonus, "value"=>value}
+      $player.have_weapon.push(reward_weapon)
+      @item_name += reward_name + "を手に入れた！<br>"
+      
+      # 武器を攻撃力順にソート
+      if $player.have_weapon.length > 1 then
+        pos_max = $player.have_weapon.length - 1
+        
+        (0...(pos_max)).each{|n|
+          (0...(pos_max - n)).each{|ix|
+            iy = ix + 1
+            if $player.have_weapon[ix]["value"] > $player.have_weapon[iy]["value"] then
+              $player.have_weapon[ix], $player.have_weapon[iy] = $player.have_weapon[iy], $player.have_weapon[ix]
+            end
+          }
+        }
+      end
+      
+      
     else
-      $player.have_armor[idx][1] += 1
-      @item_name += $armordata.get_armor_data(idx)[:name] + "を手に入れた！<br>"
+      reward_name = $armordata.get_armor_data(idx)[:name]
+      if bonus > 0 then
+        reward_name += "+" + bonus.to_s
+      end
+      if element != "" then
+        reward_name = reward_name + "(" + element + ")"
+      end
+      if heal > 0 then
+        reward_name = reward_name + "H" + heal
+      end
+      
+      # 実防御力の計算
+      value = $armordata.get_armor_data(idx)[:value]
+      if bonus > 0 then
+        value_bonus = value / 10
+        value += value_bonus * bonus
+      end
+      
+      reward_armor = {"idx"=>idx, "name"=>reward_name, "element"=>element, "bonus"=>bonus, "heal"=>heal, "value"=>value}
+      $player.have_armor.push(reward_armor)
+      @item_name += reward_name + "を手に入れた！<br>"
+      
+      # 防具を攻撃力順にソート
+      if $player.have_armor.length > 1 then
+        pos_max = $player.have_armor.length - 1
+        
+        (0...(pos_max)).each{|n|
+          (0...(pos_max - n)).each{|ix|
+            iy = ix + 1
+            if $player.have_armor[ix]["value"] > $player.have_armor[iy]["value"] then
+              $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
+            end
+          }
+        }      
+      end
+      
+      
     end
+    
+    
   end
 
 end

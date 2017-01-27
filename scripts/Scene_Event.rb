@@ -84,69 +84,77 @@ class Scene_Event < Scene_Base
   
   # フレーム更新処理
   def update()
-    draw()
-    
-    # ピクチャーの表示待ち
-    if @picture_mode == 1 then
-      if @picture != nil then
-        @picture_alpha += 4
-        if @picture_alpha >= 255 then
-          @picture_alpha = 255
-          @picture_mode = 0
-        end
-        return
-      else
-        @picture_mode = 0
-      end
-    end
-    
-    # ピクチャーの消去待ち
-    if @picture_mode == 2 then
-      if @picture != nil then
-        @picture_alpha -= 4
-        if @picture_alpha <= 0 then
-          @picture_alpha = 0
-          @picture = nil
-          @picture_mode = 0
-        end
-        return
-      else
-        @picture_mode = 0
-      end
-    end
-    
-    # フェードアウト/フェードインの表示
-    @fade_effect.update
-    if @fade_effect.effect_end? == false then
-      return
+    # イベントスキップ機能
+    if Input.key_push?(K_LCONTROL) then
+      @idx = @event_data.size + 1
+
     else
-      if @fade_out then
-        Window.draw_box_fill(0, 0, Game_Main::WINDOW_WIDTH - 1, Game_Main::WINDOW_HEIGHT - 1, [0,0,0])
+      draw()
+      
+      # ピクチャーの表示待ち
+      if @picture_mode == 1 then
+        if @picture != nil then
+          @picture_alpha += 4
+          if @picture_alpha >= 255 then
+            @picture_alpha = 255
+            @picture_mode = 0
+          end
+          return
+        else
+          @picture_mode = 0
+        end
       end
-    end
-    
-    # ウェイト処理
-    return if wait?
-    
-    # メッセージウィンドウの表示/消去中
-    if @message_window_state == 1 || @message_window_state == 3 then
-      return
-    end
-    
-    # メッセージの表示中
-    if @message_status == 1 then
-      return
-    end
-    
-    # キー入力待ち
-    if @key_wait == true then
-      if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
-        @message = nil
-        @name = nil
-        @key_wait = false
+      
+      # ピクチャーの消去待ち
+      if @picture_mode == 2 then
+        if @picture != nil then
+          @picture_alpha -= 4
+          if @picture_alpha <= 0 then
+            @picture_alpha = 0
+            @picture = nil
+            @picture_mode = 0
+          end
+          return
+        else
+          @picture_mode = 0
+        end
       end
-      return
+      
+      # フェードアウト/フェードインの表示
+      @fade_effect.update
+      if @fade_effect.effect_end? == false then
+        return
+      else
+        if @fade_out then
+          Window.draw_box_fill(0, 0, Game_Main::WINDOW_WIDTH - 1, Game_Main::WINDOW_HEIGHT - 1, [0,0,0])
+        end
+      end
+      
+      # ウェイト処理
+      return if wait?
+      
+      # メッセージウィンドウの表示/消去中
+      if @message_window_state == 1 || @message_window_state == 3 then
+        return
+      end
+      
+      # メッセージの表示中
+      if @message_status == 1 then
+        return
+      end
+      
+      # キー入力待ち
+      if @key_wait == true then
+        if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
+          @message = nil
+          @name = nil
+          @key_wait = false
+        end
+        return
+      end
+    
     end
+
     
     # コマンド処理
     command_call()
