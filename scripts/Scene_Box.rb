@@ -248,11 +248,18 @@ class Scene_Box < Scene_Base
           (0...(pos_max - n)).each{|ix|
             iy = ix + 1
             if $player.have_weapon[ix]["value"] > $player.have_weapon[iy]["value"] then
+              if $player.equip_weapon == ix then
+                $player.equip_weapon = iy
+              elsif $player.equip_weapon == iy then
+                $player.equip_weapon = ix
+              end
               $player.have_weapon[ix], $player.have_weapon[iy] = $player.have_weapon[iy], $player.have_weapon[ix]
             end
           }
         }
       end
+      
+      
       
       
     else
@@ -264,7 +271,7 @@ class Scene_Box < Scene_Base
         reward_name = reward_name + "(" + element + ")"
       end
       if heal > 0 then
-        reward_name = reward_name + "H" + heal
+        reward_name = reward_name + "H" + heal.to_s
       end
       
       # 実防御力の計算
@@ -286,6 +293,11 @@ class Scene_Box < Scene_Base
           (0...(pos_max - n)).each{|ix|
             iy = ix + 1
             if $player.have_armor[ix]["value"] > $player.have_armor[iy]["value"] then
+              if $player.equip_armor == ix then
+                $player.equip_armor = iy
+              elsif $player.equip_armor == iy then
+                $player.equip_armor = ix
+              end
               $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
             end
           }

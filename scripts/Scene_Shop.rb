@@ -334,13 +334,11 @@ class Scene_Shop < Scene_Base
         
         # 武器売却処理
         if $player.have_weapon.size > 1 then
-          p "de"
-          
           save_weapon = {"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]}
 
           for i in 0...$player.have_weapon.size - 1 do
             if $player.equip_weapon != i then
-              total += $weapondata.get_weapon_data(i)[:price] / 2
+              total += $weapondata.get_weapon_data($player.have_armor[i]["idx"])[:price]
             end
           end
           
@@ -355,7 +353,7 @@ class Scene_Shop < Scene_Base
 
           for i in 0...$player.have_armor.size - 1 do
             if $player.equip_armor != i then
-              total += $armordata.get_armor_data(i)[:price] / 2
+              total += $armordata.get_armor_data($player.have_armor[i]["idx"])[:price]
             end
           end
           
@@ -363,6 +361,8 @@ class Scene_Shop < Scene_Base
           $player.have_armor.push(save_armor)
           $player.equip_armor = 0
         end
+        
+        total = total / 2
         
         $player.gold += total
         
