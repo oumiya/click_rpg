@@ -189,7 +189,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 492 then
-      @message = "まおー<br>「よかった……無料アルファ版で……<br>　ぐふっ！"
+      @message = "まおー<br>「よかった……お前が紳士で……<br>　ぐふっ！"
       @key_wait = true
       @wait_frame = 15
       $bgm["evil_king"].stop(1)
