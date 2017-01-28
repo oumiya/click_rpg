@@ -182,7 +182,8 @@ class Scene_Event < Scene_Base
       end
       # キャラクターの描画
       if @left_character != nil then
-        x = Game_Main::WINDOW_WIDTH / 3 - @left_character.width / 2
+        #x = Game_Main::WINDOW_WIDTH / 3 - @left_character.width / 2
+        x = 33
         y = Game_Main::WINDOW_HEIGHT - @left_character.height
         Window.draw(x, y, @left_character)
       end
@@ -192,7 +193,8 @@ class Scene_Event < Scene_Base
         Window.draw(x, y, @center_character)
       end
       if @right_character != nil then
-        x = (Game_Main::WINDOW_WIDTH / 3) * 2 - @right_character.width / 2
+        #x = (Game_Main::WINDOW_WIDTH / 3) * 2 - @right_character.width / 2
+        x = 630
         y = Game_Main::WINDOW_HEIGHT - @right_character.height
         Window.draw(x, y, @right_character)
       end

@@ -1,3 +1,4 @@
+bg_load:タイトル,title.png
 bg_load:城下町,town.jpg
 chr_load:主人公,player.png
 chr_load:老人,oldman.png
@@ -29,6 +30,11 @@ se_load:主人公6,p006.mp3
 se_load:主人公7,p007.mp3
 se_load:主人公8,p008.mp3
 se_load:主人公9,p009.mp3
+fade_in
+bg:タイトル
+click
+fade_out
+bg_clear
 bgm:街中
 bg:城下町
 chr:主人公,center

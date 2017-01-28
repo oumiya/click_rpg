@@ -7,6 +7,7 @@ require_relative 'Scene_Creation.rb'
 require_relative 'Scene_Event.rb'
 require_relative 'Scene_Key_Config.rb'
 require_relative 'Scene_Select_Battale.rb'
+require_relative 'Scene_Ending2.rb'
 include Save_Data
 
 # ホーム画面
@@ -77,6 +78,11 @@ class Scene_Home < Scene_Base
     if $player.flag[0] == false && $player.gold > 1000 then
       $player.flag[0] = true
       @next_scene = Scene_Event.new("creation.dat")
+    end
+    
+    if $player.flag[1] == false && $player.gold > 10000000 then
+      $player.flag[1] = true
+      @next_scene = Scene_Event.new("ending.dat")
     end
   end
   
