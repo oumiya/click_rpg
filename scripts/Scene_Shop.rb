@@ -338,7 +338,7 @@ class Scene_Shop < Scene_Base
 
           for i in 0...$player.have_weapon.size - 1 do
             if $player.equip_weapon != i then
-              total += $weapondata.get_weapon_data($player.have_armor[i]["idx"])[:price]
+              total += $weapondata.get_weapon_data($player.have_weapon[i]["idx"])[:price]
             end
           end
           
