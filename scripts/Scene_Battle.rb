@@ -29,6 +29,7 @@ class Scene_Battle
     @wait_frame = 0
     @result = Wave_Result.new
     @heal_wait = 0
+    @elements = Array.new
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -52,6 +53,13 @@ class Scene_Battle
     when 6
       @background = Image.load("image/background/castle.jpg")
     end
+    # 属性画像の読込
+    @elements.push(Image.load("image/system/e_fire.png"))
+    @elements.push(Image.load("image/system/e_ice.png"))
+    @elements.push(Image.load("image/system/e_earth.png"))
+    @elements.push(Image.load("image/system/e_wind.png"))
+    @elements.push(Image.load("image/system/e_light.png"))
+    @elements.push(Image.load("image/system/e_dark.png"))
     # 敵データの読込
     @enemies = Array.new
     s = ($dungeon_id - 1) * 7
@@ -307,6 +315,21 @@ class Scene_Battle
         Window.draw(ENEMY_X, ENEMY_Y, @enemies[@enemy_idx].die_effects[@enemies[@enemy_idx].effect_index])
       end
     end
+    # 敵属性の表示
+    if @enemies[@enemy_idx].element == "火" then
+      Window.draw(181, 58, @elements[0])
+    elsif @enemies[@enemy_idx].element == "氷" then
+      Window.draw(181, 58, @elements[1])
+    elsif @enemies[@enemy_idx].element == "土" then
+      Window.draw(181, 58, @elements[2])
+    elsif @enemies[@enemy_idx].element == "風" then
+      Window.draw(181, 58, @elements[3])
+    elsif @enemies[@enemy_idx].element == "光" then
+      Window.draw(181, 58, @elements[4])
+    elsif @enemies[@enemy_idx].element == "闇" then
+      Window.draw(181, 58, @elements[5])
+    end
+    
     # コンボ回数の表示
     if @state == 2 && @combo_count > 0 then
       Window.draw_font_ex(540, 290, (@combo_count + 1).to_s + "HIT", @heal_font, @combo_option)
