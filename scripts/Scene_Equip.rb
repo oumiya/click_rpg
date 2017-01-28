@@ -103,6 +103,9 @@ class Scene_Equip < Scene_Base
     # 髪型を描画
     $hair.draw
     
+    # アバター武器の描画
+    $weapondata.draw
+    
     # 髪色選択ボックスを描画
     Window.draw_font(12, 102, "髪の色", @font)
     x = 120

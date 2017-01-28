@@ -386,6 +386,8 @@ class Scene_Battle
       $armordata.draw
       # アバター髪型の描画
       $hair.draw
+      # アバター武器の描画
+      $weapondata.draw
     end
     # 戦闘の残り回数の描画
     if BATTLE_COUNT_MAX - @battle_count <= 0 then

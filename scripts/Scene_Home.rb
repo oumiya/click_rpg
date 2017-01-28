@@ -100,6 +100,8 @@ class Scene_Home < Scene_Base
     $armordata.draw
     # 髪型を表示
     $hair.draw
+    # アバター武器の描画
+    $weapondata.draw
     # ダンジョン選択カーソルを表示
     @cursor.update
     # お金が足りないメッセージの表示
