@@ -384,6 +384,26 @@ class Scene_Shop < Scene_Base
               $player.gold -= weapon[:price]
               @message = "ありがとよ！"
               @wait_frame = 60
+
+              # 武器を攻撃力順にソート
+              if $player.have_weapon.length > 1 then
+                pos_max = $player.have_weapon.length - 1
+                
+                (0...(pos_max)).each{|n|
+                  (0...(pos_max - n)).each{|ix|
+                    iy = ix + 1
+                    if $player.have_weapon[ix]["value"] > $player.have_weapon[iy]["value"] then
+                      if $player.equip_weapon == ix then
+                        $player.equip_weapon = iy
+                      elsif $player.equip_weapon == iy then
+                        $player.equip_weapon = ix
+                      end
+                      $player.have_weapon[ix], $player.have_weapon[iy] = $player.have_weapon[iy], $player.have_weapon[ix]
+                    end
+                  }
+                }
+              end
+
             else
               @message = "お金が足りないぜ"
               @wait_frame = 60
@@ -402,6 +422,29 @@ class Scene_Shop < Scene_Base
               $player.gold -= armor[:price]
               @message = "ありがとよ！"
               @wait_frame = 60
+
+              # 防具を攻撃力順にソート
+              if $player.have_armor.length > 1 then
+                pos_max = $player.have_armor.length - 1
+                
+                (0...(pos_max)).each{|n|
+                  (0...(pos_max - n)).each{|ix|
+                    iy = ix + 1
+                    if $player.have_armor[ix]["value"] > $player.have_armor[iy]["value"] then
+                      if $player.equip_armor == ix then
+                        $player.equip_armor = iy
+                      elsif $player.equip_armor == iy then
+                        $player.equip_armor = ix
+                      end
+                      $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
+                    end
+                  }
+                }      
+              end
+
+
+
+
             else
               @message = "お金が足りないぜ"
               @wait_frame = 60

@@ -30,6 +30,7 @@ class Scene_Battle
     @result = Wave_Result.new
     @heal_wait = 0
     @elements = Array.new
+    @effective = false
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -255,7 +256,7 @@ class Scene_Battle
         @state = 5
         @state_count = 0
         # HP自動回復処理
-        if $player.equip_armor > 0 then
+        if $player.equip_armor >= 0 then
           heal_point = $player.max_hp / 10
           heal_point *= $player.have_armor[$player.equip_armor]["heal"]
           $player.hp += heal_point
@@ -283,7 +284,7 @@ class Scene_Battle
          $player.progress = progress
         end
         
-        if @enemies[@enemy_idx].id == 41 then
+        if @enemies[@enemy_idx].id == 41 && $player.cleared == false then
           @next_scene = Scene_Ending.new
         else
           @result.result = true
@@ -335,7 +336,7 @@ class Scene_Battle
       Window.draw_font_ex(540, 290, (@combo_count + 1).to_s + "HIT", @heal_font, @combo_option)
     end
     # 攻撃エフェクトの描画
-    @attack_effect.update
+    @attack_effect.update(@effective)
     # ガードゲージの描画
     Window.draw(230, 392, @guard_gauge)
     # 攻撃アイコンの描画
@@ -593,28 +594,35 @@ class Scene_Battle
           damage = (damage.to_f * combo_correction_value).ceil
           
           # ダメージ属性補正
+          @effective = false
           if $player.equip_weapon >= 0 then
             if $player.have_weapon[$player.equip_weapon]["element"] == "火" && @enemies[@enemy_idx].element == "氷" then
+              @effective = true
               damage *= 2
             end
             
             if $player.have_weapon[$player.equip_weapon]["element"] == "氷" && @enemies[@enemy_idx].element == "火" then
+              @effective = true
               damage *= 2
             end
             
             if $player.have_weapon[$player.equip_weapon]["element"] == "土" && @enemies[@enemy_idx].element == "風" then
+              @effective = true
               damage *= 2
             end
             
             if $player.have_weapon[$player.equip_weapon]["element"] == "風" && @enemies[@enemy_idx].element == "土" then
+              @effective = true
               damage *= 2
             end
             
             if $player.have_weapon[$player.equip_weapon]["element"] == "光" && @enemies[@enemy_idx].element == "闇" then
+              @effective = true
               damage *= 2
             end
             
             if $player.have_weapon[$player.equip_weapon]["element"] == "闇" && @enemies[@enemy_idx].element == "光" then
+              @effective = true
               damage *= 2
             end
           end

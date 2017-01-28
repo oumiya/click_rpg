@@ -15,6 +15,8 @@ class Attack_Effect
     @frames.push(Image.load_tiles("image/animation/rightdown.png", 9, 1))
     @frames.push(Image.load_tiles("image/animation/up.png", 9, 1))
     @frames.push(Image.load_tiles("image/animation/down.png", 9, 1))
+    # 属性攻撃が倍加ダメージを与えた時の表示画像
+    @effective_image = Image.load("image/system/effective.png")
 
     @frame_count = 0
     @index = 0
@@ -35,12 +37,18 @@ class Attack_Effect
     @visible = false
   end
   
-  def update()
+  def update(effective)
     if @visible then
       x = 232 - @frames[@combo][@index].width / 2
       y = 152 - @frames[@combo][@index].height / 2
     
       Window.draw(237 + x, 72 + y, @frames[@combo][@index], 100)
+      
+      # ダメージ倍加の場合はエフェクティブというエフェクトを表示！
+      if effective == true then
+        Window.draw(321, 45, @effective_image, 100)
+      end
+      
       @frame_count += 1
       
       if @frame_count % 2 == 0 then
