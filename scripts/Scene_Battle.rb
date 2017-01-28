@@ -121,20 +121,6 @@ class Scene_Battle
     # キー入力処理
     input()
     
-    # HP自動回復処理
-    if $player.equip_armor > 0 then
-      @heal_wait += 1
-      if @heal_wait > 60 then
-        heal_point = $player.max_hp / 100
-        heal_point *= $player.have_armor[$player.equip_armor]["heal"]
-        $player.hp += heal_point
-        if $player.hp >= $player.max_hp then
-          $player.hp = $player.max_hp
-        end
-        @heal_wait = 0
-      end
-    end
-    
     # 画面状態の遷移処理
     state_change()
   end
@@ -260,6 +246,15 @@ class Scene_Battle
       if @state_count > 113 then
         @state = 5
         @state_count = 0
+        # HP自動回復処理
+        if $player.equip_armor > 0 then
+          heal_point = $player.max_hp / 10
+          heal_point *= $player.have_armor[$player.equip_armor]["heal"]
+          $player.hp += heal_point
+          if $player.hp >= $player.max_hp then
+            $player.hp = $player.max_hp
+          end
+        end
       end
     elsif @state == 5 then
       # 勝利

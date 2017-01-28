@@ -187,9 +187,14 @@ class Scene_Box < Scene_Base
       end
     end
     
+    idx = ($dungeon_id - 1) * 4 + idx
+    
     # 防具の場合のみ自動回復の抽選
     heal = 0
-    if drop_item == 1 then
+    
+    heal = $armordata.get_armor_data(idx)[:heal]
+    
+    if drop_item == 1 && heal < 1 then
       # 防具の自動回復は10%の確率で付与 毎秒1% ～ 毎秒10% まで
       lottery = rand(100)
       if lottery < 10 then
@@ -218,7 +223,7 @@ class Scene_Box < Scene_Base
       end
     end
     
-    idx = ($dungeon_id - 1) * 4 + idx
+    
     
     if drop_item == 0 then
       reward_name = $weapondata.get_weapon_data(idx)[:name]

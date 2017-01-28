@@ -26,9 +26,9 @@ class Armor_Data
     @armor.push({:name=>"氷の鎧", :value=>420, :price=>14500, :filename=>"ice_armor.png", :element=>"氷", :heal=>0})
     @armor.push({:name=>"ジュピターの鎧", :value=>440, :price=>16000, :filename=>"jupiter.png", :element=>"", :heal=>0})
     @armor.push({:name=>"白金の鎧", :value=>450, :price=>17500, :filename=>"platinum.png", :element=>"", :heal=>0})
-    @armor.push({:name=>"勇者の鎧", :value=>480, :price=>19000, :filename=>"brave.png", :element=>"光", :heal=>15})
+    @armor.push({:name=>"勇者の鎧", :value=>480, :price=>19000, :filename=>"brave.png", :element=>"光", :heal=>10})
     @armor.push({:name=>"荒武者の鎧", :value=>500, :price=>20500, :filename=>"aramusha.png", :element=>"", :heal=>0})
-    @armor.push({:name=>"神秘の服", :value=>550, :price=>22000, :filename=>"mystery.png", :element=>"光", :heal=>20})
+    @armor.push({:name=>"神秘の服", :value=>550, :price=>22000, :filename=>"mystery.png", :element=>"光", :heal=>10})
     
     @images = Array.new
     @armor.each{|a|
