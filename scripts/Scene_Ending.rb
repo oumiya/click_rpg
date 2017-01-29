@@ -89,8 +89,6 @@ class Scene_Ending < Scene_Base
     $player.cleared = true
     save()
     @next_scene = nil
-    $bgm["evil_king"].play(1, 1)
-    $playing_bgm = "evil_king"
   end
   
   # フレーム更新処理
@@ -120,6 +118,11 @@ class Scene_Ending < Scene_Base
     end
     
     @frame += 1
+    
+    if @frame == 1 then
+      $bgm["evil_king"].play(1, 1)
+      $playing_bgm = "evil_king"
+    end
     
     if @frame > 60 && @frame <= 276 then
       move_image()

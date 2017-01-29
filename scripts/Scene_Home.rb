@@ -7,7 +7,7 @@ require_relative 'Scene_Creation.rb'
 require_relative 'Scene_Event.rb'
 require_relative 'Scene_Key_Config.rb'
 require_relative 'Scene_Select_Battale.rb'
-require_relative 'Scene_Ending2.rb'
+require_relative 'Scene_Ending.rb'
 include Save_Data
 
 # ホーム画面
@@ -81,6 +81,7 @@ class Scene_Home < Scene_Base
     end
     
     if $player.flag[1] == false && $player.gold > 10000000 then
+      $player.gold -= 10000000
       $player.flag[1] = true
       @next_scene = Scene_Event.new("ending.dat")
     end
@@ -110,6 +111,14 @@ class Scene_Home < Scene_Base
       if @wait_frame <= 0 then
         @not_enough_money_show = false
       end
+    end
+    # エンディングを見直すボタンの表示
+    if $player.flag[0] == true then
+      draw_ending_button()
+    end
+    # トゥルーエンディングを見直すボタンの表示
+    if $player.flag[1] == true then
+      draw_true_ending_button()
     end
     
     # メッセージボックスの表示
@@ -210,6 +219,15 @@ class Scene_Home < Scene_Base
       # ゲームパッドのコンフィグ設定
       if mouse_widthin_button?("pad_config") then
         @next_scene = Scene_Key_Config.new
+      end
+      
+      # エンディングを見直すボタンを押す
+      if mouse_widthin_button?("ending") && $player.flag[0] == true then
+        @next_scene = Scene_Ending.new
+      end
+      # トゥルーエンディングを見直すボタンを押す
+      if mouse_widthin_button?("true_ending") && $player.flag[1] == true then
+        @next_scene = Scene_Event.new("ending.dat")
       end
     end
     
@@ -386,6 +404,11 @@ class Scene_Home < Scene_Base
     
     # 上部メニューボタン
     @button["pad_config"] = [0, 0, 160, 36]
+    
+    # エンディングを見直すボタン
+    @button["ending"] = [180, 0, 330, 36]
+    @button["true_ending"] = [342, 0, 555, 36]
+    
   end
   
   # マウスカーソルがボタンの座標内に入っているかどうかを返します
@@ -433,6 +456,16 @@ class Scene_Home < Scene_Base
     Window.draw_font(208, 253, "うひひ　頑張るぞ！", @status_font, {:color => [0, 0, 0]})
     Window.draw_font(208, 253+18, "うひひ　頑張るぞ！", @status_font, {:color => [0, 0, 0]})
     Window.draw_font(208, 253+36, "うひひ　頑張るぞ！", @status_font, {:color => [0, 0, 0]})
+  end
+  
+  # エンディングを見直すボタンを描画
+  def draw_ending_button()
+    Window.draw_font(186, 7, "エンディングを見る", @status_font, {:color => [0, 0, 0]})
+  end
+  
+  # エンディングを見直すボタンを描画
+  def draw_true_ending_button()
+    Window.draw_font(347, 7, "トゥルーエンディングを見る", @status_font, {:color => [0, 0, 0]})
   end
 
 end
