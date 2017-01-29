@@ -48,6 +48,7 @@ class Game_Main
     loaded = false
     
     Window.loop do
+      
       if loaded == false then
         font = Font.new(32)
         width = font.get_width("Now Loading...")
@@ -61,17 +62,20 @@ class Game_Main
         $scene.start # シーンの初期化
       end
       
-      $scene.update
-      
-      break if $scene == nil
+      # ウィンドウが非アクティブの時はゲームを停止
+      if Window.active? == true then
+        $scene.update
+        
+        break if $scene == nil
 
-      if $scene.get_next_scene != nil then
-        $scene.terminate               # シーンの終了処理
-        $scene = $scene.get_next_scene # シーンを遷移
-        $scene.start                   # シーンの初期化
+        if $scene.get_next_scene != nil then
+          $scene.terminate               # シーンの終了処理
+          $scene = $scene.get_next_scene # シーンを遷移
+          $scene.start                   # シーンの初期化
+        end
+        
+        $frame_counter += 1
       end
-      
-      $frame_counter += 1
 
       Ayame.update
 
