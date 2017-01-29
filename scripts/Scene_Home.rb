@@ -85,6 +85,11 @@ class Scene_Home < Scene_Base
       $player.flag[1] = true
       @next_scene = Scene_Event.new("ending.dat")
     end
+    
+    if $player.flag[2] == false && $player.progress >= 5 then
+      $player.flag[2] = true
+      @next_scene = Scene_Event.new("knight1.dat")
+    end
   end
   
   # フレーム更新処理
