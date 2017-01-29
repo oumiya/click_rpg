@@ -195,9 +195,11 @@ class Scene_Battle
     elsif @state == 2 then
       # 戦闘中
       if $player.fever? then
+        $player.fever_point -= 1
         $player.fever_frame -= 1
         if $player.fever_frame <= 0 then
           $player.fever_frame = 0
+          $player.fever_point = 0
         end
       end
       # プレイヤーか敵のHPが 0 以下になったら画面状態を遷移

@@ -45,11 +45,11 @@ class Scene_Creation < Scene_Base
     @facilities[MANSION]   = Facility.new(5)
     # ボタン座標情報
     @button_hitbox = Hash.new
-    @button_hitbox["farmer"]      = [13,   61,  52, 100]
-    @button_hitbox["house"]       = [13,  113,  52, 152]
-    @button_hitbox["shop"]        = [13,  167,  52, 206]
-    @button_hitbox["food_shop"]   = [13,  219,  52, 258]
-    @button_hitbox["mansion"]     = [13,  270,  52, 309]
+    @button_hitbox["farmer"]      = [13,   61,  148, 100]
+    @button_hitbox["house"]       = [13,  113,  148, 152]
+    @button_hitbox["shop"]        = [13,  167,  148, 206]
+    @button_hitbox["food_shop"]   = [13,  219,  148, 258]
+    @button_hitbox["mansion"]     = [13,  270,  148, 309]
     @button_hitbox["back"]        = [160, 509, 284, 539]
     @button_hitbox["install"]     = [9,    11,  70,  43]
     @button_hitbox["info"]        = [81,   11, 142,  43]

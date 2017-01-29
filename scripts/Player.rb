@@ -4,7 +4,7 @@ require_relative 'Weapon_Data.rb'
 class Player
   # フィーバー持続時間の最大値
   FEVER_MAX_FRAME = 600
-  FEVER_MAX_POINT = 500
+  FEVER_MAX_POINT = 600
   
   attr_accessor :name              # プレイヤー名
   attr_accessor :level             # レベル
@@ -202,7 +202,7 @@ class Player
   # フィーバー状態を開始
   def fever_start()
     if @fever_point >= FEVER_MAX_POINT then
-      @fever_point = 0
+      #@fever_point = 0
       @fever_frame = FEVER_MAX_FRAME
     end
   end
