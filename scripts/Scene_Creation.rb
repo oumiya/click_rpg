@@ -50,7 +50,7 @@ class Scene_Creation < Scene_Base
     @button_hitbox["shop"]        = [13,  167,  52, 206]
     @button_hitbox["food_shop"]   = [13,  219,  52, 258]
     @button_hitbox["mansion"]     = [13,  270,  52, 309]
-    @button_hitbox["back"]        = [160, 519, 229, 539]
+    @button_hitbox["back"]        = [160, 509, 284, 539]
     @button_hitbox["install"]     = [9,    11,  70,  43]
     @button_hitbox["info"]        = [81,   11, 142,  43]
     @button_hitbox["map"]         = [160,   0, 959, 518]
@@ -130,6 +130,25 @@ class Scene_Creation < Scene_Base
   
   # 画面の描画
   def draw()
+        # マップの描画
+    for x in 0..19 do
+      for y in 0..12 do
+        Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[0])
+        case $player.town[x][y]
+        when FARMER
+          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[1])
+        when HOUSE
+          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[2])
+        when SHOP
+          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[3])
+        when FOOD_SHOP
+          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[4])
+        when MANSION
+          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[5])
+        end
+      end
+    end
+    
     # フレームの描画
     if @menu_state == 0 then
       Window.draw(0, 0, @install_frame)
@@ -168,25 +187,6 @@ class Scene_Creation < Scene_Base
       Window.draw_font(10, 393, sprintf("% 15d", @surplus_population), @system_font)
       # 使える食料
       Window.draw_font(10, 461, sprintf("% 15d", @surplus_food), @system_font)
-    end
-    
-    # マップの描画
-    for x in 0..19 do
-      for y in 0..12 do
-        Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[0])
-        case $player.town[x][y]
-        when FARMER
-          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[1])
-        when HOUSE
-          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[2])
-        when SHOP
-          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[3])
-        when FOOD_SHOP
-          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[4])
-        when MANSION
-          Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[5])
-        end
-      end
     end
   end
   
