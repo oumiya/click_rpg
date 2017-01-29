@@ -118,7 +118,7 @@ class Scene_Home < Scene_Base
       end
     end
     # エンディングを見直すボタンの表示
-    if $player.flag[0] == true then
+    if $player.cleared == true then
       draw_ending_button()
     end
     # トゥルーエンディングを見直すボタンの表示
@@ -227,7 +227,7 @@ class Scene_Home < Scene_Base
       end
       
       # エンディングを見直すボタンを押す
-      if mouse_widthin_button?("ending") && $player.flag[0] == true then
+      if mouse_widthin_button?("ending") && $player.cleared == true then
         @next_scene = Scene_Ending.new
       end
       # トゥルーエンディングを見直すボタンを押す
