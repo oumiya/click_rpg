@@ -96,6 +96,7 @@ class Game_Main
     $sounds["p_guard_sound"] = Ayame.new("audio/se/player_guard.mp3")   # プレイヤーガード音
     $sounds["heal"] = Ayame.new("audio/se/heal.mp3")                    # 回復音
     $sounds["p_attack"] = Ayame.new("audio/se/player_attack.mp3")       # プレイヤーの攻撃音
+    $sounds["effective"] = Ayame.new("audio/se/effective.mp3")          # ダメージ倍加攻撃音
     $sounds["encount"] = Ayame.new("audio/se/encount.mp3")              # 敵とのエンカウント音
     $sounds["win"] = Ayame.new("audio/se/win.mp3")                      # 戦闘に勝った！
     $sounds["lose"] = Ayame.new("audio/se/lose.mp3")                    # 戦闘に負けた！

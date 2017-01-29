@@ -581,7 +581,6 @@ class Scene_Battle
             $player.fever_point += 1
           end
           
-          $sounds["p_attack"].play(1, 0)
           @attack_effect.show(@combo_count)
           damage = calc_damage($player.ATK, @enemies[@enemy_idx].defence)
           
@@ -630,6 +629,12 @@ class Scene_Battle
           @enemies[@enemy_idx].hp -= damage
           if @enemies[@enemy_idx].hp < 0 then
             @enemies[@enemy_idx].hp = 0
+          end
+          
+          if @effective == true then
+            $sounds["effective"].play(1, 0)
+          else
+            $sounds["p_attack"].play(1, 0)
           end
           
           @combo_frame = $frame_counter
