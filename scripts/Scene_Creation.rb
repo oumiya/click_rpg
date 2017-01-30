@@ -226,7 +226,7 @@ class Scene_Creation < Scene_Base
 
     # マウスホバー
     if mouse_widthin_button?("map") then
-      if @menu_state == 0 && @select_facility > 0 then
+      if @select_facility > 0 then
         # 半透明で選択中の施設を表示
         Window.draw_alpha(x * 40 + 160, y * 40, @map_chip[@select_facility], 128)
       end
@@ -244,15 +244,13 @@ class Scene_Creation < Scene_Base
         # 設置ボタンを押した
         calc_parameter()
         @menu_state = 0
-        @select_facility = 0
       elsif mouse_widthin_button?("info") then
         # 情報ボタンを押した
         calc_parameter()
         @menu_state = 1
-        @select_facility = 0
       end
       
-      if @menu_state == 0 then
+      if @select_facility > 0 then
         if mouse_widthin_button?("map") then
           if @select_facility > 0 then
             # その施設を置ける条件を満たしているか？
@@ -274,21 +272,25 @@ class Scene_Creation < Scene_Base
               @wait_frame = 95
             end
           end
-        else
-          @select_facility = 0
-          if mouse_widthin_button?("farmer") then
-            @select_facility = 1
-          elsif mouse_widthin_button?("house") then
-            @select_facility = 2
-          elsif mouse_widthin_button?("shop") then
-            @select_facility = 3
-          elsif mouse_widthin_button?("food_shop") then
-            @select_facility = 4
-          elsif mouse_widthin_button?("mansion") then
-            @select_facility = 5
-          end
         end
-        
+      end
+      
+      if @menu_state == 0 then
+        temp_select_facility = @select_facility
+        @select_facility = 0
+        if mouse_widthin_button?("farmer") then
+          @select_facility = 1
+        elsif mouse_widthin_button?("house") then
+          @select_facility = 2
+        elsif mouse_widthin_button?("shop") then
+          @select_facility = 3
+        elsif mouse_widthin_button?("food_shop") then
+          @select_facility = 4
+        elsif mouse_widthin_button?("mansion") then
+          @select_facility = 5
+        else
+          @select_facility = temp_select_facility
+        end
       end
       
     end
