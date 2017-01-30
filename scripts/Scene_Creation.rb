@@ -130,7 +130,7 @@ class Scene_Creation < Scene_Base
   
   # 画面の描画
   def draw()
-        # マップの描画
+    # マップの描画
     for x in 0..19 do
       for y in 0..12 do
         Window.draw(D_BEGIN_X + (x*40), D_BEGIN_Y + (y*40), @map_chip[0])
@@ -167,6 +167,33 @@ class Scene_Creation < Scene_Base
       
       # 所持金の描画
       Window.draw_font(9, 507, sprintf("% 16d", $player.gold), @system_font)
+      
+      # 施設名の描画
+      if set_facility?(1) then
+        Window.draw_font(56, 61, "農家", @system_font)
+      else
+        Window.draw_font(56, 61, "農家", @system_font, {:color=>[128, 128, 128]})
+      end
+      if set_facility?(2) then
+        Window.draw_font(56, 113, "住宅", @system_font)
+      else
+        Window.draw_font(56, 113, "住宅", @system_font, {:color=>[128, 128, 128]})
+      end
+      if set_facility?(3) then
+        Window.draw_font(56, 167, "商店", @system_font)
+      else
+        Window.draw_font(56, 167, "商店", @system_font, {:color=>[128, 128, 128]})
+      end
+      if set_facility?(4) then
+        Window.draw_font(56, 219, "食料品店", @system_font)
+      else
+        Window.draw_font(56, 219, "食料品店", @system_font, {:color=>[128, 128, 128]})
+      end
+      if set_facility?(5) then
+        Window.draw_font(56, 270, "高級住宅", @system_font)
+      else
+        Window.draw_font(56, 270, "高級住宅", @system_font, {:color=>[128, 128, 128]})
+      end
     else
       Window.draw(0, 0, @info_frame)
       Window.draw_font(11, 13, "設置", @font)
@@ -229,10 +256,7 @@ class Scene_Creation < Scene_Base
         if mouse_widthin_button?("map") then
           if @select_facility > 0 then
             # その施設を置ける条件を満たしているか？
-            calc_parameter()
-            if @facilities[@select_facility].population <= @surplus_population &&
-               @facilities[@select_facility].food <= @surplus_food &&
-               @facilities[@select_facility].price <= $player.gold then
+            if set_facility?(@select_facility) then
               # 置ける
               $player.gold -= @facilities[@select_facility].price
               $player.town[x][y] = @select_facility
@@ -319,6 +343,21 @@ class Scene_Creation < Scene_Base
     
     @surplus_population = @population - @consumed_population
     @surplus_food = @food - @consumed_food
+  end
+  
+  # 施設が配置できる条件を満たしているか？
+  def set_facility?(idx)
+    calc_parameter()
+    
+    if @facilities[idx].population <= @surplus_population &&
+       @facilities[idx].food <= @surplus_food &&
+       @facilities[idx].price <= $player.gold then
+       
+       return true
+       
+    end
+    
+    return false
   end
   
   # マウスカーソルがボタンの座標内に入っているかどうかを返します
