@@ -30,7 +30,15 @@ class Scene_Battle
     @result = Wave_Result.new
     @heal_wait = 0
     @elements = Array.new
+    @help = Array.new
     @effective = false
+    
+    # プレイヤーが敵に何回攻撃したかカウントする変数
+    @p_atk_count = 0
+    # プレイヤーが何回ガードしかたカウントする変数
+    @p_gd_count = 0
+    # プレイヤーが何回薬草を使ったかカウントする変数
+    @p_heal_count = 0
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -53,6 +61,8 @@ class Scene_Battle
       @background = Image.load("image/background/ice_world.jpg")
     when 6
       @background = Image.load("image/background/castle.jpg")
+    when 7
+      @background = Image.load("image/background/tower.jpg")
     end
     # 属性画像の読込
     @elements.push(Image.load("image/system/e_fire.png"))
@@ -61,6 +71,11 @@ class Scene_Battle
     @elements.push(Image.load("image/system/e_wind.png"))
     @elements.push(Image.load("image/system/e_light.png"))
     @elements.push(Image.load("image/system/e_dark.png"))
+    # ヒント画像の読込
+    @help.push(Image.load("image/help/00_note_attack.png"))
+    @help.push(Image.load("image/help/01_note_guard.png"))
+    @help.push(Image.load("image/help/02_note_heal.png"))
+    @help.push(Image.load("image/help/03_note_fever.png"))
     # 敵データの読込
     @enemies = Array.new
     s = ($dungeon_id - 1) * 7
@@ -398,6 +413,30 @@ class Scene_Battle
     else
       Message_Box.show("あと" + (BATTLE_COUNT_MAX - @battle_count).to_s + "戦", 0, 0)
     end
+    
+    # ヘルプの表示
+    # 攻撃ヘルプの表示
+    if @p_atk_count < 3 && $player.flag[3] == false then
+      Window.draw(542, 63, @help[0])
+    else
+      $player.flag[3] = true
+    end
+    # ガードヘルプの表示
+    if @p_gd_count < 3 && $player.flag[4] == false then
+      Window.draw(145, 242, @help[1])
+    else
+      $player.flag[4] = true
+    end
+    # 回復ヘルプの表示
+    if @p_heal_count < 3 && $player.flag[5] == false then
+      Window.draw(722, 353, @help[2])
+    else
+      $player.flag[5] = true
+    end
+    # フィーバーヘルプの表示
+    if $player.fever? && $player.fever_count <= 2 then
+      Window.draw(5, 127, @help[3])
+    end
   end
   
   # 敵HPゲージの描画
@@ -640,6 +679,9 @@ class Scene_Battle
           end
           
           @combo_frame = $frame_counter
+          
+          # 攻撃回数をカウント
+          @p_atk_count += 1
         else
           @combo_frame = 0
         end
@@ -727,6 +769,10 @@ class Scene_Battle
             end
             
             icon.die() # ガードした場合は 攻撃アイコン を消去
+            
+            # ガード回数をカウント
+            @p_gd_count += 1
+            
             break
           end
         end
@@ -749,6 +795,7 @@ class Scene_Battle
             end
             
             $player.heal_count -= 1
+            @p_heal_count += 1
           end
         end
     end

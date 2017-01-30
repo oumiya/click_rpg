@@ -30,6 +30,7 @@ class Player
   attr_accessor :have_armor        # 所持している防具
   attr_accessor :fever_point       # 現在のフィーバーポイント
   attr_accessor :fever_frame       # フィーバー持続時間（フレーム）
+  attr_accessor :fever_count       # フィーバー回数
   attr_accessor :opening           # オープニング見た
   attr_accessor :cleared           # クリア済みフラグ
   attr_accessor :progress          # 進行度
@@ -61,6 +62,7 @@ class Player
     @have_armor = Array.new
     @fever_point = 0
     @fever_frame = 0
+    @fever_count = 0
     @opening = false
     @cleared = false
     @progress = 0
@@ -202,7 +204,8 @@ class Player
   # フィーバー状態を開始
   def fever_start()
     if @fever_point >= FEVER_MAX_POINT then
-      #@fever_point = 0
+      # フィーバー回数をカウント
+      @fever_count += 1
       @fever_frame = FEVER_MAX_FRAME
     end
   end

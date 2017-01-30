@@ -30,6 +30,7 @@ module Save_Data
     save_data["have_armor"] = $player.have_armor         # 持っている防具
     save_data["fever_point"] = $player.fever_point       # フィーバーポイント
     save_data["fever_frame"] = $player.fever_frame       # フィーバー持続時間
+    save_data["fever_count"] = $player.fever_count       # フィーバー回数
     save_data["opening"] = $player.opening               # オープニングを見たかどうか
     save_data["cleared"] = $player.cleared               # クリア済みかどうか
     save_data["progress"] = $player.progress             # 進行度
@@ -73,6 +74,7 @@ module Save_Data
       $player.have_armor= save_data["have_armor"]            # 持っている防具
       $player.fever_point = save_data["fever_point"]         # フィーバーポイント
       $player.fever_frame = save_data["fever_frame"]         # フィーバー持続時間
+      $player.fever_count = save_data["fever_count"]         # フィーバー回数
       $player.opening = save_data["opening"]                 # オープニングを見たかどうか
       $player.cleared = save_data["cleared"]                 # クリア済みかどうか
       $player.progress = save_data["progress"]               # 進行度

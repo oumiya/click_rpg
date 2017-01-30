@@ -327,23 +327,33 @@ class Scene_Equip < Scene_Base
     if (Input.mouse_push?(M_LBUTTON) && $control_mode == 0) || (Input.pad_push?($attack_button) && $control_mode == 1) then
       # 武器ボタンを押下
       if @cursor.index == 0 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @tab_index = 0
       end
       # 防具ボタンを押下
       if @cursor.index == 1 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @tab_index = 1
       end
       # 髪型ボタンを押下
       if @cursor.index == 2 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @tab_index = 2
       end
       # 店を出るボタンを押下
       if @cursor.index == 3 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         @fade_effect.setup(0)
         @scene_index = 1
       end
       # 次のページボタンを押下
       if @cursor.index == 14 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
         if @tab_index == 0 then
           if @max_weapon_page > 1 then
             @weapon_page += 1
@@ -364,6 +374,9 @@ class Scene_Equip < Scene_Base
       
       # 前のページボタンを押下
       if @cursor.index == 13 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        
         if @tab_index == 0 then
           @weapon_page -= 1
           if @weapon_page < 0 then
@@ -380,6 +393,9 @@ class Scene_Equip < Scene_Base
       
       # アイテム名を左クリック
       if @cursor.index >= 4 && @cursor.index <= 12 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+      
         idx = @cursor.index - 4
         # 武器装備処理
         if @tab_index == 0 then
@@ -416,6 +432,10 @@ class Scene_Equip < Scene_Base
            Input.mouse_y >= hitbox[1] &&
            Input.mouse_x <= hitbox[2] &&
            Input.mouse_y <= hitbox[3] then
+           
+           # 決定音を鳴らす
+           $sounds["decision"].play(1, 0)
+           
            idx = i
            break
         end
@@ -468,6 +488,10 @@ class Scene_Equip < Scene_Base
            Input.mouse_y >= hitbox[1] &&
            Input.mouse_x <= hitbox[2] &&
            Input.mouse_y <= hitbox[3] then
+           
+           # 決定音を鳴らす
+           $sounds["decision"].play(1, 0)
+           
            idx = i
            break
         end
@@ -476,6 +500,16 @@ class Scene_Equip < Scene_Base
       if idx > -1 then
         $player.skin_color = idx
       end
+    end
+    
+    # 右クリックで街に戻る
+    if (Input.mouse_push?(M_RBUTTON) && $control_mode == 0) then
+      # 決定音を鳴らす
+      $sounds["decision"].play(1, 0)
+      
+      @cursor.index = 3
+      @fade_effect.setup(0)
+      @scene_index = 1
     end
     
     # マウスホバー処理

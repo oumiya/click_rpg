@@ -480,6 +480,15 @@ class Scene_Shop < Scene_Base
         end
       end
     end
+
+    # 右クリックで街に戻る
+    if (Input.mouse_push?(M_RBUTTON) && $control_mode == 0) then
+      @cursor.index = 3
+      # 決定音を鳴らす
+      $sounds["decision"].play(1, 0)
+      @fade_effect.setup(0)
+      @scene_index = 1
+    end
     
     # マウスホバー処理
     if $control_mode == 0 then
