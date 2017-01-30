@@ -337,7 +337,7 @@ class Scene_Shop < Scene_Base
           save_weapon = {"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]}
 
           for i in 0...$player.have_weapon.size - 1 do
-            if $player.equip_weapon != i then
+            if $player.equip_weapon != i && $player.have_armor[i]["idx"] != 24 then
               total += $weapondata.get_weapon_data($player.have_weapon[i]["idx"])[:price]
             end
           end
@@ -352,7 +352,7 @@ class Scene_Shop < Scene_Base
           save_armor = {"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]}
 
           for i in 0...$player.have_armor.size - 1 do
-            if $player.equip_armor != i then
+            if $player.equip_armor != i && $player.have_armor[i]["idx"] != 24 then
               total += $armordata.get_armor_data($player.have_armor[i]["idx"])[:price]
             end
           end

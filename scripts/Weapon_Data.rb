@@ -29,6 +29,7 @@ class Weapon_Data
     @weapon.push({:name=>"マーズの剣", :value=>480, :price=>19000, :element=>"氷", :filename=>"21_mars.png"})
     @weapon.push({:name=>"マサムネ", :value=>500, :price=>20500, :element=>"風", :filename=>"22_masamune.png"})
     @weapon.push({:name=>"冥王剣", :value=>550, :price=>22000, :element=>"闇", :filename=>"23_pluto.png"})
+    @weapon.push({:name=>"アロウの剣", :value=>500, :price=>22000, :element=>"光", :filename=>"24_arrow.png"})
     
     @images = Array.new
     @weapon.each{|a|

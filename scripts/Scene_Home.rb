@@ -75,20 +75,49 @@ class Scene_Home < Scene_Base
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
     
+    # 街づくりモード解放
     if $player.flag[0] == false && $player.gold > 1000 then
       $player.flag[0] = true
       @next_scene = Scene_Event.new("creation.dat")
     end
-    
+    # トゥルーエンディング
     if $player.flag[1] == false && $player.gold > 10000000 then
       $player.gold -= 10000000
       $player.flag[1] = true
       @next_scene = Scene_Event.new("ending.dat")
     end
-    
+    # 騎士イベント1
     if $player.flag[2] == false && $player.progress >= 5 then
       $player.flag[2] = true
       @next_scene = Scene_Event.new("knight1.dat")
+    end
+    # 騎士イベント2
+    if $player.flag[6] == false && $player.progress >= 10 then
+      $player.flag[6] = true
+      @next_scene = Scene_Event.new("knight2.dat")
+    end
+    # 騎士イベント3
+    if $player.flag[7] == false && $player.progress >= 15 then
+      $player.flag[7] = true
+      @next_scene = Scene_Event.new("knight3.dat")
+      reward_armor = {"idx"=>24, "name"=>"アロウの鎧(光)H2", "element"=>"光", "bonus"=>0, "heal"=>2, "value"=>150}
+      $player.have_armor.push(reward_armor)
+    end
+    
+    # 騎士イベント4
+    if $player.flag[8] == false && $player.progress >= 20 then
+      $player.flag[8] = true
+      @next_scene = Scene_Event.new("knight4.dat")
+    end
+    
+    # 騎士イベント5
+    if $player.flag[9] == false && $player.progress >= 25 then
+      $player.flag[9] = true
+      @next_scene = Scene_Event.new("knight5.dat")
+      reward_weapon = {"idx"=>24, "name"=>"アロウの剣(光)", "element"=>"光", "bonus"=>0, "value"=>500}
+      $player.have_weapon.push(reward_weapon)
+      reward_armor = {"idx"=>24, "name"=>"アロウの鎧(闇)H5", "element"=>"闇", "bonus"=>0, "heal"=>5, "value"=>500}
+      $player.have_armor.push(reward_armor)
     end
   end
   
