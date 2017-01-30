@@ -223,6 +223,19 @@ class Scene_Select_Battale < Scene_Base
       end
     end
     
+    # マウスの右クリックで街に戻る
+    if (Input.mouse_push?(M_RBUTTON)) then
+      @cursor.index = 5
+      # 決定音を鳴らす
+      $sounds["decision"].play(1, 0)
+      # フェードアウト後に戦闘シーンへ遷移させる
+      @scene_index = 2
+      # カーソルを点滅させる
+      @cursor.flash = true
+      # 画面を徐々にフェードアウトさせる
+      @fade_effect.setup(0)
+    end
+    
   end
   
   # ループ後処理
