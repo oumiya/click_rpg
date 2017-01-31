@@ -219,4 +219,82 @@ class Player
       return diff
     end
   end
+  
+  # 指定の武器を所持品に追加
+  def add_weapon(idx)
+    weapon_name = $weapondata.get_weapon_data(idx)[:name]
+    value = $weapondata.get_weapon_data(idx)[:value]
+    element = $weapondata.get_weapon_data(idx)[:element]
+    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>0, "value"=>value}
+    $player.have_weapon.push(adding_weapon)
+    sort_weapon()
+  end
+
+  # 指定の武器を所持品に追加
+  def add_weapon(idx, weapon_name, element, bonus, value)
+    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>bonus, "value"=>value}
+    $player.have_weapon.push(adding_weapon)
+    sort_weapon()
+  end
+  
+  # 所持している武器のソート
+  def sort_weapon()
+    if $player.have_weapon.length > 1 then
+      pos_max = $player.have_weapon.length - 1
+      
+      (0...(pos_max)).each{|n|
+        (0...(pos_max - n)).each{|ix|
+          iy = ix + 1
+          if $player.have_weapon[ix]["value"] > $player.have_weapon[iy]["value"] then
+            if $player.equip_weapon == ix then
+              $player.equip_weapon = iy
+            elsif $player.equip_weapon == iy then
+              $player.equip_weapon = ix
+            end
+            $player.have_weapon[ix], $player.have_weapon[iy] = $player.have_weapon[iy], $player.have_weapon[ix]
+          end
+        }
+      }
+    end
+  end
+  
+  # 指定の防具を所持品に追加
+  def add_armor(idx)
+    armor_name = $armordata.get_armor_data(idx)[:name]
+    value = $armordata.get_armor_data(idx)[:value]
+    element = $armordata.get_armor_data(idx)[:element]
+    heal = $armordata.get_armor_data(idx)[:heal]
+    
+    adding_armor = {"idx"=>idx, "name"=>armor_name, "element"=>element, "bonus"=>0, "heal"=>heal, "value"=>value}
+    $player.have_armor.push(adding_armor)
+    sort_armor()
+  end
+
+  # 指定の防具を所持品に追加
+  def add_armor(idx, armor_name, element, bonus, heal, value)
+    added_armor = {"idx"=>idx, "name"=>armor_name, "element"=>"", "bonus"=>0, "heal"=>0, "value"=>value}
+    $player.have_armor.push(added_armor)
+    sort_armor()
+  end
+  
+  # 所持している防具のソート
+  def sort_armor()
+    if $player.have_armor.length > 1 then
+      pos_max = $player.have_armor.length - 1
+      
+      (0...(pos_max)).each{|n|
+        (0...(pos_max - n)).each{|ix|
+          iy = ix + 1
+          if $player.have_armor[ix]["value"] > $player.have_armor[iy]["value"] then
+            if $player.equip_armor == ix then
+              $player.equip_armor = iy
+            elsif $player.equip_armor == iy then
+              $player.equip_armor = ix
+            end
+            $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
+          end
+        }
+      }
+    end
+  end
 end

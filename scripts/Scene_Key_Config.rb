@@ -14,10 +14,9 @@ class Scene_Key_Config
     $heal_button = nil
     @wait_frame = 0
   end
-  
-  # フレーム更新処理
-  def update()
-    # 画面の描画
+
+  # 画面の描画
+  def draw()
     if @state == 0 then
       Message_Box.show("決定/攻撃ボタンを押してください<br>（キャンセルする場合はキーボードのSPACEキーを押してください）")
     end
@@ -37,7 +36,10 @@ class Scene_Key_Config
     if @state == 4 then
       Message_Box.show("ボタンの設定をキャンセルしました。")
     end
-    
+  end
+  
+  # フレーム更新処理
+  def update()
     # ウェイト処理
     return if wait?
     

@@ -89,8 +89,6 @@ class Scene_Event < Scene_Base
       @idx = @event_data.size + 1
 
     else
-      draw()
-      
       # ピクチャーの表示待ち
       if @picture_mode == 1 then
         if @picture != nil then

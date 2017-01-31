@@ -93,8 +93,8 @@ class Scene_Shop < Scene_Base
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
-  # フレーム更新処理
-  def update()
+  # 画面の描画
+  def draw()
     # 罫線の描画
     Window.draw_box(295, 70, 910, 110, [255, 255, 255])
     Window.draw_box(296, 71, 909, 109, [255, 255, 255])
@@ -236,7 +236,10 @@ class Scene_Shop < Scene_Base
         @message = nil
       end
     end
-    
+  end
+  
+  # フレーム更新処理
+  def update()
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
       @wait_frame -= 1
@@ -377,33 +380,12 @@ class Scene_Shop < Scene_Base
           weapon = $weapondata.get_weapon_data(idx)
           if weapon != nil then
             if $player.gold >= weapon[:price] then
-              weapon_name = $weapondata.get_weapon_data(idx)[:name]
-              value = $weapondata.get_weapon_data(idx)[:value]
-              buy_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>"", "bonus"=>0, "value"=>value}
-              $player.have_weapon.push(buy_weapon)
+              # 武器を所持品に追加
+              $player.add_weapon(idx)
+              # プレイヤーの所持金から代金を減算
               $player.gold -= weapon[:price]
               @message = "ありがとよ！"
               @wait_frame = 60
-
-              # 武器を攻撃力順にソート
-              if $player.have_weapon.length > 1 then
-                pos_max = $player.have_weapon.length - 1
-                
-                (0...(pos_max)).each{|n|
-                  (0...(pos_max - n)).each{|ix|
-                    iy = ix + 1
-                    if $player.have_weapon[ix]["value"] > $player.have_weapon[iy]["value"] then
-                      if $player.equip_weapon == ix then
-                        $player.equip_weapon = iy
-                      elsif $player.equip_weapon == iy then
-                        $player.equip_weapon = ix
-                      end
-                      $player.have_weapon[ix], $player.have_weapon[iy] = $player.have_weapon[iy], $player.have_weapon[ix]
-                    end
-                  }
-                }
-              end
-
             else
               @message = "お金が足りないぜ"
               @wait_frame = 60
@@ -415,36 +397,12 @@ class Scene_Shop < Scene_Base
           armor = $armordata.get_armor_data(idx)
           if armor != nil then
             if $player.gold >= armor[:price] then
-              armor_name = $armordata.get_armor_data(idx)[:name]
-              value = $armordata.get_armor_data(idx)[:value]
-              buy_armor = {"idx"=>idx, "name"=>armor_name, "element"=>"", "bonus"=>0, "heal"=>0, "value"=>value}
-              $player.have_armor.push(buy_armor)
+              # 指定の防具を所持品に追加
+              $player.add_armor(idx)
+              # プレイヤーの所持金から代金を減算
               $player.gold -= armor[:price]
               @message = "ありがとよ！"
               @wait_frame = 60
-
-              # 防具を攻撃力順にソート
-              if $player.have_armor.length > 1 then
-                pos_max = $player.have_armor.length - 1
-                
-                (0...(pos_max)).each{|n|
-                  (0...(pos_max - n)).each{|ix|
-                    iy = ix + 1
-                    if $player.have_armor[ix]["value"] > $player.have_armor[iy]["value"] then
-                      if $player.equip_armor == ix then
-                        $player.equip_armor = iy
-                      elsif $player.equip_armor == iy then
-                        $player.equip_armor = ix
-                      end
-                      $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
-                    end
-                  }
-                }      
-              end
-
-
-
-
             else
               @message = "お金が足りないぜ"
               @wait_frame = 60

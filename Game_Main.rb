@@ -64,6 +64,7 @@ class Game_Main
       
       # ウィンドウが非アクティブの時はゲームを停止
       if Window.active? == true then
+        $scene.draw
         $scene.update
         
         break if $scene == nil
@@ -75,6 +76,8 @@ class Game_Main
         end
         
         $frame_counter += 1
+      else
+        $scene.draw
       end
 
       Ayame.update

@@ -81,17 +81,6 @@ class Scene_Creation < Scene_Base
   
   # フレーム更新処理
   def update()
-    # 画面の描画
-    draw()
-    
-    # メッセージボックスの表示
-    if @message != "" then
-      Message_Box.show(@message)
-      if @wait_frame < 1 then
-        @message = ""
-      end
-    end
-    
     # フェードアウト/フェードインの表示
     @fade_effect.update
     if @fade_effect.effect_end? then
@@ -214,6 +203,14 @@ class Scene_Creation < Scene_Base
       Window.draw_font(10, 393, sprintf("% 15d", @surplus_population), @system_font)
       # 使える食料
       Window.draw_font(10, 461, sprintf("% 15d", @surplus_food), @system_font)
+    end
+    
+    # メッセージボックスの表示
+    if @message != "" then
+      Message_Box.show(@message)
+      if @wait_frame < 1 then
+        @message = ""
+      end
     end
   end
   

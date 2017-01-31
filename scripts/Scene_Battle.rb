@@ -122,17 +122,6 @@ class Scene_Battle
   
   # フレーム更新処理
   def update()
-    # 画面の描画
-    draw()
-    
-    # メッセージボックスの表示
-    if @message != "" then
-      Message_Box.show(@message)
-      if @wait_frame < 1 then
-        @message = ""
-      end
-    end
-    
     # フェードアウト/フェードインの表示
     @fade_effect.update
     if @fade_effect.effect_end? == false then
@@ -436,6 +425,14 @@ class Scene_Battle
     # フィーバーヘルプの表示
     if $player.fever? && $player.fever_count <= 2 then
       Window.draw(5, 127, @help[3])
+    end
+    
+    # メッセージボックスの表示
+    if @message != "" then
+      Message_Box.show(@message)
+      if @wait_frame < 1 then
+        @message = ""
+      end
     end
   end
   

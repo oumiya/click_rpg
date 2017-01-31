@@ -92,9 +92,9 @@ class Scene_Equip < Scene_Base
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
   
-  # フレーム更新処理
-  def update()
-    # アバターの描画
+  # 画面の描画
+  def draw()
+        # アバターの描画
     Window.draw(29, 285, $avater[$player.skin_color])
     
     # 防具の描画
@@ -131,8 +131,6 @@ class Scene_Equip < Scene_Base
       Window.draw_box_fill(x, y, x+32, y+32, value)
       x += 33
     }
-    
-    # 肌色選択ボックスを描画
     
     # 攻撃力の描画
     Window.draw_font(12, 26, "攻撃力", @font)
@@ -264,7 +262,10 @@ class Scene_Equip < Scene_Base
         @message = nil
       end
     end
-    
+  end
+  
+  # フレーム更新処理
+  def update()    
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
       @wait_frame -= 1

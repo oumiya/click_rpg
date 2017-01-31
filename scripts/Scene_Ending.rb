@@ -94,9 +94,6 @@ class Scene_Ending < Scene_Base
   
   # フレーム更新処理
   def update()
-    # 描画処理
-    draw()
-    
     # フェードアウト/フェードインの表示
     @fade_effect.update
     if @fade_effect.effect_end? then

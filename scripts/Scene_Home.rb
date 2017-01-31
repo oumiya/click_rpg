@@ -100,8 +100,7 @@ class Scene_Home < Scene_Base
     if $player.flag[7] == false && $player.progress >= 15 then
       $player.flag[7] = true
       @next_scene = Scene_Event.new("knight3.dat")
-      reward_armor = {"idx"=>24, "name"=>"アロウの鎧(光)H2", "element"=>"光", "bonus"=>0, "heal"=>2, "value"=>150}
-      $player.have_armor.push(reward_armor)
+      $player.add_armor(24, "アロウの鎧(光)H2", "光", 0, 2, 150)
     end
     
     # 騎士イベント4
@@ -114,15 +113,13 @@ class Scene_Home < Scene_Base
     if $player.flag[9] == false && $player.progress >= 25 then
       $player.flag[9] = true
       @next_scene = Scene_Event.new("knight5.dat")
-      reward_weapon = {"idx"=>24, "name"=>"アロウの剣(光)", "element"=>"光", "bonus"=>0, "value"=>500}
-      $player.have_weapon.push(reward_weapon)
-      reward_armor = {"idx"=>24, "name"=>"アロウの鎧(闇)H5", "element"=>"闇", "bonus"=>0, "heal"=>5, "value"=>500}
-      $player.have_armor.push(reward_armor)
+      $player.add_weapon(24, "アロウの剣(光)", "光", 0, 500)
+      $player.add_armor(24, "アロウの鎧改(闇)H5", "闇", 0, 5, 500)
     end
   end
   
-  # フレーム更新処理
-  def update()
+  # 画面描画処理
+  def draw()
     # ホーム画面を描画
     Window.draw(0, 0, @back_image)
     # プレイヤーのステータスを表示
@@ -162,7 +159,11 @@ class Scene_Home < Scene_Base
         @message = ""
       end
     end
-    
+  end
+  
+  
+  # フレーム更新処理
+  def update()
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
       @wait_frame -= 1

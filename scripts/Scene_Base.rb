@@ -7,6 +7,10 @@ class Scene_Base
   def start()
   end
   
+  # 画面の描画をする ※ このメソッドに描画処理以外の処理を入れてはならない
+  def draw()
+  end
+  
   # フレーム更新処理
   def update()
   end

@@ -4,7 +4,7 @@ require_relative 'Scene_Home.rb'
 require_relative 'Message_Box.rb'
 require_relative 'Wave_Result.rb'
 
-# ゲーム中の全てのシーンのスーパークラス
+# 戦闘結果シーンクラス
 class Scene_Box < Scene_Base
 
   def initialize(result)
@@ -34,6 +34,8 @@ class Scene_Box < Scene_Base
     
     @font = Font.new(32)
     @next_scene = nil
+    
+    @show_message_box = false
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -74,11 +76,19 @@ class Scene_Box < Scene_Base
     end
   end
   
-  # フレーム更新処理
-  def update()
+  # 画面描画処理
+  def draw()
     Window.draw(0, 0, @background)
     Window.draw(230, 70, @box_image)
     Message_Box.show(@message, -1, -1, @font)
+    
+    if @show_message_box then
+      Message_Box.show("街へ戻る", -1, 415, @font)
+    end
+  end
+  
+  # フレーム更新処理
+  def update()
     
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
@@ -86,7 +96,7 @@ class Scene_Box < Scene_Base
       return
     end
     
-    Message_Box.show("街へ戻る", -1, 415, @font)
+    @show_message_box = true
     
     # キー入力待ち
     if Input.mouse_push?(M_LBUTTON) || Input.pad_push?($attack_button) then
@@ -226,10 +236,13 @@ class Scene_Box < Scene_Base
     
     
     if drop_item == 0 then
+      # ドロップ武器の名前生成
       reward_name = $weapondata.get_weapon_data(idx)[:name]
+      
       if bonus > 0 then
         reward_name += "+" + bonus.to_s
       end
+      
       if element != "" then
         reward_name = reward_name + "(" + element + ")"
       end
@@ -241,40 +254,22 @@ class Scene_Box < Scene_Base
         value += value_bonus * bonus
       end
       
-      reward_weapon = {"idx"=>idx, "name"=>reward_name, "element"=>element, "bonus"=>bonus, "value"=>value}
-      $player.have_weapon.push(reward_weapon)
+      # 所持品を追加
+      $player.add_weapon(idx, reward_name, element, bonus, value)
       @item_name += reward_name + "を手に入れた！<br>"
       
-      # 武器を攻撃力順にソート
-      if $player.have_weapon.length > 1 then
-        pos_max = $player.have_weapon.length - 1
-        
-        (0...(pos_max)).each{|n|
-          (0...(pos_max - n)).each{|ix|
-            iy = ix + 1
-            if $player.have_weapon[ix]["value"] > $player.have_weapon[iy]["value"] then
-              if $player.equip_weapon == ix then
-                $player.equip_weapon = iy
-              elsif $player.equip_weapon == iy then
-                $player.equip_weapon = ix
-              end
-              $player.have_weapon[ix], $player.have_weapon[iy] = $player.have_weapon[iy], $player.have_weapon[ix]
-            end
-          }
-        }
-      end
-      
-      
-      
-      
     else
+      # ドロップ防具の名前を生成
       reward_name = $armordata.get_armor_data(idx)[:name]
+      
       if bonus > 0 then
         reward_name += "+" + bonus.to_s
       end
+      
       if element != "" then
         reward_name = reward_name + "(" + element + ")"
       end
+      
       if heal > 0 then
         reward_name = reward_name + "H" + heal.to_s
       end
@@ -286,29 +281,9 @@ class Scene_Box < Scene_Base
         value += value_bonus * bonus
       end
       
-      reward_armor = {"idx"=>idx, "name"=>reward_name, "element"=>element, "bonus"=>bonus, "heal"=>heal, "value"=>value}
-      $player.have_armor.push(reward_armor)
+      # 所持品にドロップ防具を追加
+      $player.add_armor(idx, reward_name, element, bonus, heal, value)
       @item_name += reward_name + "を手に入れた！<br>"
-      
-      # 防具を攻撃力順にソート
-      if $player.have_armor.length > 1 then
-        pos_max = $player.have_armor.length - 1
-        
-        (0...(pos_max)).each{|n|
-          (0...(pos_max - n)).each{|ix|
-            iy = ix + 1
-            if $player.have_armor[ix]["value"] > $player.have_armor[iy]["value"] then
-              if $player.equip_armor == ix then
-                $player.equip_armor = iy
-              elsif $player.equip_armor == iy then
-                $player.equip_armor = ix
-              end
-              $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
-            end
-          }
-        }      
-      end
-      
       
     end
     

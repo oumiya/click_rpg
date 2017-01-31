@@ -131,9 +131,6 @@ class Scene_Select_Battale < Scene_Base
   
   # フレーム更新処理
   def update()
-    # 画面の描画
-    draw()
-    
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
       @wait_frame -= 1
