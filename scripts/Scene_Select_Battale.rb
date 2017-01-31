@@ -23,6 +23,9 @@ class Scene_Select_Battale < Scene_Base
     # 背景画像の読込
     @background = Image.load("image/background/map.png")
     
+    # CLEAR画像の読込
+    @clear_img = Image.load("image/system/clear_ribbon.png")
+    
     # ダンジョンアイコン画像の読込
     @dungeon_icon = nil
     
@@ -341,21 +344,21 @@ class Scene_Select_Battale < Scene_Base
     
     # クリア済みかどうか
     if get_progress(1) <= $player.progress then
-      Window.draw_font(355, 249, "CLEAR", @wave_font)
+      Window.draw(335, 230, @clear_img)
     end
     if get_progress(2) <= $player.progress then
-      Window.draw_font(355, 306, "CLEAR", @wave_font)
+      Window.draw(335, 287, @clear_img)
     end
     if get_progress(3) <= $player.progress then
-      Window.draw_font(355, 364, "CLEAR", @wave_font)
+      Window.draw(335, 345, @clear_img)
     end
     if get_progress(4) <= $player.progress then
-      Window.draw_font(355, 421, "CLEAR", @wave_font)
+      Window.draw(335, 400, @clear_img)
     end
     if get_progress(5) <= $player.progress then
-      Window.draw_font(355, 477, "CLEAR", @wave_font)
+      Window.draw(335, 456, @clear_img)
     elsif $player.cleared == true
-      Window.draw_font(355, 477, "CLEAR", @wave_font)
+      Window.draw(335, 456, @clear_img)
     end
     
     # 説明文の描画

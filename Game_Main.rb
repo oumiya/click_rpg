@@ -109,6 +109,7 @@ class Game_Main
     $sounds["v_lose"] = Ayame.new("audio/se/voice_lose.mp3")            # 戦闘敗北音声
     $sounds["decision"] = Ayame.new("audio/se/decision.mp3")            # 決定音
     $sounds["box"] = Ayame.new("audio/se/box.mp3")                      # 宝箱
+    $sounds["wave_win"] = Ayame.new("audio/se/yourewinner.mp3")                 # Waveに勝利した！
     
     # BGMを読み込む
     $bgm = Hash.new

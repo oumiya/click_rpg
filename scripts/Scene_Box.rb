@@ -3,6 +3,7 @@ require_relative 'Scene_Base.rb'
 require_relative 'Scene_Home.rb'
 require_relative 'Message_Box.rb'
 require_relative 'Wave_Result.rb'
+require_relative 'Paper_Snow.rb'
 
 # 戦闘結果シーンクラス
 class Scene_Box < Scene_Base
@@ -32,6 +33,12 @@ class Scene_Box < Scene_Base
     # 宝箱画像
     @box_image = Image.load("image/enemy/box.png")
     
+    # 紙吹雪
+    @paper_snow = Paper_Snow.new
+    
+    # You're Winner!画像
+    @youre_winner = Image.load("image/system/yourewinner.png")
+    
     @font = Font.new(32)
     @next_scene = nil
     
@@ -45,6 +52,9 @@ class Scene_Box < Scene_Base
     }
     
     $sounds["box"].play(1, 0)
+    if @result.result then
+      $sounds["wave_win"].play(1, 0)
+    end
     @wait_frame = 180
     
     @message = @result.exp.to_s + "の経験値を獲得！<br>"
@@ -78,8 +88,17 @@ class Scene_Box < Scene_Base
   
   # 画面描画処理
   def draw()
+    # 背景画像の描画
     Window.draw(0, 0, @background)
+    # 宝箱画像の描画
     Window.draw(230, 70, @box_image)
+    if @result.result then
+      # 紙吹雪の描画
+      @paper_snow.draw
+      # You're Winner!の描画
+      Window.draw(320, 18, @youre_winner)
+    end
+    
     Message_Box.show(@message, -1, -1, @font)
     
     if @show_message_box then
@@ -89,6 +108,7 @@ class Scene_Box < Scene_Base
   
   # フレーム更新処理
   def update()
+    @paper_snow.update
     
     # 指定のフレーム数ウェイト
     if @wait_frame > 0 then
