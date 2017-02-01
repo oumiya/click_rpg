@@ -186,13 +186,12 @@ class Scene_Box < Scene_Base
     # まず属性がつくかどうか（属性は65%の確率で付与）
     lottery = rand(100)
     element = ""
+    if drop_item == 0 then
+      element = $weapondata.get_weapon_data(idx)[:element]
+    else
+      element = $armordata.get_armor_data(idx)[:element]
+    end
     if lottery < 65 then
-      if drop_item == 0 then
-        element = $weapondata.get_weapon_data(idx)[:element]
-      else
-        element = $armordata.get_armor_data(idx)[:element]
-      end
-      
       # 属性が無属性の時は属性を付与する
       if element == "" then
         lottery = rand(6) + 1
