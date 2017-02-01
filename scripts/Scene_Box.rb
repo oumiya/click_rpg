@@ -151,6 +151,8 @@ class Scene_Box < Scene_Base
       idx = 3
     end
     
+    idx = ($dungeon_id - 1) * 4 + idx
+
     # ボーナスの抽選
     # まずボーナスがつくかどうか（ボーナスは50%の確率で付与）
     lottery = rand(100)
@@ -191,9 +193,10 @@ class Scene_Box < Scene_Base
     else
       element = $armordata.get_armor_data(idx)[:element]
     end
+        
     if lottery < 65 then
       # 属性が無属性の時は属性を付与する
-      if element == "" then
+      if element.empty? then
         lottery = rand(6) + 1
         if lottery == 1 then
           element = "火"
@@ -215,8 +218,6 @@ class Scene_Box < Scene_Base
         end
       end
     end
-    
-    idx = ($dungeon_id - 1) * 4 + idx
     
     # 防具の場合のみ自動回復の抽選
     heal = 0
