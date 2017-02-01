@@ -130,6 +130,9 @@ class Scene_Tower < Scene_Base
       if @scene_index == 2 then
         @next_scene = Scene_Home.new
       end
+      if @scene_index == 3 then
+        @next_scene = Scene_Event.new("salmon2.dat")
+      end
     else
       return
     end
@@ -305,6 +308,7 @@ class Scene_Tower < Scene_Base
     end
     if @cursor.index == 7 then
       $wave_id = 8
+      @scene_index = 3
     end
     
     # カーソルを点滅させる

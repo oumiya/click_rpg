@@ -55,7 +55,7 @@ class Scene_Event < Scene_Base
     @draw_start = false
     # 遷移先のシーンID 0 ～ 4
     @next_scene_id = 0
-    # 遷移先のダンジョンID 1～6
+    # 遷移先のダンジョンID 1～7
     @dungeon_id = 0
     # 遷移先のシーンインスタンスを格納
     @next_scene = nil

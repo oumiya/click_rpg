@@ -94,7 +94,14 @@ class Scene_Home < Scene_Base
       $player.gold -= 10000000
       $player.flag[1] = true
       @next_scene = Scene_Event.new("ending.dat")
+    else
+      # トゥルーエンディング後のイベント
+      if $player.flag[1] == true && $player.flag[11] == false then
+        $player.flag[11] = true
+        @next_scene = Scene_Event.new("salmon1.dat")
+      end
     end
+    
     # 騎士イベント1
     if $player.flag[2] == false && $player.progress >= 5 then
       $player.flag[2] = true

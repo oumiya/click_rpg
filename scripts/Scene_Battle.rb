@@ -6,6 +6,7 @@ require_relative 'Guard_Rank_Text.rb'
 require_relative 'Message_Box.rb'
 require_relative 'Scene_Box.rb'
 require_relative 'Scene_Ending.rb'
+require_relative 'Scene_Event.rb'
 require_relative 'Scene_Home.rb'
 require_relative 'Sparkly.rb'
 require_relative 'Wave_Result.rb'
@@ -348,7 +349,11 @@ class Scene_Battle
             $player.progress = progress
           end
           
-          @next_scene = Scene_Tower.new
+          if $wave_id != 8 then
+            @next_scene = Scene_Tower.new
+          else
+            @next_scene = Scene_Event.new("salmon3.dat")
+          end
           
         else
           # 続けて戦闘を続行
