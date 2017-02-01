@@ -341,7 +341,7 @@ class Scene_Shop < Scene_Base
           save_weapon.push({"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]})
           
           for i in 0..$player.have_weapon.size - 1 do
-            if $player.have_weapon[i]["idx"] == 24 then
+            if $player.have_weapon[i]["idx"] == 24 && $player.equip_weapon != i then
               save_weapon.push({"idx"=>$player.have_weapon[i]["idx"], "name"=>$player.have_weapon[i]["name"], "element"=>$player.have_weapon[i]["element"], "bonus"=>$player.have_weapon[i]["bonus"], "value"=>$player.have_weapon[i]["value"]})
             end
           end
@@ -367,7 +367,7 @@ class Scene_Shop < Scene_Base
           save_armor.push({"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]})
           
           for i in 0..$player.have_armor.size - 1 do
-            if $player.have_armor[i]["idx"] == 24 then
+            if $player.have_armor[i]["idx"] == 24 && $player.equip_armor != i then
               save_armor.push({"idx"=>$player.have_armor[i]["idx"], "name"=>$player.have_armor[i]["name"], "element"=>$player.have_armor[i]["element"], "bonus"=>$player.have_armor[i]["bonus"], "heal"=>$player.have_armor[i]["heal"], "value"=>$player.have_armor[i]["value"]})
             end
           end
