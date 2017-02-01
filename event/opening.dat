@@ -8,7 +8,7 @@ pic_load:チュートリアル2,tutorial01.png
 pic_load:チュートリアル3,tutorial02.png
 pic_load:チュートリアル4,tutorial03.png
 pic_load:チュートリアル5,tutorial04.png
-bgm_load:街中,town.mp3
+bgm_load:街中,opening.mp3
 se_load:ナレーション1,n001.mp3
 se_load:ナレーション2,n002.mp3
 se_load:老人1,o001.mp3
