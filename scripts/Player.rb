@@ -38,7 +38,7 @@ class Player
   attr_accessor :income            # 1ターンごとに街から得られる収入
   attr_accessor :flag              # ストーリー進行フラグ
   
-  MAX_LEVEL = 100 # プレイヤーの最大レベル
+  MAX_LEVEL = 50 # プレイヤーの最大レベル
   
   def initialize()
     # 初期化
