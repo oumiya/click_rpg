@@ -595,6 +595,118 @@ class Enemy_Data
       enemy.exp = 2000
       enemy.gold = 10000
       enemy.element = "闇"
+    when 42
+      enemy.id = 42
+      enemy.image_file_name = "lucifer.png"
+      enemy.name = "ルシファー"
+      enemy.description = "魔界の王子。すっげーキモいデザインだな"
+      enemy.max_hp = 351000
+      enemy.attack = 10000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "光"
+    when 43
+      enemy.id = 43
+      enemy.image_file_name = "satan.png"
+      enemy.name = "サタン"
+      enemy.description = "魔界の王様。狼みたいなライオンのようなそんな感じ"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "火"
+    when 44
+      enemy.id = 44
+      enemy.image_file_name = "leviathan.png"
+      enemy.name = "レヴィアタン"
+      enemy.description = "大蛇"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "氷"
+    when 45
+      enemy.id = 45
+      enemy.image_file_name = "belphegor.png"
+      enemy.name = "ベルフェゴール"
+      enemy.description = "ちょっと！　うんこ中なんですけど！！"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "土"
+    when 46
+      enemy.id = 46
+      enemy.image_file_name = "mammon.png"
+      enemy.name = "マモン"
+      enemy.description = "カァーッ！　カァーッ！"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 16
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "風"
+    when 47
+      enemy.id = 47
+      enemy.image_file_name = "beelzebub.png"
+      enemy.name = "ベルゼブブ"
+      enemy.description = "蝿の王。王様らしい格好をしている。"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "闇"
+    when 48
+      enemy.id = 48
+      enemy.image_file_name = "asmodeus.png"
+      enemy.name = "アスモデウス"
+      enemy.description = "蝿の王。王様らしい格好をしている。"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "闇"
+    when 49
+      enemy.id = 49
+      enemy.image_file_name = "arrow.png"
+      enemy.name = "アロウ"
+      enemy.description = "ソロモンの塔の魔力に取り憑かれたアロウ。しかし属性は光のまま"
+      enemy.max_hp = 351000
+      enemy.attack = 15000
+      enemy.defence = 200
+      enemy.attack_frequency = [10, 11, 12, 13]
+      enemy.ai = 0
+      enemy.attack_speed = 12
+      enemy.exp = 0
+      enemy.gold = 0
+      enemy.element = "光"
     else
       puts id
     end

@@ -39,7 +39,7 @@ class Scene_Box < Scene_Base
     # You're Winner!画像
     @youre_winner = Image.load("image/system/yourewinner.png")
     
-    @font = Font.new(32)
+    @font = Font.new(18)
     @next_scene = nil
     
     @show_message_box = false
@@ -57,6 +57,11 @@ class Scene_Box < Scene_Base
     end
     @wait_frame = 180
     
+    if $player.cleared then
+      @result.exp *= 2
+      @result.gold *= 2
+    end
+    
     @message = @result.exp.to_s + "の経験値を獲得！<br>"
     $player.exp += @result.exp
     if $player.level_up? then
@@ -70,9 +75,15 @@ class Scene_Box < Scene_Base
       item_drop() # 必ず1個は当たる
     end
     
-    for i in 0..@result.battle_count do
-      if rand(8) == 0 then
+    if $player.cleared == true then
+      for i in 0..@result.battle_count do
         item_drop()
+      end
+    else
+      for i in 0..@result.battle_count do
+        if rand(8) == 0 then
+          item_drop()
+        end
       end
     end
     

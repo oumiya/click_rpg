@@ -8,6 +8,7 @@ require_relative 'Scene_Event.rb'
 require_relative 'Scene_Key_Config.rb'
 require_relative 'Scene_Select_Battale.rb'
 require_relative 'Scene_Ending.rb'
+require_relative 'Scene_Tower.rb'
 include Save_Data
 
 # ホーム画面
@@ -27,11 +28,13 @@ class Scene_Home < Scene_Base
     # 背景画像の読み込み
     @back_image = Image.load("image/system/home.png")
     # ダンジョン選択カーソル
-    @cursor = Cursor.new([[114, 39], [314, 39], [514, 42], [713, 44], [515, 232], [712, 233], [523, 413], [726, 413], [523, 477], [726, 477]])
+    @cursor = Cursor.new([[114, 39], [314, 39], [514, 42], [713, 44], [515, 232], [712, 233], [523, 413], [726, 413], [523, 477], [726, 477], [915, 212]])
     @cursor.index = $cursor_idx
     # お金が足りないよウィンドウの準備
     @not_enough_money = Image.load("image/system/not_enough_money.png")
     @not_enough_money_show = false
+    # ソロモンの塔に行く矢印の表示
+    @salmon_arrow = Image.load("image/system/arrow.png")
     # プレイヤーステータス描画用のフォントを用意
     @status_font = Font.new(18)
     # ボタン座標の設定
@@ -75,13 +78,19 @@ class Scene_Home < Scene_Base
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
     
+    if $player.cleared == true && $player.flag[10] == false then
+      @message = "クリア特典が解放されました。<br>お金と経験値の取得値が2倍になりました。<br>アイテムドロップ率が100%になった。"
+      @wait_frame = 300
+      $player.flag[10] = true
+    end
+    
     # 街づくりモード解放
     if $player.flag[0] == false && $player.gold > 1000 then
       $player.flag[0] = true
       @next_scene = Scene_Event.new("creation.dat")
     end
     # トゥルーエンディング
-    if $player.flag[1] == false && $player.gold > 10000000 then
+    if $player.flag[1] == false && $player.gold > 10000000 && $player.cleared == true then
       $player.gold -= 10000000
       $player.flag[1] = true
       @next_scene = Scene_Event.new("ending.dat")
@@ -151,6 +160,10 @@ class Scene_Home < Scene_Base
     if $player.flag[1] == true then
       draw_true_ending_button()
     end
+    # ソロモンの塔に行くボタンを表示
+    if $player.cleared == true && $player.flag[1] == true then
+      Window.draw(915, 212, @salmon_arrow)
+    end
     
     # メッセージボックスの表示
     if @message != "" then
@@ -189,6 +202,10 @@ class Scene_Home < Scene_Base
       if @scene_index == 4 then
         @next_scene = Scene_Creation.new
       end
+      # ソロモンの塔へ行く
+      if @scene_index == 5 then
+        @next_scene = Scene_Tower.new
+      end
     else
       return
     end
@@ -206,9 +223,16 @@ class Scene_Home < Scene_Base
     
     if Input.pad_push?(P_RIGHT) then
       @cursor.index += 1
-      if @cursor.index > 9 then
-        @cursor.index = 0
-        $cursor_idx = @cursor.index
+      if $player.cleared == true && $player.flag[1] == true then
+        if @cursor.index > 10 then
+          @cursor.index = 0
+          $cursor_idx = @cursor.index
+        end
+      else
+        if @cursor.index > 9 then
+          @cursor.index = 0
+          $cursor_idx = @cursor.index
+        end
       end
     end
     
@@ -249,6 +273,15 @@ class Scene_Home < Scene_Base
       # 街づくりボタンを押下
       if @cursor.index == 9 then
         creation()
+      end
+      
+      # ソロモンの塔へ行く
+      if @cursor.index == 10 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        # 画面を徐々にフェードアウトさせる
+        @fade_effect.setup(0)
+        @scene_index = 5
       end
       
       # ゲームパッドのコンフィグ設定
@@ -308,6 +341,10 @@ class Scene_Home < Scene_Base
       if mouse_widthin_button?("quit") then
          @cursor.index = 9
          $cursor_idx = @cursor.index
+      end
+      if mouse_widthin_button?("salmon") && $player.cleared == true && $player.flag[1] == true then
+        @cursor.index = 10
+        $cursor_idx = 10
       end
     end
     
@@ -394,7 +431,7 @@ class Scene_Home < Scene_Base
       @fade_effect.setup(0)
       @scene_index = 4
     else
-      @message = "このモードはまだ開放されていません"
+      @message = "このモードはまだ解放されていません"
       @wait_frame = 95
     end
   end
@@ -436,6 +473,9 @@ class Scene_Home < Scene_Base
     @button["equip"] = [739, 407, 915, 467]      # 装備変更ボタン
     @button["shop"] = [538, 471, 714, 531]       # ショップボタン
     @button["quit"] = [739, 471, 915, 531]       # ゲームをやめるボタン
+    
+    # ソロモンの塔へ行くボタン
+    @button["salmon"] = [915, 212, 954, 337]
     
     # 上部メニューボタン
     @button["pad_config"] = [0, 0, 160, 36]

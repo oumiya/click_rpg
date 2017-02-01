@@ -109,17 +109,19 @@ class Game_Main
     $sounds["v_lose"] = Ayame.new("audio/se/voice_lose.mp3")            # 戦闘敗北音声
     $sounds["decision"] = Ayame.new("audio/se/decision.mp3")            # 決定音
     $sounds["box"] = Ayame.new("audio/se/box.mp3")                      # 宝箱
-    $sounds["wave_win"] = Ayame.new("audio/se/yourewinner.mp3")                 # Waveに勝利した！
+    $sounds["wave_win"] = Ayame.new("audio/se/yourewinner.mp3")         # Waveに勝利した！
     
     # BGMを読み込む
     $bgm = Hash.new
-    $bgm["battle"] = Ayame.new("audio/bgm/battle.mp3")
-    $bgm["boss_battle"] = Ayame.new("audio/bgm/boss_battle.mp3")
-    $bgm["home"] = Ayame.new("audio/bgm/home.mp3")
-    $bgm["fever"] = Ayame.new("audio/bgm/fever.mp3")
-    $bgm["last_battle"] = Ayame.new("audio/bgm/last_battle.mp3")
-    $bgm["ending"] = Ayame.new("audio/bgm/ending.mp3")
-    $bgm["evil_king"] = Ayame.new("audio/bgm/evil_king.mp3")
+    $bgm["battle"] = Ayame.new("audio/bgm/battle.mp3")                  # 通常戦闘曲
+    $bgm["boss_battle"] = Ayame.new("audio/bgm/boss_battle.mp3")        # ボスバトル曲
+    $bgm["home"] = Ayame.new("audio/bgm/home.mp3")                      # ホーム画面曲
+    $bgm["fever"] = Ayame.new("audio/bgm/fever.mp3")                    # フィーバー曲
+    $bgm["last_battle"] = Ayame.new("audio/bgm/last_battle.mp3")        # ラストボス戦闘曲
+    $bgm["ending"] = Ayame.new("audio/bgm/ending.mp3")                  # エンディング曲
+    $bgm["evil_king"] = Ayame.new("audio/bgm/evil_king.mp3")            # 魔王敗北曲
+    $bgm["tower"] = Ayame.new("audio/bgm/tower.mp3")                    # ソロモンの塔
+    $bgm["tower_battle"] = Ayame.new("audio/bgm/tower_battle.mp3")      # ソロモンの塔戦闘曲
     $playing_bgm = nil
     $last_bgm = nil
    
@@ -175,6 +177,9 @@ class Game_Main
     
     # ホーム画面のカーソル記憶
     $cursor_idx = 0
+    
+    # タワー画面のカーソル記憶
+    $tower_idx = 0
     
     # ダンジョンID ダンジョンは全部で 6 ダンジョン
     # 値は 1 ～ 6

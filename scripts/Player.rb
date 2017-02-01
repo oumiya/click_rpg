@@ -38,7 +38,7 @@ class Player
   attr_accessor :income            # 1ターンごとに街から得られる収入
   attr_accessor :flag              # ストーリー進行フラグ
   
-  MAX_LEVEL = 50 # プレイヤーの最大レベル
+  MAX_LEVEL = 98 # プレイヤーの最大レベル
   
   def initialize()
     # 初期化
@@ -86,7 +86,11 @@ class Player
     @exp_table[0] = 10
     
     for i in 1..@exp_table.length-1 do
-      @exp_table[i] = (@exp_table[i-1] * base_rate + base_value).round
+      if i > 42 then
+        @exp_table[i] = 105728
+      else
+        @exp_table[i] = (@exp_table[i-1] * base_rate + base_value).round
+      end
     end
   end
   

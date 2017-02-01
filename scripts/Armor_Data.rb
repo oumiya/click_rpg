@@ -28,7 +28,7 @@ class Armor_Data
     @armor.push({:name=>"白金の鎧", :value=>450, :price=>17500, :filename=>"platinum.png", :element=>"", :heal=>0})
     @armor.push({:name=>"勇者の鎧", :value=>480, :price=>19000, :filename=>"brave.png", :element=>"光", :heal=>10})
     @armor.push({:name=>"荒武者の鎧", :value=>500, :price=>20500, :filename=>"aramusha.png", :element=>"", :heal=>0})
-    @armor.push({:name=>"神秘の服", :value=>550, :price=>22000, :filename=>"mystery.png", :element=>"光", :heal=>10})
+    @armor.push({:name=>"神秘の服", :value=>550, :price=>22000, :filename=>"mystery.png", :element=>"", :heal=>10})
     @armor.push({:name=>"アロウの鎧", :value=>150, :price=>22000, :filename=>"arrow.png", :element=>"光", :heal=>2})
     
     @images = Array.new

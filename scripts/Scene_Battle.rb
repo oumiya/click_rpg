@@ -9,6 +9,7 @@ require_relative 'Scene_Ending.rb'
 require_relative 'Scene_Home.rb'
 require_relative 'Sparkly.rb'
 require_relative 'Wave_Result.rb'
+require_relative 'Scene_Tower.rb'
 
 class Scene_Battle
 
@@ -76,14 +77,22 @@ class Scene_Battle
     @help.push(Image.load("image/help/01_note_guard.png"))
     @help.push(Image.load("image/help/02_note_heal.png"))
     @help.push(Image.load("image/help/03_note_fever.png"))
+    
     # 敵データの読込
     @enemies = Array.new
-    s = ($dungeon_id - 1) * 7
-    e = $dungeon_id * 7
-    for idx in s..e-1 do
-      @enemies.push($enemydata.get_enemy(idx))
+    if $dungeon_id == 7 then
+      e_idx = $wave_id + 41
+      @enemies.push($enemydata.get_enemy(e_idx))
+      @enemy_idx = 0
+    else
+      s = ($dungeon_id - 1) * 7
+      e = $dungeon_id * 7
+      for idx in s..e-1 do
+        @enemies.push($enemydata.get_enemy(idx))
+      end
+      @enemy_idx = -1
     end
-    @enemy_idx = -1
+    
     # 攻撃エフェクトを初期化
     @attack_effect = Attack_Effect.new
     # ガードゲージ画像の読込
@@ -160,22 +169,29 @@ class Scene_Battle
       # 待機状態
       @battle_count += 1
       # 出現する敵の決定
-      if @battle_count >= BATTLE_COUNT_MAX && $wave_id == 5 then
-        @enemy_idx = 6
+      if $dungeon_id == 7 then
+        @enemy_idx = 0
         $bgm["battle"].stop(0)
-        if @enemies[@enemy_idx].id == 41 then
-          $bgm["last_battle"].play(0, 0)
-        else
-          $bgm["boss_battle"].play(0, 0)
-        end
+        $bgm["tower_battle"].play(0, 0)
       else
-        @enemy_idx = rand(6)
-        if $bgm["fever"].playing? == false then
-          if $bgm["battle"].playing? == false then
-            $bgm["battle"].play(0, 0)
+        if @battle_count >= BATTLE_COUNT_MAX && $wave_id == 5 then
+          @enemy_idx = 6
+          $bgm["battle"].stop(0)
+          if @enemies[@enemy_idx].id == 41 then
+            $bgm["last_battle"].play(0, 0)
+          else
+            $bgm["boss_battle"].play(0, 0)
+          end
+        else
+          @enemy_idx = rand(6)
+          if $bgm["fever"].playing? == false then
+            if $bgm["battle"].playing? == false then
+              $bgm["battle"].play(0, 0)
+            end
           end
         end
       end
+      
       # 出現する敵の全回復
       @enemies[@enemy_idx].hp = @enemies[@enemy_idx].max_hp
       # 画面状態を敵が出現に変更
@@ -221,13 +237,18 @@ class Scene_Battle
         $bgm["battle"].stop(0)
         $bgm["boss_battle"].stop(0)
         $bgm["last_battle"].stop(0)
+        $bgm["tower_battle"].stop(0)
         $bgm["fever"].stop(0)
         $sounds["lose"].play(1, 0)
       end
       
       if @state_count == 240 then
-        @result.result = false
-        @next_scene = Scene_Box.new(@result)
+        if $dungeon_id == 7 then
+          @next_scene = Scene_Tower.new
+        else
+          @result.result = false
+          @next_scene = Scene_Box.new(@result)
+        end
       end
     elsif @state == 4 then
       if @state_count == 1 then
@@ -287,7 +308,7 @@ class Scene_Battle
         progress += ($wave_id)
 
         if $player.progress < progress then
-         $player.progress = progress
+          $player.progress = progress
         end
         
         if @enemies[@enemy_idx].id == 41 && $player.cleared == false then
@@ -297,8 +318,42 @@ class Scene_Battle
           @next_scene = Scene_Box.new(@result)
         end
       else
-        # 続けて戦闘を続行
-        @state = 0
+        if $dungeon_id == 7 then
+          if $wave_id == 1 then
+            progress = 31
+          end
+          if $wave_id == 2 then
+            progress = 32
+          end
+          if $wave_id == 3 then
+            progress = 33
+          end
+          if $wave_id == 4 then
+            progress = 34
+          end
+          if $wave_id == 5 then
+            progress = 35
+          end
+          if $wave_id == 6 then
+            progress = 36
+          end
+          if $wave_id == 7 then
+            progress = 37
+          end
+          if $wave_id == 8 then
+            progress = 38
+          end
+          
+          if $player.progress < progress then
+            $player.progress = progress
+          end
+          
+          @next_scene = Scene_Tower.new
+          
+        else
+          # 続けて戦闘を続行
+          @state = 0
+        end
       end
     end
   end
@@ -397,10 +452,14 @@ class Scene_Battle
       $weapondata.draw
     end
     # 戦闘の残り回数の描画
-    if BATTLE_COUNT_MAX - @battle_count <= 0 then
+    if $dungeon_id == 7 then
       Message_Box.show("最終戦", 0, 0)
     else
-      Message_Box.show("あと" + (BATTLE_COUNT_MAX - @battle_count).to_s + "戦", 0, 0)
+      if BATTLE_COUNT_MAX - @battle_count <= 0 then
+        Message_Box.show("最終戦", 0, 0)
+      else
+        Message_Box.show("あと" + (BATTLE_COUNT_MAX - @battle_count).to_s + "戦", 0, 0)
+      end
     end
     
     # ヘルプの表示
