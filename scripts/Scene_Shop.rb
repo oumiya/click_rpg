@@ -337,32 +337,54 @@ class Scene_Shop < Scene_Base
         
         # 武器売却処理
         if $player.have_weapon.size > 1 then
-          save_weapon = {"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]}
-
-          for i in 0...$player.have_weapon.size - 1 do
-            if $player.equip_weapon != i && $player.have_armor[i]["idx"] != 24 then
+          save_weapon = Array.new
+          save_weapon.push({"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]})
+          
+          for i in 0..$player.have_weapon.size - 1 do
+            if $player.have_weapon[i]["idx"] == 24 then
+              save_weapon.push({"idx"=>$player.have_weapon[i]["idx"], "name"=>$player.have_weapon[i]["name"], "element"=>$player.have_weapon[i]["element"], "bonus"=>$player.have_weapon[i]["bonus"], "value"=>$player.have_weapon[i]["value"]})
+            end
+          end
+          
+          for i in 0..$player.have_weapon.size - 1 do
+            if $player.equip_weapon != i && $player.have_weapon[i]["idx"] != 24 then
               total += $weapondata.get_weapon_data($player.have_weapon[i]["idx"])[:price]
             end
           end
           
           $player.have_weapon.clear
-          $player.have_weapon.push(save_weapon)
+          for i in 0..save_weapon.size - 1 do
+            $player.have_weapon.push(save_weapon[i])
+          end
           $player.equip_weapon = 0
+          
+          $player.sort_weapon()
         end
         
         # 防具売却処理
         if $player.have_armor.size > 1 then
-          save_armor = {"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]}
+          save_armor = Array.new
+          save_armor.push({"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]})
+          
+          for i in 0..$player.have_armor.size - 1 do
+            if $player.have_armor[i]["idx"] == 24 then
+              save_armor.push({"idx"=>$player.have_armor[i]["idx"], "name"=>$player.have_armor[i]["name"], "element"=>$player.have_armor[i]["element"], "bonus"=>$player.have_armor[i]["bonus"], "heal"=>$player.have_armor[i]["heal"], "value"=>$player.have_armor[i]["value"]})
+            end
+          end
 
-          for i in 0...$player.have_armor.size - 1 do
+          for i in 0..$player.have_armor.size - 1 do
             if $player.equip_armor != i && $player.have_armor[i]["idx"] != 24 then
               total += $armordata.get_armor_data($player.have_armor[i]["idx"])[:price]
             end
           end
           
           $player.have_armor.clear
-          $player.have_armor.push(save_armor)
+          for i in 0..save_armor.size - 1 do
+            $player.have_armor.push(save_armor[i])
+          end
           $player.equip_armor = 0
+          
+          $player.sort_armor()
         end
         
         total = total / 2
