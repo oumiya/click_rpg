@@ -1,10 +1,12 @@
 bg_load:タワー,tower.jpg
+bg_load:エンディング,last.png
 chr_load:主人公,player_hero.png
 chr_load:アロウ,knight2.png
 chr_load:二人,maria_maoh.png
 chr_load:アロウ2,knight3.png
 bgm_load:BGM,opening.mp3
 bgm_load:BGM2,true_ending.mp3
+se_load:ラスト,last.mp3
 bgm:BGM
 bg:タワー
 chr:主人公,left
@@ -24,7 +26,7 @@ fade_in
 mes:まおー,なるほど、ただの人間がソロモンの指環に取り憑かれたのか。<br>それで最近のソロモンの塔がおかしかったのか。
 mes:主人公,マリア！　まおー！！　なぜここに！？
 mes:まおー,お前が下の階の連中を倒してくれたおかげで<br>安全にここまで来れたぞ。<br>ははは露払いご苦労だったな。
-mes:主人公,なんでマリアまで連れてきてるんだこの馬鹿！！
+mes:主人公,なんでマリアまで連れてきてるんだこの馬鹿！！	
 mes:まおー,うぐっ！？　だってなー！！　マリアはなー！！
 mes:マリア,あなた、まおーちゃんは私をちゃんと守ってくれたわ。<br>ここまで安全に来れたのもまおーちゃんのおかげなの。
 mes:主人公,いや、そういうことではなくてな。<br>なぜこんな危ない所に連れてきたのかってことを言ってるんだ。
@@ -69,4 +71,14 @@ mes:主人公,（さて、さすがに３回目のスタッフロールはない
 mes:まおー,おいルウ！　何してる、早く行くぞ！！
 mes:主人公,分かった、分かった。少し落ち着け。
 fade_out
-scene:0, 0
+bgm_stop
+bg_clear
+chr_clear:left
+chr_clear:center
+chr_clear:right
+wait:60
+bg:エンディング
+fade_in
+se:ラスト
+wait:420
+fade_out
