@@ -381,7 +381,7 @@ class Scene_Shop < Scene_Base
           if weapon != nil then
             if $player.gold >= weapon[:price] then
               # 武器を所持品に追加
-              $player.add_weapon(idx)
+              $player.add_weapon_idx(idx)
               # プレイヤーの所持金から代金を減算
               $player.gold -= weapon[:price]
               @message = "ありがとよ！"
@@ -398,7 +398,7 @@ class Scene_Shop < Scene_Base
           if armor != nil then
             if $player.gold >= armor[:price] then
               # 指定の防具を所持品に追加
-              $player.add_armor(idx)
+              $player.add_armor_idx(idx)
               # プレイヤーの所持金から代金を減算
               $player.gold -= armor[:price]
               @message = "ありがとよ！"

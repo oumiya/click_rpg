@@ -101,12 +101,7 @@ class Player
   def ATK()
     res = 0
     if @equip_weapon >= 0 then
-      value = $weapondata.get_weapon_data(@have_weapon[@equip_weapon]["idx"])[:value]
-      # 武器ボーナス
-      if @have_weapon[@equip_weapon]["bonus"] > 0 then
-        value_bonus = value / 10
-        value += value_bonus * @have_weapon[@equip_weapon]["bonus"]
-      end
+      value = @have_weapon[@equip_weapon]["value"]
       res = @attack + value
     else
       res = @attack
@@ -122,12 +117,7 @@ class Player
   def real_ATK()
     res = 0
     if @equip_weapon >= 0 then
-      value = $weapondata.get_weapon_data(@have_weapon[@equip_weapon]["idx"])[:value]
-      # 武器ボーナス
-      if @have_weapon[@equip_weapon]["bonus"] > 0 then
-        value_bonus = value / 10
-        value += value_bonus * @have_weapon[@equip_weapon]["bonus"]
-      end
+      value = @have_weapon[@equip_weapon]["value"]
       res = @attack + value
     else
       res = @attack
@@ -139,12 +129,7 @@ class Player
   def DEF()
     res = 0
     if @equip_armor >= 0 then
-      value = $armordata.get_armor_data(@have_armor[@equip_armor]["idx"])[:value]
-      # 防具ボーナス
-      if @have_armor[@equip_armor]["bonus"] > 0 then
-        value_bonus = value / 10
-        value += value_bonus * @have_armor[@equip_armor]["bonus"]
-      end
+      value = @have_armor[@equip_armor]["value"]
       res = @defence + value
     else
       res = @defence
@@ -160,12 +145,7 @@ class Player
   def real_DEF()
     res = 0
     if @equip_armor >= 0 then
-      value = $armordata.get_armor_data(@have_armor[@equip_armor]["idx"])[:value]
-      # 防具ボーナス
-      if @have_armor[@equip_armor]["bonus"] > 0 then
-        value_bonus = value / 10
-        value += value_bonus * @have_armor[@equip_armor]["bonus"]
-      end
+      value = @have_armor[@equip_armor]["value"]
       res = @defence + value
     else
       res = @defence
@@ -221,7 +201,7 @@ class Player
   end
   
   # 指定の武器を所持品に追加
-  def add_weapon(idx)
+  def add_weapon_idx(idx)
     weapon_name = $weapondata.get_weapon_data(idx)[:name]
     value = $weapondata.get_weapon_data(idx)[:value]
     element = $weapondata.get_weapon_data(idx)[:element]
@@ -259,7 +239,7 @@ class Player
   end
   
   # 指定の防具を所持品に追加
-  def add_armor(idx)
+  def add_armor_idx(idx)
     armor_name = $armordata.get_armor_data(idx)[:name]
     value = $armordata.get_armor_data(idx)[:value]
     element = $armordata.get_armor_data(idx)[:element]
@@ -272,7 +252,7 @@ class Player
 
   # 指定の防具を所持品に追加
   def add_armor(idx, armor_name, element, bonus, heal, value)
-    added_armor = {"idx"=>idx, "name"=>armor_name, "element"=>"", "bonus"=>0, "heal"=>0, "value"=>value}
+    added_armor = {"idx"=>idx, "name"=>armor_name, "element"=>element, "bonus"=>bonus, "heal"=>heal, "value"=>value}
     $player.have_armor.push(added_armor)
     sort_armor()
   end
