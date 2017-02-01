@@ -94,7 +94,7 @@ class Scene_Equip < Scene_Base
   
   # 画面の描画
   def draw()
-        # アバターの描画
+    # アバターの描画
     Window.draw(29, 285, $avater[$player.skin_color])
     
     # 防具の描画
@@ -176,9 +176,6 @@ class Scene_Equip < Scene_Base
     Window.draw_font(449, 74, "アイテム名", @font)
     Window.draw_font(794, 74, "所持数", @font)
     
-    Window.draw_font(441, 503, "前のページ", @font)
-    Window.draw_font(750, 503, "次のページ", @font)
-    
     # アイテムリストの表示
     y = 84
     if @tab_index == 0 then
@@ -249,6 +246,22 @@ class Scene_Equip < Scene_Base
       }
     end
     
+    if @tab_index == 0 && @weapon_page > 0 then
+      Window.draw_font(441, 503, "前のページ", @font)
+    end
+    
+    if @tab_index == 1 && @armor_page > 0 then
+      Window.draw_font(441, 503, "前のページ", @font)
+    end
+    
+    if @tab_index == 0 && @weapon_page + 1 < @max_weapon_page then
+      Window.draw_font(750, 503, "次のページ", @font)
+    end
+    
+    if @tab_index == 1 && @armor_page + 1 < @max_armor_page then
+      Window.draw_font(750, 503, "次のページ", @font)
+    end
+    
     # カーソルの表示
     @cursor.update
     
@@ -285,6 +298,26 @@ class Scene_Equip < Scene_Base
     # コントロールモードの変更
     control_mode_change()
     
+    # 次のページに遷移した時、さらにその次のページが無かったらカーソルをリストの最初に移動させる
+    if @cursor.index == 14 then
+      if @tab_index == 0 && @weapon_page + 1 == @max_weapon_page then
+        @cursor.index = 4
+      end
+      if @tab_index == 1 && @armor_page + 1 == @max_armor_page then
+        @cursor.index = 4
+      end
+    end
+    
+    # 前のページに遷移した時、さらにその前のページが無かったらカーソルをリストの最後に移動させる
+    if @cursor.index == 13 then
+      if @tab_index == 0 && @weapon_page == 0 then
+        @cursor.index = 12
+      end
+      if @tab_index == 1 && @armor_page  == 0 then
+        @cursor.index = 12
+      end
+    end
+    
     # カーソルキーの操作
     if Input.pad_push?(P_UP) then
       if @cursor.index == 4 then
@@ -301,9 +334,23 @@ class Scene_Equip < Scene_Base
       elsif @cursor.index >= 1 && @cursor.index <= 3 then
         @cursor.index -= 1
       elsif @cursor.index == 13 then
-        @cursor.index = 14
+        # 武器タブの場合、次のページが表示されている場合は次のページカーソルを遷移
+        if @tab_index == 0 && @weapon_page + 1 < @max_weapon_page then
+          @cursor.index = 14
+        end
+        # 防具タブの場合、次のページが表示されている場合は次のページカーソルを遷移
+        if @tab_index == 1 && @armor_page + 1 < @max_armor_page then
+          @cursor.index = 14
+        end
       elsif @cursor.index == 14 then
-        @cursor.index = 13
+        # 武器タブの場合、前のページが表示されている場合は前のページへカーソルを遷移
+        if @tab_index == 0 && @weapon_page > 0 then
+          @cursor.index = 13
+        end
+        # 防具タブの場合、前のページが表示されている場合は前のページへカーソルを遷移
+        if @tab_index == 1 && @armor_page > 0 then
+          @cursor.index = 13
+        end
       end
     end
     if Input.pad_push?(P_RIGHT) then
@@ -312,16 +359,47 @@ class Scene_Equip < Scene_Base
       elsif @cursor.index >= 0 && @cursor.index <= 2 then
         @cursor.index += 1
       elsif @cursor.index == 13 then
-        @cursor.index = 14
+        # 武器タブの場合、次のページが表示されている場合は次のページカーソルを遷移
+        if @tab_index == 0 && @weapon_page + 1 < @max_weapon_page then
+          @cursor.index = 14
+        end
+        # 防具タブの場合、次のページが表示されている場合は次のページカーソルを遷移
+        if @tab_index == 1 && @armor_page + 1 < @max_armor_page then
+          @cursor.index = 14
+        end
       elsif @cursor.index == 14 then
-        @cursor.index = 13
+        # 武器タブの場合、前のページが表示されている場合は前のページへカーソルを遷移
+        if @tab_index == 0 && @weapon_page > 0 then
+          @cursor.index = 13
+        end
+        # 防具タブの場合、前のページが表示されている場合は前のページへカーソルを遷移
+        if @tab_index == 1 && @armor_page > 0 then
+          @cursor.index = 13
+        end
       end
     end
     if Input.pad_push?(P_DOWN) then
       if @cursor.index >= 0 && @cursor.index <= 3 then
         @cursor.index = 4
-      elsif @cursor.index >= 4 && @cursor.index < 13 then
+      elsif @cursor.index >= 4 && @cursor.index < 12 then
         @cursor.index += 1
+      else
+        # 武器タブの場合、前のページが表示されているかどうかで遷移先を変更
+        if @tab_index == 0 && @weapon_page > 0 && @cursor.index == 12 then
+          @cursor.index = 13
+        elsif @tab_index == 0 && @weapon_page + 1 < @max_weapon_page && @cursor.index == 12 then
+          @cursor.index = 14
+        end
+        # 防具タブの場合、武器タブと同様
+        if @tab_index == 1 && @armor_page > 0 && @cursor.index == 12 then
+          @cursor.index = 13
+        elsif @tab_index == 1 && @armor_page + 1 < @max_armor_page && @cursor.index == 12 then
+          @cursor.index = 14
+        end
+        
+        
+        # 髪型タブの場合、複数ページじゃないので何もしない
+        
       end
     end
     
@@ -533,11 +611,22 @@ class Scene_Equip < Scene_Base
       end    
       # 前のページボタンを押下
       if mouse_widthin_button?("prev_page") then
-        @cursor.index = 13
+        if @tab_index == 0 && @weapon_page > 0 then
+          @cursor.index = 13
+        end
+        if @tab_index == 1 && @armor_page > 0 then
+          @cursor.index = 13
+        end
       end
       # 次のページボタンを押下
       if mouse_widthin_button?("next_page") then
-        @cursor.index = 14
+        if @tab_index == 0 && @weapon_page + 1 < @max_weapon_page then
+          @cursor.index = 14
+        end
+        
+        if @tab_index == 1 && @armor_page + 1 < @max_armor_page then
+          @cursor.index = 14
+        end
       end
       
       # アイテム名ホバーすると四角が出る
