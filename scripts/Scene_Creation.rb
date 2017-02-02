@@ -54,6 +54,8 @@ class Scene_Creation < Scene_Base
     @button_hitbox["install"]     = [9,    11,  70,  43]
     @button_hitbox["info"]        = [81,   11, 142,  43]
     @button_hitbox["map"]         = [160,   0, 959, 518]
+    # マウスカーソルを表示
+    Input.mouse_enable = true
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う

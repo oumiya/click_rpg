@@ -206,6 +206,22 @@ class Scene_Shop < Scene_Base
       }
     end
     
+    if @tab_index == 0 && @weapon_page > 0 then
+      Window.draw_font(441, 503, "前のページ", @font)
+    end
+    
+    if @tab_index == 1 && @armor_page > 0 then
+      Window.draw_font(441, 503, "前のページ", @font)
+    end
+    
+    if @tab_index == 0 && @weapon_page + 1 < @max_weapon_page then
+      Window.draw_font(750, 503, "次のページ", @font)
+    end
+    
+    if @tab_index == 1 && @armor_page + 1 < @max_armor_page then
+      Window.draw_font(750, 503, "次のページ", @font)
+    end
+    
     # カーソルの表示
     @cursor.update
     
@@ -349,6 +365,7 @@ class Scene_Shop < Scene_Base
           for i in 0..$player.have_weapon.size - 1 do
             if $player.equip_weapon != i && $player.have_weapon[i]["idx"] != 24 then
               total += $weapondata.get_weapon_data($player.have_weapon[i]["idx"])[:price]
+              $player.sell_weapon.push({"idx"=>$player.have_weapon[i]["idx"], "name"=>$player.have_weapon[i]["name"], "element"=>$player.have_weapon[i]["element"], "bonus"=>$player.have_weapon[i]["bonus"], "value"=>$player.have_weapon[i]["value"]})
             end
           end
           
@@ -375,6 +392,7 @@ class Scene_Shop < Scene_Base
           for i in 0..$player.have_armor.size - 1 do
             if $player.equip_armor != i && $player.have_armor[i]["idx"] != 24 then
               total += $armordata.get_armor_data($player.have_armor[i]["idx"])[:price]
+              $player.sell_armor.push({"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]})
             end
           end
           
@@ -524,7 +542,7 @@ class Scene_Shop < Scene_Base
     d += ((Input.mouse_y - @prev_mouse_pos[1]) ** 2).abs
     d = Math.sqrt(d)
     
-    if d > 32 then
+    if d > 8 then
       $control_mode = 0
       Input.mouse_enable = true
     end

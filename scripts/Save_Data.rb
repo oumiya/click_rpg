@@ -37,6 +37,8 @@ module Save_Data
     save_data["town"] = $player.town                     # ŠX
     save_data["income"] = $player.income                 # 1í“¬‚²‚Æ‚Ìû“ü
     save_data["flag"] = $player.flag                     # ƒXƒg[ƒŠ[ƒtƒ‰ƒO
+    save_data["sell_weapon"] = $player.sell_weapon       # ”„‹p‚µ‚½•Ší
+    save_data["sell_armor"] = $player.sell_armor         # ”„‹p‚µ‚½–h‹ï
   
     open("save_data.dat", 'w') do |io|
       JSON.dump(save_data, io)
@@ -81,6 +83,8 @@ module Save_Data
       $player.town = save_data["town"]                       # ŠX
       $player.income = save_data["income"]                   # 1í“¬‚²‚Æ‚Ìû“ü
       $player.flag = save_data["flag"]                       # ƒXƒg[ƒŠ[ƒtƒ‰ƒO
+      $player.sell_weapon = save_data["sell_weapon"]         # ”„‹p‚µ‚½•Ší
+      $player.sell_armor = save_data["sell_armor"]           # ”„‹p‚µ‚½–h‹ï
     end
     
   end

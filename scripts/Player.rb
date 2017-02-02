@@ -37,6 +37,8 @@ class Player
   attr_accessor :town              # クリエーションモードの街情報
   attr_accessor :income            # 1ターンごとに街から得られる収入
   attr_accessor :flag              # ストーリー進行フラグ
+  attr_accessor :sell_weapon       # 売却した武器
+  attr_accessor :sell_armor        # 売却した防具
   
   MAX_LEVEL = 98 # プレイヤーの最大レベル
   
@@ -78,6 +80,7 @@ class Player
     for i in 0..99 do
       @flag[i] = false
     end
+    @sell_item = Array.new
 
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)

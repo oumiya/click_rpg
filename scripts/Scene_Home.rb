@@ -449,7 +449,7 @@ class Scene_Home < Scene_Base
     d += ((Input.mouse_y - @prev_mouse_pos[1]) ** 2).abs
     d = Math.sqrt(d)
     
-    if d > 32 then
+    if d > 8 then
       $control_mode = 0
       Input.mouse_enable = true
     end
