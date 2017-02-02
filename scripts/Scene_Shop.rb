@@ -44,6 +44,8 @@ class Scene_Shop < Scene_Base
     @button_hitbox["hair"] = [513, 20, 623, 68]
     @button_hitbox["quit"] = [762, 20, 908, 68]
     @button_hitbox["bulk1"] = [28, 355, 276, 403]
+    @button_hitbox["next_page"] = [748, 503, 914, 533]
+    @button_hitbox["prev_page"] = [440, 503, 604, 533]
     
     # フェードアウト/フェードイン用の演出クラスを準備
     @fade_effect = Fade_Effect.new
@@ -79,7 +81,8 @@ class Scene_Shop < Scene_Base
     cursor_pos.push([277, 408]) # 11 道具セレクト8
     cursor_pos.push([277, 448]) # 12 道具セレクト9
     cursor_pos.push([10, 366])  # 13 装備品以外を一括で売却
-    cursor_pos.push([10, 435])  # 14 装備品以外を一個残して一括で売却
+    cursor_pos.push([408, 508]) # 14 前のページ
+    cursor_pos.push([718, 508]) # 15 次のページ
     @cursor = Cursor.new(cursor_pos)
     
     @wait_frame = 0
@@ -89,6 +92,12 @@ class Scene_Shop < Scene_Base
     
     # 一括売却ボタンのフォント
     @sell_font = Font.new(20, "ＭＳ ゴシック")
+    
+    # ページの最大数
+    @weapon_page = 0
+    @armor_page = 0
+    @max_weapon_page = ($player.sell_weapon.size.to_f / 9.0).ceil
+    @max_armor_page = ($player.sell_armor.size.to_f / 9.0).ceil
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
   end
@@ -156,29 +165,32 @@ class Scene_Shop < Scene_Base
     y = 84
     if @tab_index == 0 then
       # 武器リストの表示
-      start_i = 0
+      start_i = @weapon_page * 9
       end_i = start_i + 8
+      if end_i >= $player.sell_weapon.length then
+        end_i = $player.sell_weapon.length - 1
+      end
       
       idx = 1
       for i in start_i..end_i do
-        weapon = $weapondata.get_weapon_data(i)
-        Window.draw_font(311, y + (@font.size + 8) * idx, weapon[:name], @font)
-        Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", weapon[:price]), @font)
+        weapon = $weapondata.get_weapon_data($player.sell_weapon[i]["idx"])
+        Window.draw_font(311, y + (@font.size + 8) * idx, $player.sell_weapon[i]["name"], @font)
+        Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", weapon[:price] * ($player.sell_weapon[i]["bonus"] + 1)), @font)
         idx += 1
       end
     elsif @tab_index == 1 then
       # 防具リストの表示
-      start_i = 0
+      start_i = @armor_page * 9
       end_i = start_i + 8
-      if end_i >= $armordata.length then
-        end_i = $armordata.length - 1
+      if end_i >= $player.sell_armor.length then
+        end_i = $player.sell_armor.length - 1
       end
       
       idx = 1
       for i in start_i..end_i do
-        armor = $armordata.get_armor_data(i)
-        Window.draw_font(311, y + (@font.size + 8) * idx, armor[:name], @font)
-        Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", armor[:price]), @font)
+        armor = $armordata.get_armor_data($player.sell_armor[i]["idx"])
+        Window.draw_font(311, y + (@font.size + 8) * idx, $player.sell_armor[i]["name"], @font)
+        Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", armor[:price] * ($player.sell_armor[i]["bonus"] + 1)), @font)
         idx += 1
       end
     elsif @tab_index == 2 then
@@ -275,16 +287,38 @@ class Scene_Shop < Scene_Base
     # コントロールモードの変更
     control_mode_change()
     
+    # 次のページに遷移した時、さらにその次のページが無かったらカーソルをリストの最初に移動させる
+    if @cursor.index == 15 then
+      if @tab_index == 0 && @weapon_page + 1 == @max_weapon_page then
+        @cursor.index = 4
+      end
+      if @tab_index == 1 && @armor_page + 1 == @max_armor_page then
+        @cursor.index = 4
+      end
+    end
+    
+    # 前のページに遷移した時、さらにその前のページが無かったらカーソルをリストの最後に移動させる
+    if @cursor.index == 14 then
+      if @tab_index == 0 && @weapon_page == 0 then
+        @cursor.index = 12
+      end
+      if @tab_index == 1 && @armor_page  == 0 then
+        @cursor.index = 12
+      end
+    end
+    
     # カーソルキーの操作
     if Input.pad_push?(P_UP) then
       if @cursor.index == 4 then
         @cursor.index = 0
       elsif @cursor.index > 4 && @cursor.index <= 12 then
         @cursor.index -= 1
-      elsif @cursor.index == 13
+      elsif @cursor.index == 13 then
         @cursor.index = 0
-      elsif @cursor.index == 14
-        @cursor.index = 13
+      elsif @cursor.index == 14 then
+        @cursor.index = 12
+      elsif @cursor.index == 15 then
+        @cursor.index = 12
       end
     end
     if Input.pad_push?(P_LEFT) then
@@ -294,6 +328,10 @@ class Scene_Shop < Scene_Base
         @cursor.index -= 1
       elsif @cursor.index >= 4 && @cursor.index <= 12
         @cursor.index = 13
+      elsif @cursor.index == 14 then
+        @cursor.index = 13
+      elsif @cursor.index == 15 then
+        @cursor.index = 14
       end
     end
     if Input.pad_push?(P_RIGHT) then
@@ -304,15 +342,17 @@ class Scene_Shop < Scene_Base
       elsif @cursor.index == 13 then
         @cursor.index = 0
       elsif @cursor.index == 14 then
-        @cursor.index = 0
+        @cursor.index = 15
       end
     end
     if Input.pad_push?(P_DOWN) then
       if @cursor.index >= 0 && @cursor.index <= 3 then
         @cursor.index = 4
-      elsif @cursor.index >= 4 && @cursor.index < 13 then
+      elsif @cursor.index >= 4 && @cursor.index < 12 then
         @cursor.index += 1
-      elsif @cursor.index == 13
+      elsif @cursor.index == 12 then
+        @cursor.index = 14
+      elsif @cursor.index == 13 then
         @cursor.index = 13
       end
     end
@@ -344,6 +384,49 @@ class Scene_Shop < Scene_Base
         @fade_effect.setup(0)
         @scene_index = 1
       end
+      
+      # 次のページボタンを押下
+      if @cursor.index == 15 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        if @tab_index == 0 then
+          if @max_weapon_page > 1 then
+            @weapon_page += 1
+            if @weapon_page >= @max_weapon_page then
+              @weapon_page = @max_weapon_page - 1
+            end
+          end
+        end
+        if @tab_index == 1 then
+          if @max_armor_page > 1 then
+            @armor_page += 1
+            if @armor_page >= @max_armor_page then
+              @armor_page = @max_armor_page - 1
+            end
+          end
+        end
+      end
+      
+      # 前のページボタンを押下
+      if @cursor.index == 14 then
+        # 決定音を鳴らす
+        $sounds["decision"].play(1, 0)
+        
+        if @tab_index == 0 then
+          @weapon_page -= 1
+          if @weapon_page < 0 then
+            @weapon_page = 0
+          end
+        end
+        if @tab_index == 1 then
+          @armor_page -= 1
+          if @armor_page < 0 then
+            @armor_page = 0
+          end
+        end
+      end
+      
+      
       # 一括売却ボタンを押下
       if @cursor.index == 13 then
 
@@ -365,7 +448,7 @@ class Scene_Shop < Scene_Base
           for i in 0..$player.have_weapon.size - 1 do
             if $player.equip_weapon != i && $player.have_weapon[i]["idx"] != 24 then
               total += $weapondata.get_weapon_data($player.have_weapon[i]["idx"])[:price]
-              $player.sell_weapon.push({"idx"=>$player.have_weapon[i]["idx"], "name"=>$player.have_weapon[i]["name"], "element"=>$player.have_weapon[i]["element"], "bonus"=>$player.have_weapon[i]["bonus"], "value"=>$player.have_weapon[i]["value"]})
+              $player.sell_weapon.push($player.have_weapon[i])
             end
           end
           
@@ -376,6 +459,7 @@ class Scene_Shop < Scene_Base
           $player.equip_weapon = 0
           
           $player.sort_weapon()
+          $player.sort_sell_weapon()
         end
         
         # 防具売却処理
@@ -392,7 +476,7 @@ class Scene_Shop < Scene_Base
           for i in 0..$player.have_armor.size - 1 do
             if $player.equip_armor != i && $player.have_armor[i]["idx"] != 24 then
               total += $armordata.get_armor_data($player.have_armor[i]["idx"])[:price]
-              $player.sell_armor.push({"idx"=>$player.have_armor[$player.equip_armor]["idx"], "name"=>$player.have_armor[$player.equip_armor]["name"], "element"=>$player.have_armor[$player.equip_armor]["element"], "bonus"=>$player.have_armor[$player.equip_armor]["bonus"], "heal"=>$player.have_armor[$player.equip_armor]["heal"], "value"=>$player.have_armor[$player.equip_armor]["value"]})
+              $player.sell_armor.push($player.have_armor[i])
             end
           end
           
@@ -403,6 +487,7 @@ class Scene_Shop < Scene_Base
           $player.equip_armor = 0
           
           $player.sort_armor()
+          $player.sort_sell_armor()
         end
         
         total = total / 2
@@ -417,35 +502,43 @@ class Scene_Shop < Scene_Base
         idx = @cursor.index - 4
         # 武器購入処理
         if @tab_index == 0 then
-          weapon = $weapondata.get_weapon_data(idx)
-          if weapon != nil then
-            if $player.gold >= weapon[:price] then
-              # 武器を所持品に追加
-              $player.add_weapon_idx(idx)
-              # プレイヤーの所持金から代金を減算
-              $player.gold -= weapon[:price]
-              @message = "ありがとよ！"
-              @wait_frame = 60
-            else
-              @message = "お金が足りないぜ"
-              @wait_frame = 60
+          idx = idx + @weapon_page * 9
+          if idx < $player.sell_weapon.size then
+            weapon = $player.sell_weapon[idx]
+            if weapon != nil then
+              price = $weapondata.get_weapon_data(weapon["idx"])[:price] * (weapon["bonus"] + 1)
+              if $player.gold >= price then
+                # 武器を所持品に追加
+                $player.have_weapon.push(weapon)
+                # プレイヤーの所持金から代金を減算
+                $player.gold -= price
+                @message = "ありがとよ！"
+                @wait_frame = 60
+              else
+                @message = "お金が足りないぜ"
+                @wait_frame = 60
+              end
             end
           end
         end
         # 防具購入処理
         if @tab_index == 1 then
-          armor = $armordata.get_armor_data(idx)
-          if armor != nil then
-            if $player.gold >= armor[:price] then
-              # 指定の防具を所持品に追加
-              $player.add_armor_idx(idx)
-              # プレイヤーの所持金から代金を減算
-              $player.gold -= armor[:price]
-              @message = "ありがとよ！"
-              @wait_frame = 60
-            else
-              @message = "お金が足りないぜ"
-              @wait_frame = 60
+          idx = idx + @armor_page * 9
+          if idx < $player.sell_armor.size then
+            armor = $player.sell_armor[idx]
+            if armor != nil then
+              price = $armordata.get_armor_data(armor["idx"])[:price] * (armor["bonus"] + 1)
+              if $player.gold >= price then
+                # 指定の防具を所持品に追加
+                $player.have_armor.push(armor)
+                # プレイヤーの所持金から代金を減算
+                $player.gold -= price
+                @message = "ありがとよ！"
+                @wait_frame = 60
+              else
+                @message = "お金が足りないぜ"
+                @wait_frame = 60
+              end
             end
           end
         end
@@ -510,7 +603,7 @@ class Scene_Shop < Scene_Base
       if mouse_widthin_button?("bulk1") then
         @cursor.index = 13
       end
-
+      
       # アイテム名ホバーすると四角が出る
       @item_hitbox.each_with_index{|hitbox, i|
       
@@ -522,6 +615,26 @@ class Scene_Shop < Scene_Base
            @cursor.index = i + 4
         end
       }
+
+      # 前のページボタンを押下
+      if mouse_widthin_button?("prev_page") then
+        if @tab_index == 0 && @weapon_page > 0 then
+          @cursor.index = 14
+        end
+        if @tab_index == 1 && @armor_page > 0 then
+          @cursor.index = 14
+        end
+      end
+      # 次のページボタンを押下
+      if mouse_widthin_button?("next_page") then
+        if @tab_index == 0 && @weapon_page + 1 < @max_weapon_page then
+          @cursor.index = 15
+        end
+        if @tab_index == 1 && @armor_page + 1 < @max_armor_page then
+          @cursor.index = 15
+        end
+      end
+      
     end
   end
   
