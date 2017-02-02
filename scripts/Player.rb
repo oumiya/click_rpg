@@ -80,7 +80,14 @@ class Player
     for i in 0..99 do
       @flag[i] = false
     end
-    @sell_item = Array.new
+    @sell_weapon = Array.new
+    for i in 0..8 do
+      sell_weapon.push(get_weapon_idx(i))
+    end
+    @sell_armor = Array.new
+    for i in 0..8 do
+      sell_armor.push(get_armor_idx(i))
+    end
 
     # 経験値テーブルの作成
     @exp_table = Array.new(MAX_LEVEL)
@@ -216,6 +223,15 @@ class Player
     $player.have_weapon.push(adding_weapon)
     sort_weapon()
   end
+  
+  def get_weapon_idx(idx)
+    weapon_name = $weapondata.get_weapon_data(idx)[:name]
+    value = $weapondata.get_weapon_data(idx)[:value]
+    element = $weapondata.get_weapon_data(idx)[:element]
+    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>0, "value"=>value}
+    
+    return adding_weapon
+  end
 
   # 指定の武器を所持品に追加
   def add_weapon(idx, weapon_name, element, bonus, value)
@@ -245,6 +261,22 @@ class Player
     end
   end
   
+  # 売却した武器のソート
+  def sort_sell_weapon()
+    if $player.sell_weapon.length > 1 then
+      pos_max = $player.sell_weapon.length - 1
+      
+      (0...(pos_max)).each{|n|
+        (0...(pos_max - n)).each{|ix|
+          iy = ix + 1
+          if $player.sell_weapon[ix]["value"] > $player.sell_weapon[iy]["value"] then
+            $player.sell_weapon[ix], $player.sell_weapon[iy] = $player.sell_weapon[iy], $player.sell_weapon[ix]
+          end
+        }
+      }
+    end
+  end
+  
   # 指定の防具を所持品に追加
   def add_armor_idx(idx)
     armor_name = $armordata.get_armor_data(idx)[:name]
@@ -255,6 +287,16 @@ class Player
     adding_armor = {"idx"=>idx, "name"=>armor_name, "element"=>element, "bonus"=>0, "heal"=>heal, "value"=>value}
     $player.have_armor.push(adding_armor)
     sort_armor()
+  end
+  
+  def get_armor_idx(idx)
+    armor_name = $armordata.get_armor_data(idx)[:name]
+    value = $armordata.get_armor_data(idx)[:value]
+    element = $armordata.get_armor_data(idx)[:element]
+    heal = $armordata.get_armor_data(idx)[:heal]
+    
+    adding_armor = {"idx"=>idx, "name"=>armor_name, "element"=>element, "bonus"=>0, "heal"=>heal, "value"=>value}
+    return adding_armor
   end
 
   # 指定の防具を所持品に追加
@@ -279,6 +321,22 @@ class Player
               $player.equip_armor = ix
             end
             $player.have_armor[ix], $player.have_armor[iy] = $player.have_armor[iy], $player.have_armor[ix]
+          end
+        }
+      }
+    end
+  end
+  
+  # 売却した防具のソート
+  def sort_sell_armor()
+    if $player.sell_armor.length > 1 then
+      pos_max = $player.sell_armor.length - 1
+      
+      (0...(pos_max)).each{|n|
+        (0...(pos_max - n)).each{|ix|
+          iy = ix + 1
+          if $player.sell_armor[ix]["value"] > $player.sell_armor[iy]["value"] then
+            $player.sell_armor[ix], $player.sell_armor[iy] = $player.sell_armor[iy], $player.sell_armor[ix]
           end
         }
       }

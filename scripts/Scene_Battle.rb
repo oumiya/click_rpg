@@ -793,32 +793,26 @@ class Scene_Battle
             # ダメージ属性補正
             if $player.equip_armor >= 0 then
               if $player.have_armor[$player.equip_armor]["element"] == "火" && @enemies[@enemy_idx].element == "火" then
-                p "damage 1/2"
                 damage /= 2
               end
               
               if $player.have_armor[$player.equip_armor]["element"] == "氷" && @enemies[@enemy_idx].element == "氷" then
-                p "damage 1/2"
                 damage /= 2
               end
               
               if $player.have_armor[$player.equip_armor]["element"] == "土" && @enemies[@enemy_idx].element == "土" then
-                p "damage 1/2"
                 damage /= 2
               end
               
               if $player.have_armor[$player.equip_armor]["element"] == "風" && @enemies[@enemy_idx].element == "風" then
-                p "damage 1/2"
                 damage /= 2
               end
               
               if $player.have_armor[$player.equip_armor]["element"] == "光" && @enemies[@enemy_idx].element == "光" then
-                p "damage 1/2"
                 damage /= 2
               end
               
               if $player.have_armor[$player.equip_armor]["element"] == "闇" && @enemies[@enemy_idx].element == "闇" then
-                p "damage 1/2"
                 damage /= 2
               end
             end
