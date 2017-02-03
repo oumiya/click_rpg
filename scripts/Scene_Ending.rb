@@ -46,6 +46,8 @@ class Scene_Ending < Scene_Base
     @staff_roll = Array.new
     # 画面に表示するテキスト配列
     @staff_font = Font.new(32)
+    @staff_roll.push(Staff.new("Starring"))
+    @staff_roll.push(Staff.new("　　　　まおー：胡桃くらら"))
     @staff_roll.push(Staff.new("Director"))
     @staff_roll.push(Staff.new("　　　　しかわ（@OumiyaS676）"))
     @staff_roll.push(Staff.new("Game Scripter"))
@@ -79,6 +81,15 @@ class Scene_Ending < Scene_Base
     @transition = false
     # 表示用メッセージ
     @message = nil
+    
+    # 音声読込
+    @maoh_sound = Array.new
+    @maoh_sound.push(Ayame.new("audio/se/m001.mp3"))
+    @maoh_sound.push(Ayame.new("audio/se/m002.mp3"))
+    @maoh_sound.push(Ayame.new("audio/se/m003.mp3"))
+    @maoh_sound.push(Ayame.new("audio/se/m004.mp3"))
+    @maoh_sound.push(Ayame.new("audio/se/m005.mp3"))
+    @maoh_sound.push(Ayame.new("audio/se/m006.mp3"))
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -127,6 +138,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 218 then
+      @maoh_sound[0].play(1, 0)
       @message = "まおー<br>「まさかこの私が負けるとはな……<br>　貴様、よほど名のある勇者なのであろう"
       @key_wait = true
       @wait_frame = 15
@@ -134,6 +146,8 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 250 then
+      @maoh_sound[0].stop(0)
+      @maoh_sound[1].play(1, 0)
       @message = "まおー<br>「この私をどうする？<br>　くくくっ当然殺すのであろうな"
       @key_wait = true
       @wait_frame = 15
@@ -141,6 +155,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 282 then
+      @maoh_sound[1].stop(0)
       @message = "あなた<br>「いや、どうもしないさ<br>　ただ暴れるのをやめてくれればいい"
       @key_wait = true
       @wait_frame = 15
@@ -148,6 +163,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 312 then
+      @maoh_sound[2].play(1, 0)
       @message = "まおー<br>「ふっ……<br>　私は魔王だぞ。魔王のまおーだ<br>　好きに生きるのが魔王の運命（さだめ）だ"
       @key_wait = true
       @wait_frame = 15
@@ -155,6 +171,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 342 then
+      @maoh_sound[2].stop(0)
       @message = "あなた<br>「そうか<br>　ならいいさ<br>　また止めに来てやるよ"
       @key_wait = true
       @wait_frame = 15
@@ -162,6 +179,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 372 then
+      @maoh_sound[3].play(1, 0)
       @message = "まおー<br>「ふっ……<br>　甘いヤツめ！<br>　だが、ありがとう"
       @key_wait = true
       @wait_frame = 15
@@ -169,6 +187,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 402 then
+      @maoh_sound[3].stop(0)
       @message = "あなた<br>「だが俺はこう思うんだ……。<br>　もし、このゲームの有料版が出たとしたら<br>　ここで選択肢出るんだろうなって……"
       @key_wait = true
       @wait_frame = 15
@@ -176,6 +195,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 432 then
+      @maoh_sound[4].play(1, 0)
       @message = "まおー<br>「そ、それは一体……どういうことだ！？"
       @key_wait = true
       @wait_frame = 15
@@ -183,6 +203,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 462 then
+      @maoh_sound[4].stop(0)
       @message = "あなた<br>「おまえを☓☓☓したり☓☓☓するってことさ"
       @key_wait = true
       @wait_frame = 15
@@ -190,6 +211,7 @@ class Scene_Ending < Scene_Base
     end
     
     if @frame == 492 then
+      @maoh_sound[5].play(1, 0)
       @message = "まおー<br>「よかった……お前が紳士で……<br>　ぐふっ！"
       @key_wait = true
       @wait_frame = 15
