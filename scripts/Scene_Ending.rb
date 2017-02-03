@@ -62,6 +62,8 @@ class Scene_Ending < Scene_Base
     @staff_roll.push(Staff.new("BGM"))
     @staff_roll.push(Staff.new("　　　　魔王魂"))
     @staff_roll.push(Staff.new("　　　　http://maoudamashii.jokersounds.com/"))
+    @staff_roll.push(Staff.new("　　　　MusMus"))
+    @staff_roll.push(Staff.new("　　　　http://musmus.main.jp/"))
     @staff_roll.push(Staff.new("Graphic"))
     @staff_roll.push(Staff.new("　　　　Alex Schwab"))
     @staff_roll.push(Staff.new("　　　　J McSporran"))

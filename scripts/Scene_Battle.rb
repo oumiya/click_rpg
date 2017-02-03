@@ -11,6 +11,7 @@ require_relative 'Scene_Home.rb'
 require_relative 'Sparkly.rb'
 require_relative 'Wave_Result.rb'
 require_relative 'Scene_Tower.rb'
+require_relative 'Effect.rb'
 
 class Scene_Battle
 
@@ -44,6 +45,9 @@ class Scene_Battle
     
     # プレイヤーが現在装備しているスキル
     @equip_skill = $active_skills.get_active_skill($player.have_weapon[$player.equip_weapon]["skill"])
+    
+    # プレイヤーの防御範囲拡大フラグ
+    @guard_range = false
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -81,6 +85,16 @@ class Scene_Battle
     @help.push(Image.load("image/help/01_note_guard.png"))
     @help.push(Image.load("image/help/02_note_heal.png"))
     @help.push(Image.load("image/help/03_note_fever.png"))
+    # 回復エフェクトの読込
+    @heal_effect = Effect.new
+    @heal_effect.x = 0
+    @heal_effect.y = 290
+    @heal_effect.images = Image.load_tiles("image/effect/heal.png", 9, 1)
+    # スペシャルアタックエフェクトの読込
+    @sp_effect = Effect.new
+    @sp_effect.x = 300
+    @sp_effect.y = 80
+    @sp_effect.images = Image.load_tiles("image/effect/sp_attack.png", 1, 10)
     
     # 敵データの読込
     @enemies = Array.new
@@ -135,6 +149,13 @@ class Scene_Battle
   
   # フレーム更新処理
   def update()
+    #エフェクトの更新
+    @heal_effect.update
+    @sp_effect.update
+    if @equip_skill.id == 1 && @equip_skill.skill_continued?() == false then
+      @guard_range = false
+    end
+
     # フェードアウト/フェードインの表示
     @fade_effect.update
     if @fade_effect.effect_end? == false then
@@ -475,6 +496,10 @@ class Scene_Battle
       @equip_skill.draw
     end
     
+    # エフェクトの表示
+    @heal_effect.draw
+    @sp_effect.draw
+    
     # ヘルプの表示
     # 攻撃ヘルプの表示
     if @p_atk_count < 3 && $player.flag[3] == false then
@@ -775,22 +800,37 @@ class Scene_Battle
             
             # ガード評価
             diff = (297 - icon.x).abs
+            rank = 0
             
             if diff <= 12 then
+              rank = 1
+            elsif diff <= 32 then
+              rank = 2
+            else
+              rank = 3
+            end
+            
+            if @guard_range then
+              if rank > 1 then
+                rank -= 1
+              end
+            end
+            
+            if rank == 1 then
               @guard_rank.set_rank("perfect")
               @p_damage = false # ガードがパーフェクトの場合は ダメージを受けない
               if $player.fever? == false then
                 $player.fever_point += 4
               end
               damage = 0
-            elsif diff <= 32 then
+            elsif rank == 2 then
               @guard_rank.set_rank("good")
               @p_damage = true
               if $player.fever? == false then
                 $player.fever_point += 4
               end
               damage *= 0.5
-            else
+            elsif rank == 3 then
               @guard_rank.set_rank("poor")
               @p_damage = true
               if $player.fever? == false then
@@ -852,6 +892,7 @@ class Scene_Battle
           if $player.hp < $player.max_hp then
             # 回復音を再生
             $sounds["heal"].play(1, 0)
+            @heal_effect.show
             heal_point = $player.max_hp * 0.25
             $player.hp += heal_point.to_i
             if $player.hp > $player.max_hp
@@ -870,9 +911,77 @@ class Scene_Battle
     if @equip_skill then
       @equip_skill.update
       
+      # 持続スキルの場合、持続判定をする
+      
       if Input.key_push?(K_S) then
         if @equip_skill.use_skill?() then
           @equip_skill.use()
+          
+          # HP回復スキル
+          if @equip_skill.id == 0 then
+            # 回復音を再生
+            $sounds["heal"].play(1, 0)
+            $player.hp = $player.max_hp
+            @heal_effect.show
+          end
+          
+          # 防御範囲拡大スキル
+          if @equip_skill.id == 1 then
+            @guard_range = true
+          end
+          
+          # 2倍攻撃
+          if @equip_skill.id == 2 then
+            # 効果音を再生
+            $sounds["sp_attack"].play(1, 0)
+            @sp_effect.show
+            @super_attack = true
+            damage = calc_damage($player.ATK, @enemies[@enemy_idx].defence)
+            damage *= 2
+            
+            # ダメージ属性補正
+            @effective = false
+            if $player.equip_weapon >= 0 then
+              if $player.have_weapon[$player.equip_weapon]["element"] == "火" && @enemies[@enemy_idx].element == "氷" then
+                @effective = true
+                damage *= 2
+              end
+              
+              if $player.have_weapon[$player.equip_weapon]["element"] == "氷" && @enemies[@enemy_idx].element == "火" then
+                @effective = true
+                damage *= 2
+              end
+              
+              if $player.have_weapon[$player.equip_weapon]["element"] == "土" && @enemies[@enemy_idx].element == "風" then
+                @effective = true
+                damage *= 2
+              end
+              
+              if $player.have_weapon[$player.equip_weapon]["element"] == "風" && @enemies[@enemy_idx].element == "土" then
+                @effective = true
+                damage *= 2
+              end
+              
+              if $player.have_weapon[$player.equip_weapon]["element"] == "光" && @enemies[@enemy_idx].element == "闇" then
+                @effective = true
+                damage *= 2
+              end
+              
+              if $player.have_weapon[$player.equip_weapon]["element"] == "闇" && @enemies[@enemy_idx].element == "光" then
+                @effective = true
+                damage *= 2
+              end
+            end
+            
+            @enemies[@enemy_idx].hp -= damage
+            if @enemies[@enemy_idx].hp < 0 then
+              @enemies[@enemy_idx].hp = 0
+            end
+          end
+          
+          
+          
+          
         end
       end
     end
