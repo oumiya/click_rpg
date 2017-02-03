@@ -41,6 +41,9 @@ class Scene_Battle
     @p_gd_count = 0
     # プレイヤーが何回薬草を使ったかカウントする変数
     @p_heal_count = 0
+    
+    # プレイヤーが現在装備しているスキル
+    @equip_skill = $active_skills.get_active_skill($player.have_weapon[$player.equip_weapon]["skill"])
   end
   
   # ループ前処理 例えばインスタンス変数の初期化などを行う
@@ -467,6 +470,11 @@ class Scene_Battle
       end
     end
     
+    # スキルの表示
+    if @equip_skill then
+      @equip_skill.draw
+    end
+    
     # ヘルプの表示
     # 攻撃ヘルプの表示
     if @p_atk_count < 3 && $player.flag[3] == false then
@@ -532,6 +540,7 @@ class Scene_Battle
       attack()
       guard()
       heal()
+      skill()
       $player.fever_start()
       if $player.fever? then
         if $bgm["fever"].playing? == false then
@@ -853,6 +862,19 @@ class Scene_Battle
             @p_heal_count += 1
           end
         end
+    end
+  end
+  
+  # スキルキー入力処理
+  def skill()
+    if @equip_skill then
+      @equip_skill.update
+      
+      if Input.key_push?(K_S) then
+        if @equip_skill.use_skill?() then
+          @equip_skill.use()
+        end
+      end
     end
   end
   

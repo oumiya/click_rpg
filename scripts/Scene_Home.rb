@@ -129,7 +129,7 @@ class Scene_Home < Scene_Base
     if $player.flag[9] == false && $player.progress >= 25 then
       $player.flag[9] = true
       @next_scene = Scene_Event.new("knight5.dat")
-      $player.add_weapon(24, "アロウの剣(光)", "光", 0, 500)
+      $player.add_weapon(24, "アロウの剣(光)", "光", 0, 500, -1)
       $player.add_armor(24, "アロウの鎧改(闇)H5", "闇", 0, 5, 500)
     end
   end

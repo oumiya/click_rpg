@@ -230,13 +230,44 @@ class Scene_Box < Scene_Base
       end
     end
     
+    # 武器の場合のみスキルの抽選
+    skill = -1
+    skill = $weapondata.get_weapon_data(idx)[:skill]
+    
+    if drop_item == 0 && skill < 0 then
+      # スキルの付与は 40%
+      lottery = rand(100)
+      if lottery < 40 then
+        lottery = rand(100)
+        if lottery < 11 then
+          skill = 0
+        elsif lottery < 22 then
+          skill = 1
+        elsif lottery < 33 then
+          skill = 2
+        elsif lottery < 44 then
+          skill = 3
+        elsif lottery < 55 then
+          skill = 4
+        elsif lottery < 66 then
+          skill = 5
+        elsif lottery < 77 then
+          skill = 6
+        elsif lottery < 88 then
+          skill = 7
+        else
+          skill = 8
+        end
+      end
+    end
+    
     # 防具の場合のみ自動回復の抽選
     heal = 0
     
     heal = $armordata.get_armor_data(idx)[:heal]
     
     if drop_item == 1 && heal < 1 then
-      # 防具の自動回復は10%の確率で付与 毎秒1% ～ 毎秒10% まで
+      # 防具の自動回復は10%の確率で付与 戦闘毎10% ～ 戦闘毎100% まで
       lottery = rand(100)
       if lottery < 10 then
         lottery = rand(100) + 1
@@ -286,7 +317,7 @@ class Scene_Box < Scene_Base
       end
       
       # 所持品を追加
-      $player.add_weapon(idx, reward_name, element, bonus, value)
+      $player.add_weapon(idx, reward_name, element, bonus, value, skill)
       @item_name += reward_name + "を手に入れた！<br>"
       
     else

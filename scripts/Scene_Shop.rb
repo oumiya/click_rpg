@@ -458,8 +458,8 @@ class Scene_Shop < Scene_Base
           end
           $player.equip_weapon = 0
           
-          $player.sort_weapon()
           $player.sort_sell_weapon()
+          $player.sort_weapon()
         end
         
         # 防具売却処理
@@ -486,8 +486,8 @@ class Scene_Shop < Scene_Base
           end
           $player.equip_armor = 0
           
-          $player.sort_armor()
           $player.sort_sell_armor()
+          $player.sort_armor()
         end
         
         total = total / 2
@@ -510,6 +510,7 @@ class Scene_Shop < Scene_Base
               if $player.gold >= price then
                 # 武器を所持品に追加
                 $player.have_weapon.push(weapon)
+                $player.sort_weapon()
                 # プレイヤーの所持金から代金を減算
                 $player.gold -= price
                 @message = "ありがとよ！"
@@ -531,6 +532,7 @@ class Scene_Shop < Scene_Base
               if $player.gold >= price then
                 # 指定の防具を所持品に追加
                 $player.have_armor.push(armor)
+                $player.sort_armor()
                 # プレイヤーの所持金から代金を減算
                 $player.gold -= price
                 @message = "ありがとよ！"

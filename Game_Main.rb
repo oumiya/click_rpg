@@ -1,5 +1,6 @@
 require 'dxruby'
 require_relative 'ayame'
+require './scripts/Active_Skills.rb'
 require './scripts/Armor_Data.rb'
 require './scripts/Enemy_Data.rb'
 require './scripts/Hair.rb'
@@ -134,6 +135,9 @@ class Game_Main
     
     # 防具データを読み込む
     $armordata = Armor_Data.new
+    
+    # スキルデータを読込
+    $active_skills = Active_Skills_Data.new
     
     # 髪情報を読み込む
     $hair = Hair.new

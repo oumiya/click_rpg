@@ -228,14 +228,14 @@ class Player
     weapon_name = $weapondata.get_weapon_data(idx)[:name]
     value = $weapondata.get_weapon_data(idx)[:value]
     element = $weapondata.get_weapon_data(idx)[:element]
-    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>0, "value"=>value}
+    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>0, "value"=>value, "skill"=>nil}
     
     return adding_weapon
   end
 
   # 指定の武器を所持品に追加
-  def add_weapon(idx, weapon_name, element, bonus, value)
-    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>bonus, "value"=>value}
+  def add_weapon(idx, weapon_name, element, bonus, value, skill)
+    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>bonus, "value"=>value, "skill"=>skill}
     $player.have_weapon.push(adding_weapon)
     sort_weapon()
   end
