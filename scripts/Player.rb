@@ -97,7 +97,7 @@ class Player
     
     for i in 1..@exp_table.length-1 do
       if i > 42 then
-        @exp_table[i] = 105728
+        @exp_table[i] = @exp_table[i-1] + 105728
       else
         @exp_table[i] = (@exp_table[i-1] * base_rate + base_value).round
       end
