@@ -192,6 +192,15 @@ class Scene_Battle
     @state = 0
     # その状態になってから何フレーム経過したかのカウント
     @state_count = 0
+    
+    # 属性画像（小）の読込
+    @el_thumb = Array.new
+    @el_thumb.push(Image.load("image/system/e_thumb_fire.png"))
+    @el_thumb.push(Image.load("image/system/e_thumb_ice.png"))
+    @el_thumb.push(Image.load("image/system/e_thumb_earth.png"))
+    @el_thumb.push(Image.load("image/system/e_thumb_wind.png"))
+    @el_thumb.push(Image.load("image/system/e_thumb_light.png"))
+    @el_thumb.push(Image.load("image/system/e_thumb_dark.png"))
   end
   
   # フレーム更新処理
@@ -542,6 +551,9 @@ class Scene_Battle
       end
     end
     
+    # プレイヤー属性の表示
+    draw_player_element()
+    
     # スキルの表示
     if @equip_skill then
       @equip_skill.draw
@@ -608,6 +620,50 @@ class Scene_Battle
       bar_width = 470
     end
     Window.draw_box_fill(251, 482, 251 + bar_width, 508, [255, 0, 0])
+  end
+  
+  # プレイヤーの攻撃属性、防御属性の描画
+  def draw_player_element()
+    # 攻撃属性の描画
+    Window.draw_font(35, 241, "攻", @heal_font)
+    if $player.have_weapon[$player.equip_weapon]["element"] == "火" then
+      Window.draw(68, 241, @el_thumb[0])
+    end
+    if $player.have_weapon[$player.equip_weapon]["element"] == "氷" then
+      Window.draw(68, 241, @el_thumb[1])
+    end
+    if $player.have_weapon[$player.equip_weapon]["element"] == "土" then
+      Window.draw(68, 241, @el_thumb[2])
+    end
+    if $player.have_weapon[$player.equip_weapon]["element"] == "風" then
+      Window.draw(68, 241, @el_thumb[3])
+    end
+    if $player.have_weapon[$player.equip_weapon]["element"] == "光" then
+      Window.draw(68, 241, @el_thumb[4])
+    end
+    if $player.have_weapon[$player.equip_weapon]["element"] == "闇" then
+      Window.draw(68, 241, @el_thumb[5])
+    end
+    # 防御属性の描画
+    Window.draw_font(108, 241, "防", @heal_font)
+    if $player.have_armor[$player.equip_armor]["element"] == "火" then
+      Window.draw(142, 241, @el_thumb[0])
+    end
+    if $player.have_armor[$player.equip_armor]["element"] == "氷" then
+      Window.draw(142, 241, @el_thumb[1])
+    end
+    if $player.have_armor[$player.equip_armor]["element"] == "土" then
+      Window.draw(142, 241, @el_thumb[2])
+    end
+    if $player.have_armor[$player.equip_armor]["element"] == "風" then
+      Window.draw(142, 241, @el_thumb[3])
+    end
+    if $player.have_armor[$player.equip_armor]["element"] == "光" then
+      Window.draw(142, 241, @el_thumb[4])
+    end
+    if $player.have_armor[$player.equip_armor]["element"] == "闇" then
+      Window.draw(142, 241, @el_thumb[5])
+    end
   end
   
   # キー入力処理
