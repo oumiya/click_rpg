@@ -92,8 +92,8 @@ class Active_Skills_Data
     @skills.push(Active_Skills.new(4, "防御力UP", "防御力が150%アップする", 600, 300, "04_up_guard.png"))
     @skills.push(Active_Skills.new(5, "敵の攻撃力DOWN", "敵の攻撃力が50%になる", 600, 300, "05_down_attack.png"))
     @skills.push(Active_Skills.new(6, "敵の防御力DOWN", "敵の防御力が50%になる", 600, 300, "06_down_guard.png"))
-    @skills.push(Active_Skills.new(7, "スタン", "敵の攻撃をかき消す", 300, 0, "07_shout.png"))
-    @skills.push(Active_Skills.new(8, "属性反転", "自分の武器属性が相反属性に反転する", 0, 0, "08_reverse.png"))
+    @skills.push(Active_Skills.new(7, "スタン", "敵の攻撃をかき消す", 300, 150, "07_shout.png"))
+    @skills.push(Active_Skills.new(8, "属性反転", "自分の武器属性が相反属性に反転する", 60, 0, "08_reverse.png"))
   end
   
   def get_active_skill(idx)

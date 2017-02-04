@@ -112,6 +112,11 @@ class Game_Main
     $sounds["box"] = Ayame.new("audio/se/box.mp3")                      # 宝箱
     $sounds["wave_win"] = Ayame.new("audio/se/yourewinner.mp3")         # Waveに勝利した！
     $sounds["sp_attack"] = Ayame.new("audio/se/sp_attack.mp3")          # 2倍攻撃
+    $sounds["up"] = Ayame.new("audio/se/up.mp3")                        # ステータス上昇
+    $sounds["down"] = Ayame.new("audio/se/down.mp3")                    # ステータス下降
+    $sounds["reverse"] = Ayame.new("audio/se/reverse.mp3")              # 属性反転
+    $sounds["guard_range"] = Ayame.new("audio/se/guard_range.mp3")      # ガード範囲拡大
+    $sounds["stun"] = Ayame.new("audio/se/shout.mp3")                   # スタン
     
     # BGMを読み込む
     $bgm = Hash.new

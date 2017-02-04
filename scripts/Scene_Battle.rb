@@ -142,6 +142,27 @@ class Scene_Battle
     @guard_frame_effect.x = 285
     @guard_frame_effect.y = 386
     @guard_frame = Image.load("image/system/guard_frame.png")
+    # ステータス上昇エフェクトの読込
+    @up_effect = Effect.new
+    @up_effect.x = 0
+    @up_effect.y = 290
+    @up_effect.images = Image.load_tiles("image/effect/status_up.png", 10, 1)
+    # ステータス下降エフェクトの読込
+    @down_effect = Effect.new
+    @down_effect.x = 350
+    @down_effect.y = 73
+    @down_effect.images = Image.load_tiles("image/effect/status_down.png", 10, 1)
+    # スタンエフェクトの読込
+    @stun_effect = Effect.new
+    @stun_effect.x = 350
+    @stun_effect.y = 73
+    @stun_effect.images = Image.load_tiles("image/effect/shout.png", 5, 1)
+    # 属性反転エフェクトの読込
+    @reverse_effect = Effect.new
+    @reverse_effect.x = 0
+    @reverse_effect.y = 290
+    @reverse_effect.images = Image.load_tiles("image/effect/reverse.png", 5, 2)
+    
     
     # 敵データの読込
     @enemies = Array.new
@@ -201,6 +222,21 @@ class Scene_Battle
     @el_thumb.push(Image.load("image/system/e_thumb_wind.png"))
     @el_thumb.push(Image.load("image/system/e_thumb_light.png"))
     @el_thumb.push(Image.load("image/system/e_thumb_dark.png"))
+    
+    # ステータス上昇/下降系の画像の読込
+    @status_updown = Array.new
+    @status_updown.push(Image.load("image/system/atack_up.png"))
+    @status_updown.push(Image.load("image/system/guard_up.png"))
+    @status_updown.push(Image.load("image/system/attack_down.png"))
+    @status_updown.push(Image.load("image/system/guard_down.png"))
+    
+    @p_attack_up = false
+    @p_guard_up = false
+    @e_attack_down = false
+    @e_guard_down = false
+    
+    # 敵がスタン状態かどうかのフラグ
+    @e_stun = false
   end
   
   # フレーム更新処理
@@ -209,11 +245,36 @@ class Scene_Battle
     @heal_effect.update
     @sp_effect.update
     @guard_frame_effect.update
+    @up_effect.update
+    @down_effect.update
+    @stun_effect.update
+    @reverse_effect.update
     
     if @equip_skill then
       if @equip_skill.id == 1 && @equip_skill.skill_continued?() == false then
         @guard_range = false
       end
+      
+      if @equip_skill.id == 3 && @equip_skill.skill_continued?() == false then
+        @p_attack_up = false
+      end
+      
+      if @equip_skill.id == 4 && @equip_skill.skill_continued?() == false then
+        @p_guard_up = false
+      end
+      
+      if @equip_skill.id == 5 && @equip_skill.skill_continued?() == false then
+        @e_attack_down = false
+      end
+      
+      if @equip_skill.id == 6 && @equip_skill.skill_continued?() == false then
+        @e_guard_down = false
+      end
+      
+      if @equip_skill.id == 7 && @equip_skill.skill_continued?() == false then
+        @e_stun = false
+      end
+      
     end
 
     # フェードアウト/フェードインの表示
@@ -566,6 +627,27 @@ class Scene_Battle
     if @guard_range then
       Window.draw(285, 386, @guard_frame)
     end
+    @up_effect.draw
+    @down_effect.draw
+    @stun_effect.draw
+    @reverse_effect.draw
+    
+    # ステータス上昇/下降の画像表示
+    if @p_attack_up then
+      Window.draw(38, 480, @status_updown[0])
+    end
+    
+    if @p_guard_up then
+      Window.draw(38, 480, @status_updown[1])
+    end
+    
+    if @e_attack_down then
+      Window.draw(504, 330, @status_updown[2])
+    end
+    
+    if @e_guard_down then
+      Window.draw(504, 330, @status_updown[3])
+    end
     
     # ヘルプの表示
     # 攻撃ヘルプの表示
@@ -715,7 +797,20 @@ class Scene_Battle
             icon.die()
             
             $sounds["p_damage_sound"].play(1,0)
-            damage = calc_damage(@enemies[@enemy_idx].attack, $player.DEF)
+            
+            e_atk = @enemies[@enemy_idx].attack
+            
+            if @e_attack_down then
+              e_atk *= 0.5
+            end
+            
+            p_def = $player.DEF
+            
+            if @p_guard_up then
+              p_def *= 1.5
+            end
+            
+            damage = calc_damage(e_atk, p_def)
 
             if $player.equip_armor >= 0 then
               # ダメージ属性補正
@@ -753,18 +848,20 @@ class Scene_Battle
         end
       }
       # 敵の攻撃処理
-      if @enemies[@enemy_idx].attack_frame? then
-        @atk_count = $frame_counter
-        @e_atk_move = 24
-        
-        # 非表示になっているアイコンがあるか検索
-        # ※ なければ攻撃タイミングが来ても攻撃はしない
-        @attack_icons.each{|icon|
-          if icon.visible == false then
-            icon.visible = true
-            break
-          end
-        }
+      if @e_stun == false then
+        if @enemies[@enemy_idx].attack_frame? then
+          @atk_count = $frame_counter
+          @e_atk_move = 24
+          
+          # 非表示になっているアイコンがあるか検索
+          # ※ なければ攻撃タイミングが来ても攻撃はしない
+          @attack_icons.each{|icon|
+            if icon.visible == false then
+              icon.visible = true
+              break
+            end
+          }
+        end
       end
       
       if $frame_counter - @atk_count > 16 then
@@ -829,7 +926,20 @@ class Scene_Battle
           end
           
           @attack_effect.show(@combo_count)
-          damage = calc_damage($player.ATK, @enemies[@enemy_idx].defence)
+          
+          p_atk = $player.ATK
+            
+          if @p_attack_up then
+            p_atk *= 1.5
+          end
+          
+          e_def = @enemies[@enemy_idx].defence
+          
+          if @e_guard_down then
+            e_def *= 0.5
+          end
+          
+          damage = calc_damage(p_atk, e_def)
           
           combo_correction_value = (@combo_count.to_f / 100.0) + 1.0
           
@@ -907,7 +1017,19 @@ class Scene_Battle
             # ガード音を再生
             $sounds["p_guard_sound"].play(1, 0)
             
-            damage = calc_damage(@enemies[@enemy_idx].attack, $player.DEF)
+            e_atk = @enemies[@enemy_idx].attack
+            
+            if @e_attack_down then
+              e_atk *= 0.5
+            end
+            
+            p_def = $player.DEF
+            
+            if @p_guard_up then
+              p_def *= 1.5
+            end
+            
+            damage = calc_damage(e_atk, p_def)
             
             # ガード評価
             diff = (297 - icon.x).abs
@@ -1038,6 +1160,7 @@ class Scene_Battle
           
           # 防御範囲拡大スキル
           if @equip_skill.id == 1 then
+            $sounds["guard_range"].play(1, 0)
             @guard_range = true
             @guard_frame_effect.show
           end
@@ -1089,6 +1212,68 @@ class Scene_Battle
             if @enemies[@enemy_idx].hp < 0 then
               @enemies[@enemy_idx].hp = 0
             end
+          end
+          
+          # 攻撃力UPスキル
+          if @equip_skill.id == 3 then
+            $sounds["up"].play(1, 0)
+            @p_attack_up = true
+            @up_effect.show
+          end
+          
+          # 防御力UPスキル
+          if @equip_skill.id == 4 then
+            $sounds["up"].play(1, 0)
+            @p_guard_up = true
+            @up_effect.show
+          end
+          
+          # 敵の攻撃力DOWNスキル
+          if @equip_skill.id == 5 then
+            $sounds["down"].play(1, 0)
+            @e_attack_down = true
+            @down_effect.show
+          end
+          
+          # 敵の防御力DOWNスキル
+          if @equip_skill.id == 6 then
+            $sounds["down"].play(1, 0)
+            @e_guard_down = true
+            @down_effect.show
+          end
+          
+          # スタンスキル
+          if @equip_skill.id == 7 then
+            $sounds["stun"].play(1, 0)
+            @e_stun = true
+            @stun_effect.show
+            @attack_icons.each{|icon|
+              if icon.visible then
+                icon.die()
+              end
+            }
+          end
+          
+          # 属性反転
+          if @equip_skill.id == 8 then
+            $sounds["reverse"].play(1, 0)
+            if $player.equip_weapon >= 0 then
+              if $player.have_weapon[$player.equip_weapon]["element"] == "火" then
+                $player.have_weapon[$player.equip_weapon]["element"] = "氷"
+              elsif $player.have_weapon[$player.equip_weapon]["element"] == "氷" then
+                $player.have_weapon[$player.equip_weapon]["element"] = "火"
+              elsif $player.have_weapon[$player.equip_weapon]["element"] == "土" then
+                $player.have_weapon[$player.equip_weapon]["element"] = "風"
+              elsif $player.have_weapon[$player.equip_weapon]["element"] == "風" then
+                $player.have_weapon[$player.equip_weapon]["element"] = "土"
+              elsif $player.have_weapon[$player.equip_weapon]["element"] == "光" then
+                $player.have_weapon[$player.equip_weapon]["element"] = "闇"
+              elsif $player.have_weapon[$player.equip_weapon]["element"] == "闇" then
+                $player.have_weapon[$player.equip_weapon]["element"] = "光"
+              end
+            end
+            # エフェクトの表示
+            @reverse_effect.show
           end
           
           
