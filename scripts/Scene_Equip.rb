@@ -90,6 +90,18 @@ class Scene_Equip < Scene_Base
     @max_armor_page = ($player.have_armor.size.to_f / 9.0).ceil
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
+    
+    # スキルアイコン画像の読込
+    @skill_icons = Array.new
+    @skill_icons.push(Image.load("image/skill/00_thumb_heal.png"))
+    @skill_icons.push(Image.load("image/skill/01_thumb_guard_range_up.png"))
+    @skill_icons.push(Image.load("image/skill/02_thumb_super_attack.png"))
+    @skill_icons.push(Image.load("image/skill/03_thumb_up_attack.png"))
+    @skill_icons.push(Image.load("image/skill/04_thumb_up_guard.png"))
+    @skill_icons.push(Image.load("image/skill/05_thumb_down_attack.png"))
+    @skill_icons.push(Image.load("image/skill/06_thumb_down_guard.png"))
+    @skill_icons.push(Image.load("image/skill/07_thumb_shout.png"))
+    @skill_icons.push(Image.load("image/skill/08_thumb_reverse.png"))
   end
   
   # 画面の描画
@@ -190,10 +202,19 @@ class Scene_Equip < Scene_Base
       for i in start_i..end_i do
         weapon = $weapondata.get_weapon_data($player.have_weapon[i]["idx"])
         have_count = 1
+        # 武器名の表示長さを取得
+        text_width = @font.get_width($player.have_weapon[i]["name"])
+        # 武器名の表示
+        Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_weapon[i]["name"], @font)
+        # スキルアイコンの表示
+        if $player.have_weapon[i]["skill"] then
+          if $player.have_weapon[i]["skill"] > -1 then
+            Window.draw(449 + text_width + 2, y + (@font.size + 8) * idx, @skill_icons[$player.have_weapon[i]["skill"]])
+          end
+        end
+        # 装備済みの表示
         if i == $player.equip_weapon then
-          Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_weapon[i]["name"] + " E", @font)
-        else
-          Window.draw_font(449, y + (@font.size + 8) * idx, $player.have_weapon[i]["name"], @font)
+          Window.draw_font(449 + text_width + 36 + 4, y + (@font.size + 8) * idx, "E", @font)
         end
         Window.draw_font(794, y + (@font.size + 8) * idx, sprintf("%6d", have_count), @font)
         idx += 1

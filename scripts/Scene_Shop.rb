@@ -100,6 +100,18 @@ class Scene_Shop < Scene_Base
     @max_armor_page = ($player.sell_armor.size.to_f / 9.0).ceil
     
     @prev_mouse_pos = [Input.mouse_x, Input.mouse_y] # 前回マウス座標
+    
+    # スキルアイコン画像の読込
+    @skill_icons = Array.new
+    @skill_icons.push(Image.load("image/skill/00_thumb_heal.png"))
+    @skill_icons.push(Image.load("image/skill/01_thumb_guard_range_up.png"))
+    @skill_icons.push(Image.load("image/skill/02_thumb_super_attack.png"))
+    @skill_icons.push(Image.load("image/skill/03_thumb_up_attack.png"))
+    @skill_icons.push(Image.load("image/skill/04_thumb_up_guard.png"))
+    @skill_icons.push(Image.load("image/skill/05_thumb_down_attack.png"))
+    @skill_icons.push(Image.load("image/skill/06_thumb_down_guard.png"))
+    @skill_icons.push(Image.load("image/skill/07_thumb_shout.png"))
+    @skill_icons.push(Image.load("image/skill/08_thumb_reverse.png"))
   end
   
   # 画面の描画
@@ -174,7 +186,15 @@ class Scene_Shop < Scene_Base
       idx = 1
       for i in start_i..end_i do
         weapon = $weapondata.get_weapon_data($player.sell_weapon[i]["idx"])
+        # 武器名の表示長さを取得
+        text_width = @font.get_width($player.sell_weapon[i]["name"])
+        # 武器名の表示
         Window.draw_font(311, y + (@font.size + 8) * idx, $player.sell_weapon[i]["name"], @font)
+        # スキルアイコンの表示
+        if $player.sell_weapon[i]["skill"] > -1 then
+          Window.draw(311 + text_width + 2, y + (@font.size + 8) * idx, @skill_icons[$player.sell_weapon[i]["skill"]])
+        end
+        # 価格の表示
         Window.draw_font(624, y + (@font.size + 8) * idx, sprintf("%8d", weapon[:price] * ($player.sell_weapon[i]["bonus"] + 1)), @font)
         idx += 1
       end
@@ -437,11 +457,11 @@ class Scene_Shop < Scene_Base
         # 武器売却処理
         if $player.have_weapon.size > 1 then
           save_weapon = Array.new
-          save_weapon.push({"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"]})
+          save_weapon.push({"idx"=>$player.have_weapon[$player.equip_weapon]["idx"], "name"=>$player.have_weapon[$player.equip_weapon]["name"], "element"=>$player.have_weapon[$player.equip_weapon]["element"], "bonus"=>$player.have_weapon[$player.equip_weapon]["bonus"], "value"=>$player.have_weapon[$player.equip_weapon]["value"], "skill"=>$player.have_weapon[$player.equip_weapon]["skill"]})
           
           for i in 0..$player.have_weapon.size - 1 do
             if $player.have_weapon[i]["idx"] == 24 && $player.equip_weapon != i then
-              save_weapon.push({"idx"=>$player.have_weapon[i]["idx"], "name"=>$player.have_weapon[i]["name"], "element"=>$player.have_weapon[i]["element"], "bonus"=>$player.have_weapon[i]["bonus"], "value"=>$player.have_weapon[i]["value"]})
+              save_weapon.push({"idx"=>$player.have_weapon[i]["idx"], "name"=>$player.have_weapon[i]["name"], "element"=>$player.have_weapon[i]["element"], "bonus"=>$player.have_weapon[i]["bonus"], "value"=>$player.have_weapon[i]["value"], "skill"=>$player.have_weapon[i]["skill"]})
             end
           end
           
