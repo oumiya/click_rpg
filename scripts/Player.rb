@@ -228,7 +228,7 @@ class Player
     weapon_name = $weapondata.get_weapon_data(idx)[:name]
     value = $weapondata.get_weapon_data(idx)[:value]
     element = $weapondata.get_weapon_data(idx)[:element]
-    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>0, "value"=>value, "skill"=>nil}
+    adding_weapon = {"idx"=>idx, "name"=>weapon_name, "element"=>element, "bonus"=>0, "value"=>value, "skill"=>-1}
     
     return adding_weapon
   end

@@ -13,6 +13,46 @@ require_relative 'Wave_Result.rb'
 require_relative 'Scene_Tower.rb'
 require_relative 'Effect.rb'
 
+class Guard_Frame_Effect < Effect
+  attr_accessor :scale
+  
+  def initialize()
+    super()
+    @counter = 30
+    @scale = 2.0
+    @alpha = 0
+    @images = Array.new
+    @images.push(Image.load("image/system/guard_frame.png"))
+  end
+  
+  def draw()
+    if visible then
+      Window.draw_ex(@x, @y, @images[0], {:scale_x=>@scale, :scale_y=>@scale, :alpha=>@alpha})
+    end
+  end
+  
+  def show()
+    @visible = true
+    @counter = 0
+    @scale = 1.0
+  end
+  
+  def update()
+    if @visible then
+      if $frame_counter % 2 == 0 then
+        # 徐々に拡大する
+        @scale += 0.1
+        @alpha += 13
+        if @scale >= 2.0 then
+          @scale = 1.0
+          @visible = false
+        end
+      end
+    end
+  end
+  
+end
+
 class Scene_Battle
 
   ENEMY_X = 237         # 敵画像の表示原点 X座標
@@ -44,7 +84,9 @@ class Scene_Battle
     @p_heal_count = 0
     
     # プレイヤーが現在装備しているスキル
-    @equip_skill = $active_skills.get_active_skill($player.have_weapon[$player.equip_weapon]["skill"])
+    if $player.equip_weapon >= 0 then
+      @equip_skill = $active_skills.get_active_skill($player.have_weapon[$player.equip_weapon]["skill"])
+    end
     
     # プレイヤーの防御範囲拡大フラグ
     @guard_range = false
@@ -95,6 +137,11 @@ class Scene_Battle
     @sp_effect.x = 300
     @sp_effect.y = 80
     @sp_effect.images = Image.load_tiles("image/effect/sp_attack.png", 1, 10)
+    # ガード強化枠画像の読込
+    @guard_frame_effect = Guard_Frame_Effect.new
+    @guard_frame_effect.x = 285
+    @guard_frame_effect.y = 386
+    @guard_frame = Image.load("image/system/guard_frame.png")
     
     # 敵データの読込
     @enemies = Array.new
@@ -152,8 +199,12 @@ class Scene_Battle
     #エフェクトの更新
     @heal_effect.update
     @sp_effect.update
-    if @equip_skill.id == 1 && @equip_skill.skill_continued?() == false then
-      @guard_range = false
+    @guard_frame_effect.update
+    
+    if @equip_skill then
+      if @equip_skill.id == 1 && @equip_skill.skill_continued?() == false then
+        @guard_range = false
+      end
     end
 
     # フェードアウト/フェードインの表示
@@ -499,6 +550,10 @@ class Scene_Battle
     # エフェクトの表示
     @heal_effect.draw
     @sp_effect.draw
+    @guard_frame_effect.draw
+    if @guard_range then
+      Window.draw(285, 386, @guard_frame)
+    end
     
     # ヘルプの表示
     # 攻撃ヘルプの表示
@@ -928,6 +983,7 @@ class Scene_Battle
           # 防御範囲拡大スキル
           if @equip_skill.id == 1 then
             @guard_range = true
+            @guard_frame_effect.show
           end
           
           # 2倍攻撃
