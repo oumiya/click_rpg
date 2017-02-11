@@ -299,6 +299,7 @@ class Scene_Battle
     $bgm["battle"].stop(0)
     $bgm["boss_battle"].stop(0)
     $bgm["last_battle"].stop(0)
+    $bgm["tower_battle"].stop(0)
   end
   
   # 次のシーンに遷移
@@ -708,43 +709,47 @@ class Scene_Battle
   def draw_player_element()
     # 攻撃属性の描画
     Window.draw_font(35, 241, "攻", @heal_font)
-    if $player.have_weapon[$player.equip_weapon]["element"] == "火" then
-      Window.draw(68, 241, @el_thumb[0])
-    end
-    if $player.have_weapon[$player.equip_weapon]["element"] == "氷" then
-      Window.draw(68, 241, @el_thumb[1])
-    end
-    if $player.have_weapon[$player.equip_weapon]["element"] == "土" then
-      Window.draw(68, 241, @el_thumb[2])
-    end
-    if $player.have_weapon[$player.equip_weapon]["element"] == "風" then
-      Window.draw(68, 241, @el_thumb[3])
-    end
-    if $player.have_weapon[$player.equip_weapon]["element"] == "光" then
-      Window.draw(68, 241, @el_thumb[4])
-    end
-    if $player.have_weapon[$player.equip_weapon]["element"] == "闇" then
-      Window.draw(68, 241, @el_thumb[5])
+    if $player.equip_weapon > -1 then
+      if $player.have_weapon[$player.equip_weapon]["element"] == "火" then
+        Window.draw(68, 241, @el_thumb[0])
+      end
+      if $player.have_weapon[$player.equip_weapon]["element"] == "氷" then
+        Window.draw(68, 241, @el_thumb[1])
+      end
+      if $player.have_weapon[$player.equip_weapon]["element"] == "土" then
+        Window.draw(68, 241, @el_thumb[2])
+      end
+      if $player.have_weapon[$player.equip_weapon]["element"] == "風" then
+        Window.draw(68, 241, @el_thumb[3])
+      end
+      if $player.have_weapon[$player.equip_weapon]["element"] == "光" then
+        Window.draw(68, 241, @el_thumb[4])
+      end
+      if $player.have_weapon[$player.equip_weapon]["element"] == "闇" then
+        Window.draw(68, 241, @el_thumb[5])
+      end
     end
     # 防御属性の描画
     Window.draw_font(108, 241, "防", @heal_font)
-    if $player.have_armor[$player.equip_armor]["element"] == "火" then
-      Window.draw(142, 241, @el_thumb[0])
-    end
-    if $player.have_armor[$player.equip_armor]["element"] == "氷" then
-      Window.draw(142, 241, @el_thumb[1])
-    end
-    if $player.have_armor[$player.equip_armor]["element"] == "土" then
-      Window.draw(142, 241, @el_thumb[2])
-    end
-    if $player.have_armor[$player.equip_armor]["element"] == "風" then
-      Window.draw(142, 241, @el_thumb[3])
-    end
-    if $player.have_armor[$player.equip_armor]["element"] == "光" then
-      Window.draw(142, 241, @el_thumb[4])
-    end
-    if $player.have_armor[$player.equip_armor]["element"] == "闇" then
-      Window.draw(142, 241, @el_thumb[5])
+    if $player.equip_armor > -1 then
+      if $player.have_armor[$player.equip_armor]["element"] == "火" then
+        Window.draw(142, 241, @el_thumb[0])
+      end
+      if $player.have_armor[$player.equip_armor]["element"] == "氷" then
+        Window.draw(142, 241, @el_thumb[1])
+      end
+      if $player.have_armor[$player.equip_armor]["element"] == "土" then
+        Window.draw(142, 241, @el_thumb[2])
+      end
+      if $player.have_armor[$player.equip_armor]["element"] == "風" then
+        Window.draw(142, 241, @el_thumb[3])
+      end
+      if $player.have_armor[$player.equip_armor]["element"] == "光" then
+        Window.draw(142, 241, @el_thumb[4])
+      end
+      if $player.have_armor[$player.equip_armor]["element"] == "闇" then
+        Window.draw(142, 241, @el_thumb[5])
+      end
     end
   end
   
@@ -765,20 +770,31 @@ class Scene_Battle
           $bgm["last_battle"].stop(0)
           $bgm["boss_battle"].stop(0)
           $bgm["battle"].stop(0)
+          $bgm["tower_battle"].stop(0)
           $bgm["fever"].play(0, 0)
         end
       else
         if $bgm["fever"].playing? == true then
           $bgm["fever"].stop(0)
           if @battle_count >= BATTLE_COUNT_MAX && $wave_id == 5 then
-            if @enemies[@enemy_idx].id == 41 then
-              $bgm["last_battle"].play(0, 0)
+            if $dungeon_id == 7 then
+              $bgm["tower_battle"].play(0, 0)
             else
-              $bgm["boss_battle"].play(0, 0)
+              if @enemies[@enemy_idx].id == 41 then
+                $bgm["last_battle"].play(0, 0)
+              else
+                $bgm["boss_battle"].play(0, 0)
+              end
             end
           else
-            if $bgm["battle"].playing? == false then
-              $bgm["battle"].play(0, 0)
+            if $dungeon_id == 7 then
+              if $bgm["tower_battle"].playing? == false then
+                $bgm["tower_battle"].play(0, 0)
+              end
+            else
+              if $bgm["battle"].playing? == false then
+                $bgm["battle"].play(0, 0)
+              end
             end
           end
         end
