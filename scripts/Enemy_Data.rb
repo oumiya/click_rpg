@@ -96,7 +96,7 @@ class Enemy_Data
       enemy.image_file_name = "dragon.png"
       enemy.name = "ドラゴン"
       enemy.description = "洞窟の主であるドラゴン"
-      enemy.max_hp = 3600
+      enemy.max_hp = 5000
       enemy.attack = 700
       enemy.defence = 200
       enemy.attack_frequency = [35,43,51,59,67]
@@ -194,7 +194,7 @@ class Enemy_Data
       enemy.image_file_name = "duroid.png"
       enemy.name = "森の隠者"
       enemy.description = "森に隠れ住んでいるが、その昔は凄いやばい人だったらしい。"
-      enemy.max_hp = 9600
+      enemy.max_hp = 10000
       enemy.attack = 1920
       enemy.defence = 200
       enemy.attack_frequency = [10, 45, 60, 72]
@@ -292,7 +292,7 @@ class Enemy_Data
       enemy.image_file_name = "wight_king.png"
       enemy.name = "ワイトキング"
       enemy.description = "不死者の王！　めっちゃ強そう！"
-      enemy.max_hp = 20000
+      enemy.max_hp = 30000
       enemy.attack = 3360
       enemy.defence = 200
       enemy.attack_frequency = [10, 45, 60, 72]
@@ -390,7 +390,7 @@ class Enemy_Data
       enemy.image_file_name = "red_dragon.png"
       enemy.name = "レッドドラゴン"
       enemy.description = "岩をも溶かすマグマを食べて生きているという。その吐く息は一つの街を簡単に焼きつくすという。"
-      enemy.max_hp = 30000
+      enemy.max_hp = 50000
       enemy.attack = 4480
       enemy.defence = 200
       enemy.attack_frequency = [10, 45, 60, 72]
@@ -488,7 +488,7 @@ class Enemy_Data
       enemy.image_file_name = "icewoman.png"
       enemy.name = "氷の女王"
       enemy.description = "可愛い"
-      enemy.max_hp = 40000
+      enemy.max_hp = 70000
       enemy.attack = 6650
       enemy.defence = 200
       enemy.attack_frequency = [10, 45, 60, 72]
@@ -586,7 +586,7 @@ class Enemy_Data
       enemy.image_file_name = "evil_king.png"
       enemy.name = "まおー"
       enemy.description = "そんでロリかい！"
-      enemy.max_hp = 52000
+      enemy.max_hp = 100000
       enemy.attack = 8750
       enemy.defence = 200
       enemy.attack_frequency = [10, 45, 60, 72]
@@ -600,7 +600,7 @@ class Enemy_Data
       enemy.image_file_name = "lucifer.png"
       enemy.name = "ルシファー"
       enemy.description = "魔界の王子。すっげーキモいデザインだな"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 10000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -614,7 +614,7 @@ class Enemy_Data
       enemy.image_file_name = "satan.png"
       enemy.name = "サタン"
       enemy.description = "魔界の王様。狼みたいなライオンのようなそんな感じ"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -628,7 +628,7 @@ class Enemy_Data
       enemy.image_file_name = "leviathan.png"
       enemy.name = "レヴィアタン"
       enemy.description = "大蛇"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -642,7 +642,7 @@ class Enemy_Data
       enemy.image_file_name = "belphegor.png"
       enemy.name = "ベルフェゴール"
       enemy.description = "ちょっと！　うんこ中なんですけど！！"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -656,7 +656,7 @@ class Enemy_Data
       enemy.image_file_name = "mammon.png"
       enemy.name = "マモン"
       enemy.description = "カァーッ！　カァーッ！"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -670,7 +670,7 @@ class Enemy_Data
       enemy.image_file_name = "beelzebub.png"
       enemy.name = "ベルゼブブ"
       enemy.description = "蝿の王。王様らしい格好をしている。"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -683,8 +683,8 @@ class Enemy_Data
       enemy.id = 48
       enemy.image_file_name = "asmodeus.png"
       enemy.name = "アスモデウス"
-      enemy.description = "蝿の王。王様らしい格好をしている。"
-      enemy.max_hp = 351000
+      enemy.description = "淫魔。やらしい格好をして玉を抱いている。"
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
@@ -698,7 +698,7 @@ class Enemy_Data
       enemy.image_file_name = "arrow.png"
       enemy.name = "アロウ"
       enemy.description = "ソロモンの塔の魔力に取り憑かれたアロウ。しかし属性は光のまま"
-      enemy.max_hp = 351000
+      enemy.max_hp = 175500
       enemy.attack = 15000
       enemy.defence = 200
       enemy.attack_frequency = [10, 11, 12, 13]
