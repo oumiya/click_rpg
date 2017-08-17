@@ -87,6 +87,7 @@ class Scene_Home < Scene_Base
     if $player.flag[0] == false && $player.gold > 1000 then
       $player.flag[0] = true
       @next_scene = Scene_Event.new("creation.dat")
+      return
     end
     # トゥルーエンディング
     if $player.flag[1] == false && $player.gold > 10000000 && $player.cleared == true then
