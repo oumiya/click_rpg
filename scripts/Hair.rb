@@ -1,5 +1,3 @@
-require 'dxruby'
-
 # 髪型クラス
 class Hair
   attr_accessor :colors

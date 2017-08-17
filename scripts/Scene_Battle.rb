@@ -1,4 +1,3 @@
-require 'dxruby'
 require_relative 'Attack_Effect.rb'
 require_relative 'Attack_Icon.rb'
 require_relative 'Fade_Effect.rb'

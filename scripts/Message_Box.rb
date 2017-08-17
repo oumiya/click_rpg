@@ -1,5 +1,3 @@
-require 'dxruby'
-
 # テキストを画面に表示するためのモジュール
 module Message_Box
   

@@ -1,4 +1,3 @@
-require 'dxruby'
 require_relative 'Scene_Home.rb'
 require_relative 'Message_Box.rb'
 

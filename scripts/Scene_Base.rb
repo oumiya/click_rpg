@@ -1,5 +1,3 @@
-require 'dxruby'
-
 # ゲーム中の全てのシーンのスーパークラス
 class Scene_Base
   

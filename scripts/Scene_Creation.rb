@@ -1,4 +1,3 @@
-require 'dxruby'
 require_relative 'Fade_Effect.rb'
 require_relative 'Facility.rb'
 require_relative 'Message_Box.rb'

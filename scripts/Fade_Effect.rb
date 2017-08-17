@@ -1,5 +1,3 @@
-require 'dxruby'
-
 # フェードイン、フェードアウトのエフェクトを表示するクラス
 class Fade_Effect
   

@@ -1,4 +1,3 @@
-require 'dxruby'
 require_relative 'Scene_Battle.rb'
 require_relative 'Scene_Ending.rb'
 require_relative 'Scene_Event.rb'

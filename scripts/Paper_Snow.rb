@@ -1,11 +1,9 @@
-require 'dxruby'
-
-# †áƒGƒtƒFƒNƒg
+# ç´™å¹é›ªã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 class Paper_Snow
-  # •`‰æ‚·‚é†á‚Ì”
+  # æç”»ã™ã‚‹ç´™å¹é›ªã®æ•°
   PAPER_NUM = 200
 
-  # †á
+  # ç´™å¹é›ª
   class Paper
     attr_accessor :image_idx
     attr_accessor :anim_idx
@@ -49,7 +47,7 @@ class Paper_Snow
   
   def draw()
     @papers.each{|paper|
-      # †á‚ğ•`‰æ
+      # ç´™å¹é›ªã‚’æç”»
       Window.draw(paper.x, paper.y, @images[paper.image_idx][paper.anim_idx])
     }
   end

@@ -1,11 +1,9 @@
-require 'dxruby'
-
-# ƒLƒ‰ƒLƒ‰ƒGƒtƒFƒNƒg
+# ã‚­ãƒ©ã‚­ãƒ©ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 class Sparkly
-  # •`‰æ‚·‚éƒLƒ‰ƒLƒ‰‚Ì”
+  # æç”»ã™ã‚‹ã‚­ãƒ©ã‚­ãƒ©ã®æ•°
   SPARK_NUM = 200
 
-  # ƒLƒ‰ƒLƒ‰
+  # ã‚­ãƒ©ã‚­ãƒ©
   class Spark
     attr_accessor :image
     attr_accessor :scale_rate
@@ -49,7 +47,7 @@ class Sparkly
   
   def draw()
     @sparkles.each{|spark|
-      # ƒLƒ‰ƒLƒ‰‚ğ•`‰æ
+      # ã‚­ãƒ©ã‚­ãƒ©ã‚’æç”»
       Window.draw_scale(spark.x, spark.y, spark.image, spark.scale_rate, spark.scale_rate)
       spark.y -= 8
       if spark.y < 0 - (spark.image.height * spark.scale_rate).round then

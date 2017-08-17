@@ -1,5 +1,3 @@
-require 'dxruby'
-
 # 攻撃エフェクトを表示する
 class Attack_Effect
   attr_accessor :visible

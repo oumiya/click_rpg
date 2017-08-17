@@ -1,4 +1,3 @@
-require 'dxruby'
 require_relative 'Cursor.rb'
 require_relative 'Fade_Effect.rb'
 require_relative 'Save_Data.rb'

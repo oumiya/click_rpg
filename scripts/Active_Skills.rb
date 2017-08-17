@@ -1,5 +1,3 @@
-require 'dxruby'
-
 # アクティブスキルクラス
 class Active_Skills
   attr_accessor :id               # スキルID
