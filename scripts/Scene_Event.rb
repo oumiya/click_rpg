@@ -4,6 +4,8 @@ require_relative 'Scene_Event.rb'
 require_relative 'Scene_Equip.rb'
 require_relative 'Scene_Home.rb'
 require_relative 'Scene_Shop.rb'
+require_relative 'Avater_Hair.rb'
+require_relative 'Avater_Armor_Data.rb'
 
 # イベントを制御するシーンクラス
 class Scene_Event < Scene_Base
@@ -79,6 +81,24 @@ class Scene_Event < Scene_Base
     # 2 徐々に透明度を高くする 0 に達したら 0 に戻る
     @picture_mode = 0
     @fade_out = false
+    
+    # アバターの作成
+    @avater = Array.new(8)
+    @avater[0] = Image.load("image/avater_event/avater/01.png")
+    @avater[1] = Image.load("image/avater_event/avater/02.png")
+    @avater[2] = Image.load("image/avater_event/avater/03.png")
+    @avater[3] = Image.load("image/avater_event/avater/04.png")
+    @avater[4] = Image.load("image/avater_event/avater/05.png")
+    @avater[5] = Image.load("image/avater_event/avater/06.png")
+    @avater[6] = Image.load("image/avater_event/avater/07.png")
+    @avater[7] = Image.load("image/avater_event/avater/08.png")
+    
+    # アバター髪型の読み込み
+    @hair = Avater_Hair.new
+    
+    # アバター防具の読み込み
+    @armordata = Avater_Armor_Data.new
+    
   end
   
   # フレーム更新処理
@@ -250,6 +270,16 @@ class Scene_Event < Scene_Base
     end
   end
   
+  # アバターの描画
+  def draw_avater(image)
+    # アバターの描画
+    image.draw(0, 0, @avater[$player.skin_color])
+    # アバター防具の描画
+    @armordata.draw(image, 0, 0)
+    # アバター髪型の描画
+    @hair.draw(image, 0, 0)
+  end
+  
   def command_call()
     # イベント命令が終わっていたらホーム画面に遷移する
     if @idx >= @event_data.size then
@@ -353,7 +383,13 @@ class Scene_Event < Scene_Base
   
   # キャラクター画像を読み込む
   def chr_load(tag, filename)
-    @character_data[tag] = Image.load("image/event/" + filename)
+    if tag == "主人公" then
+      avater = Image.new(332, 540, [0, 0, 0, 0])
+      draw_avater(avater)
+      @character_data[tag] = avater
+    else
+      @character_data[tag] = Image.load("image/event/" + filename)
+    end
   end
   
   # 一枚絵を読み込む
